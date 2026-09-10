@@ -64,6 +64,52 @@ Với mỗi mục, ghi PASS hoặc liệt kê vấn đề cụ thể kèm số d
 nhưng không thay thế việc chính bạn đọc và hiểu code trước khi merge.
 </div>
 
+<h2>Ví dụ minh hoạ: áp checklist vào một đoạn code thật</h2>
+
+<pre><code>// Code do AI sinh ra khi được yêu cầu: "viết hàm tìm user theo email"
+
+async function findUserByEmail(email) {
+  const query = `SELECT * FROM users WHERE email = '${email}'`;
+  const result = await db.query(query);
+  return result.rows[0];
+}</code></pre>
+
+<p>Áp checklist Chương 10 vào đoạn code trên:</p>
+
+<table>
+<thead>
+<tr><th>Mục checklist</th><th>Kết quả</th></tr>
+</thead>
+<tbody>
+<tr><td>Đúng yêu cầu, không thừa</td><td>PASS — đúng chức năng được yêu cầu</td></tr>
+<tr><td>Ảo giác API</td><td>PASS — <code>db.query</code> là API thật của dự án</td></tr>
+<tr><td>Edge case &amp; xử lý lỗi</td><td>FAIL — không xử lý khi <code>email</code> là <code>undefined</code>,
+không xử lý khi không tìm thấy user (trả <code>undefined</code> im lặng)</td></tr>
+<tr><td>Bảo mật</td><td><strong>FAIL nghiêm trọng</strong> — nối chuỗi trực tiếp email vào câu SQL tạo lỗ
+hổng SQL injection kinh điển</td></tr>
+<tr><td>Nhất quán convention</td><td>Cần kiểm tra — dự án có đang dùng query builder/ORM ở nơi khác
+không, hay quen dùng raw SQL với parameter binding?</td></tr>
+</tbody>
+</table>
+
+<pre><code>// Sau khi review theo checklist, yêu cầu AI sửa lại:
+
+async function findUserByEmail(email) {
+  if (!email) throw new Error("email là bắt buộc");
+  const result = await db.query(
+    "SELECT * FROM users WHERE email = $1",
+    [email]                         // <- parameter binding, chặn SQL injection
+  );
+  return result.rows[0] ?? null;    // <- rõ ràng khi không tìm thấy
+}</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Vì sao ví dụ này quan trọng</span>
+Code gốc "chạy được" và trông hoàn toàn bình thường với người đọc lướt — đây chính xác là kiểu lỗi mà
+"vibe coding" (đầu chương) bỏ lọt, và checklist có cấu trúc mới bắt được một cách hệ thống thay vì tình
+cờ.
+</div>
+
 <h2>Kiểm thử vẫn là tuyến phòng thủ quan trọng nhất</h2>
 
 <p>Test tự động (unit test, integration test) là cách khách quan nhất để xác nhận code — do AI hay con
