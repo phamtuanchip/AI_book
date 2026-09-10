@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 3: Hệ sinh thái mô hình &amp; nhà cung cấp</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần I — Nhập môn AI nhanh</p>
+<h1>Chương 3: Hệ sinh thái mô hình &amp; nhà cung cấp</h1>
+
+<div class="callout warning">
+<span class="callout-label">Chương này lỗi thời nhanh</span>
+Tên mô hình, bảng giá, và con số context window sẽ thay đổi liên tục. Mục tiêu của chương không phải
+"chốt bảng so sánh đúng mãi mãi", mà là dạy bạn <strong>khung tiêu chí</strong> để tự tra cứu và so sánh
+tại thời điểm bạn đọc sách — hãy luôn kiểm tra trang tài liệu chính thức của nhà cung cấp trước khi quyết
+định.
+</div>
+
+<h2>Hai nhóm mô hình lớn</h2>
+
+<p>Phần lớn mô hình bạn sẽ gặp rơi vào một trong hai nhóm:</p>
+
+<ul>
+<li><strong>Mô hình đóng (proprietary), dùng qua API/chat:</strong> các dòng <strong>Claude</strong>
+(Anthropic), <strong>GPT</strong> (OpenAI), <strong>Gemini</strong> (Google). Bạn không tải mô hình về —
+gọi qua API hoặc dùng qua ứng dụng chat/IDE. Đổi lại chất lượng và tốc độ cập nhật thường dẫn đầu, nhà
+cung cấp lo toàn bộ hạ tầng.</li>
+<li><strong>Mô hình mở (open-weight):</strong> các dòng <strong>Llama</strong> (Meta), <strong>Qwen</strong>
+(Alibaba), <strong>Mistral</strong>, <strong>DeepSeek</strong>, và nhiều mô hình cộng đồng khác. Trọng
+số mô hình được công bố, bạn có thể tự host (on-premise, cloud riêng) — đánh đổi là bạn (hoặc tổ chức)
+phải tự lo hạ tầng vận hành, và chất lượng đỉnh cao thường đi sau nhóm đóng vài tháng đến một năm.</li>
+</ul>
+
+<p>Ranh giới giữa hai nhóm không tuyệt đối — một số nhà cung cấp vừa bán API mô hình đóng, vừa phát hành
+bản mở nhỏ hơn để cộng đồng nghiên cứu và tự host.</p>
+
+<h2>Tiêu chí nên dùng khi chọn mô hình</h2>
+
+<table>
+<thead>
+<tr><th>Tiêu chí</th><th>Câu hỏi cần trả lời</th></tr>
+</thead>
+<tbody>
+<tr><td>Chất lượng cho tác vụ cụ thể</td><td>Mô hình mạnh về coding, reasoning, hay viết văn bản tự
+nhiên? Không có "mô hình tốt nhất tuyệt đối" — chỉ có tốt nhất <em>cho việc bạn cần</em>.</td></tr>
+<tr><td>Context window</td><td>Bạn cần nhồi cả một codebase lớn / tài liệu dài vào một lần gọi không?
+Nếu có, cần mô hình context window lớn.</td></tr>
+<tr><td>Chi phí</td><td>Tính theo token đầu vào/đầu ra. Tác vụ chạy hàng loạt (batch, agent lặp nhiều
+vòng) rất nhạy với chi phí — chênh lệch nhỏ trên 1 request nhân lên hàng triệu lần sẽ rất lớn.</td></tr>
+<tr><td>Độ trễ (latency) &amp; thông lượng</td><td>Ứng dụng tương tác thời gian thực cần mô hình phản
+hồi nhanh; tác vụ chạy nền (background) có thể chấp nhận mô hình chậm hơn nhưng rẻ/mạnh hơn.</td></tr>
+<tr><td>Khả năng dùng công cụ (tool use) &amp; agentic</td><td>Nếu định xây agent (Phần III), mô hình
+cần hỗ trợ tốt tool-calling, làm theo kế hoạch nhiều bước, tự sửa lỗi.</td></tr>
+<tr><td>Đa phương thức (multimodal)</td><td>Có cần xử lý ảnh, PDF, âm thanh, hay chỉ văn bản?</td></tr>
+<tr><td>Dữ liệu &amp; bảo mật</td><td>Dữ liệu công ty có được dùng để huấn luyện lại không? Có cần host
+riêng vì lý do tuân thủ (compliance), dữ liệu nhạy cảm, hay quy định lưu trữ nội bộ?</td></tr>
+<tr><td>Giấy phép sử dụng</td><td>Với mô hình mở: giấy phép có cho phép dùng thương mại, chỉnh sửa, phân
+phối lại không?</td></tr>
+</tbody>
+</table>
+
+<h2>Cách tra cứu thông tin luôn đúng thời điểm</h2>
+
+<p>Thay vì nhớ con số cụ thể (dễ sai vì lỗi thời), hãy tạo thói quen tra 3 nguồn sau trước khi chọn mô
+hình cho một dự án mới:</p>
+
+<ol>
+<li><strong>Trang "models"/"pricing" chính thức</strong> của nhà cung cấp — luôn là nguồn đúng nhất về
+context window, giá, và các biến thể (bản nhỏ/nhanh/rẻ vs bản mạnh nhất).</li>
+<li><strong>Bảng xếp hạng độc lập (benchmark/leaderboard)</strong> cập nhật thường xuyên, để so sánh
+khách quan giữa các nhà cung cấp thay vì chỉ tin marketing.</li>
+<li><strong>Changelog/release note</strong> của công cụ bạn đang dùng (IDE, agent framework) — vì công
+cụ thường mặc định trỏ tới một mô hình cụ thể, và có thể đã đổi sau bản cập nhật gần nhất.</li>
+</ol>
+
+<div class="callout">
+<span class="callout-label">Gợi ý thực dụng</span>
+Với hầu hết công việc lập trình hàng ngày, đừng cố tìm "mô hình tốt nhất" — hãy chọn một mô hình đủ tốt,
+có tích hợp sẵn trong công cụ bạn dùng (IDE, CLI), và tập trung thời gian học <em>cách prompt và cách
+kiểm soát output</em> (Phần II) — kỹ năng đó chuyển đổi được giữa các mô hình, còn việc "mô hình nào đang
+dẫn đầu" thì thay đổi mỗi vài tháng.
+</div>
+
+<h2>Mô hình lớn vs mô hình nhỏ/nhanh</h2>
+
+<p>Gần như mọi nhà cung cấp lớn đều có ít nhất hai cấp mô hình: một dòng "mạnh nhất" (reasoning tốt, giá
+cao hơn, chậm hơn) và một dòng "nhỏ/nhanh" (rẻ, phản hồi tức thời, đủ dùng cho tác vụ đơn giản). Khi xây
+ứng dụng hoặc agent thật (Phần III, IV), việc <strong>định tuyến (routing)</strong> — dùng mô hình nhỏ
+cho bước đơn giản, mô hình lớn cho bước cần suy luận sâu — là kỹ thuật tối ưu chi phí rất phổ biến trong
+thực tế, không phải lúc nào cũng cần dùng mô hình mạnh nhất cho mọi việc.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn 2 nhà cung cấp mô hình bất kỳ. Vào trang pricing/models chính thức của cả hai, ghi lại: context
+window lớn nhất, và có bản "nhỏ/nhanh/rẻ" hay không. So sánh xem lựa chọn nào phù hợp hơn cho (a) một
+chatbot hỗ trợ khách hàng trả lời tức thời, và (b) một agent đọc toàn bộ codebase để viết tài liệu kỹ
+thuật.
+</div>
+
+<nav class="chapter-nav">
+<a href="02-lam-viec-cua-llm.html">&larr; Chương 2: Mô hình ngôn ngữ lớn hoạt động thế nào</a>
+<a href="04-gioi-han-va-rui-ro.html">Chương 4: Giới hạn và rủi ro cần biết &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
