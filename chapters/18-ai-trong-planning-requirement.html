@@ -17,6 +17,41 @@
 đầu vào quyết định chất lượng toàn bộ chuỗi sau — requirement mơ hồ dẫn đến code sai, test thiếu, và
 review không biết chấm điểm theo tiêu chí gì.</p>
 
+<figure>
+<svg viewBox="0 0 700 110" role="img" aria-label="Luồng từ ý tưởng thô đến yêu cầu đã duyệt: ý tưởng thô, AI chuyển thành user story và câu hỏi làm rõ, product owner trả lời, yêu cầu sẵn sàng cho Planner agent">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <rect x="5" y="30" width="150" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="80" y="50" text-anchor="middle" font-weight="700">Ý tưởng thô</text>
+    <text x="80" y="66" text-anchor="middle" font-size="10">(1-2 câu từ PO)</text>
+
+    <path d="M160 55 L190 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#rq1)"/>
+
+    <rect x="195" y="30" width="180" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="285" y="50" text-anchor="middle" font-weight="700">User story + câu hỏi</text>
+    <text x="285" y="66" text-anchor="middle" font-size="10">làm rõ (AI sinh)</text>
+
+    <path d="M380 55 L410 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#rq1)"/>
+
+    <rect x="415" y="30" width="150" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="490" y="50" text-anchor="middle" font-weight="700">PO trả lời câu hỏi</text>
+
+    <path d="M570 55 L600 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#rq1)"/>
+
+    <rect x="605" y="30" width="90" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="650" y="50" text-anchor="middle" font-size="11" font-weight="700">Sẵn sàng</text>
+    <text x="650" y="66" text-anchor="middle" font-size="10">cho Chương 19-20</text>
+
+    <defs>
+      <marker id="rq1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Bước "PO trả lời câu hỏi" không thể bỏ qua — đây chính là bước ngăn lỗ hổng requirement biến
+thành bug ở giai đoạn code/test.</figcaption>
+</figure>
+
 <h2>Sinh và làm rõ user story</h2>
 
 <p>AI giỏi ở việc chuyển một ý tưởng thô thành user story có cấu trúc, và quan trọng hơn — <strong>chỉ ra

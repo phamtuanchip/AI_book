@@ -32,6 +32,37 @@ vẫn phải là người chịu trách nhiệm giải thích được code tron
 viết ra nó.
 </div>
 
+<figure>
+<svg viewBox="0 0 700 120" role="img" aria-label="Cổng review: code AI-generated phải qua checklist trước khi merge, nếu fail thì quay lại sửa">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+    <rect x="10" y="35" width="150" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="85" y="65" text-anchor="middle">Code AI-generated</text>
+
+    <path d="M165 60 L195 60" stroke="#a4442f" stroke-width="2" marker-end="url(#rv1)"/>
+
+    <rect x="200" y="35" width="170" height="50" rx="6" fill="#fbeaea" stroke="#a4442f"/>
+    <text x="285" y="65" text-anchor="middle" font-weight="700">Checklist 6 mục</text>
+
+    <path d="M375 60 L405 60" stroke="#a4442f" stroke-width="2" marker-end="url(#rv1)"/>
+    <text x="390" y="50" font-size="10.5" fill="#6b6b6b">Pass</text>
+
+    <rect x="410" y="35" width="140" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="480" y="65" text-anchor="middle">Merge</text>
+
+    <path d="M285 85 C 285 105, 550 105, 550 85" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#rv1)"/>
+    <text x="420" y="115" text-anchor="middle" font-size="10.5" fill="#6b6b6b">Fail → quay lại sửa, review lại từ đầu</text>
+
+    <defs>
+      <marker id="rv1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Checklist không phải bước "cho có" — code chỉ merge khi qua đủ 6 mục, không có ngoại lệ vì
+"nhìn có vẻ ổn".</figcaption>
+</figure>
+
 <h2>Checklist review code do AI sinh ra</h2>
 
 <p>Coi code AI-generated như code của một thực tập sinh rất nhanh nhưng chưa có kinh nghiệm ngữ cảnh dự
