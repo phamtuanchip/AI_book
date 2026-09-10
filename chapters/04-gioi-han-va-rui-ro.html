@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 4: Giới hạn và rủi ro cần biết</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần I — Nhập môn AI nhanh</p>
+<h1>Chương 4: Giới hạn và rủi ro cần biết</h1>
+
+<p>Chương khép lại Phần I này quan trọng không kém các chương trước — bỏ qua nó, bạn sẽ dùng AI với sự
+tự tin sai chỗ. Bốn nhóm giới hạn dưới đây sẽ quay lại xuyên suốt sách, đặc biệt ở Chương 10 (đánh giá
+output) và Chương 23 (bảo mật hệ thống agentic).</p>
+
+<h2>1. Hallucination — bịa thông tin một cách tự tin</h2>
+
+<p>Nhắc lại từ Chương 2: mô hình sinh ra token có khả năng cao nhất dựa trên pattern đã học, chứ không
+"tra cứu sự thật" trong một cơ sở dữ liệu. Khi không đủ thông tin, thay vì nói "tôi không biết", mô hình
+có xu hướng tạo ra một câu trả lời <em>nghe hợp lý</em> — có thể là tên hàm không tồn tại, số liệu bịa,
+hay trích dẫn nguồn không có thật.</p>
+
+<div class="callout warning">
+<span class="callout-label">Ví dụ điển hình với lập trình viên</span>
+Hỏi AI về một thư viện ít phổ biến, nó có thể "sáng tác" ra một hàm/tham số nghe rất hợp lý nhưng không
+tồn tại trong API thật (hiện tượng dân lập trình hay gọi là "package hallucination"). Luôn kiểm tra lại
+với tài liệu chính thức trước khi tin.
+</div>
+
+<p><strong>Cách giảm thiểu:</strong> yêu cầu mô hình trích dẫn nguồn/trích đoạn cụ thể; cung cấp tài liệu
+tham chiếu trực tiếp trong prompt (RAG — sẽ nói ở Chương 13) thay vì dựa vào "trí nhớ" của mô hình; hạ
+temperature cho tác vụ cần độ chính xác; và quan trọng nhất — luôn tự kiểm chứng trước khi dùng cho quyết
+định quan trọng.</p>
+
+<h2>2. Bias — thiên lệch từ dữ liệu huấn luyện</h2>
+
+<p>Mô hình học từ dữ liệu do con người tạo ra, nên nó kế thừa cả thiên lệch có sẵn trong dữ liệu đó — về
+giới tính, chủng tộc, ngôn ngữ, vùng miền, hay quan điểm chính trị phổ biến trên internet. Điều này thể
+hiện rõ khi dùng AI cho các việc như sàng lọc CV, sinh nội dung đại diện cho một nhóm người, hay đánh giá
+hiệu suất nhân viên.</p>
+
+<p><strong>Cách giảm thiểu:</strong> không dùng AI làm quyết định cuối cùng cho các việc ảnh hưởng trực
+tiếp đến con người (tuyển dụng, tín dụng, kỷ luật) mà không có con người review; kiểm tra output trên
+nhiều nhóm/kịch bản khác nhau trước khi đưa vào sản phẩm.</p>
+
+<h2>3. Kiến thức lỗi thời (knowledge cutoff)</h2>
+
+<p>Mô hình chỉ "biết" những gì có trong dữ liệu huấn luyện tính đến một mốc thời gian nhất định (training
+cutoff). Sau mốc đó, mọi sự kiện, phiên bản thư viện mới, API mới đều nằm ngoài hiểu biết của nó — trừ
+khi công cụ bạn dùng có tích hợp tìm kiếm web hoặc RAG để bù đắp.</p>
+
+<div class="callout">
+<span class="callout-label">Áp dụng ngay</span>
+Khi hỏi về phiên bản mới nhất của một framework, một API vừa ra mắt, hay tin tức gần đây — luôn kiểm tra
+xem công cụ AI đang dùng có bật tìm kiếm web/truy cập tài liệu mới không. Nếu không, giả định mặc định là
+câu trả lời có thể đã lỗi thời.
+</div>
+
+<h2>4. Bảo mật &amp; quyền riêng tư dữ liệu</h2>
+
+<p>Đây là rủi ro dễ bị bỏ qua nhất khi dùng AI trong công việc hàng ngày, và sẽ được mở rộng đầy đủ ở
+Chương 23 khi nói về hệ thống agentic. Ba nguyên tắc cần nhớ ngay từ bây giờ:</p>
+
+<ul>
+<li><strong>Đừng dán secrets/dữ liệu nhạy cảm vào prompt</strong> — API key, mật khẩu, dữ liệu khách hàng
+(PII), mã nguồn độc quyền — trừ khi bạn chắc chắn về chính sách xử lý dữ liệu của nhà cung cấp/công cụ
+đang dùng (có lưu lại để huấn luyện không, có mã hoá không, lưu trữ ở đâu).</li>
+<li><strong>Phân biệt công cụ cá nhân và công cụ được tổ chức phê duyệt</strong> — dùng chatbot cá nhân
+cho dữ liệu công ty (gọi là "shadow AI") là nguồn rò rỉ dữ liệu phổ biến trong doanh nghiệp hiện nay.</li>
+<li><strong>Đọc chính sách dữ liệu trước khi tích hợp AI vào quy trình có dữ liệu nhạy cảm</strong> — đặc
+biệt quan trọng khi chọn giữa mô hình gọi qua API công cộng và mô hình tự host nội bộ (đã nhắc ở Chương
+3).</li>
+</ul>
+
+<h2>Một giới hạn "mềm" cuối cùng: xu hướng tin tưởng quá mức</h2>
+
+<p>Vì AI trả lời trôi chảy, tự tin, và có giọng điệu giống chuyên gia, con người có xu hướng tin tưởng nó
+hơn mức nó xứng đáng — hiện tượng đôi khi gọi là "automation bias". Kỹ năng quan trọng nhất bạn cần luyện
+xuyên suốt cuốn sách này không phải là "prompt giỏi hơn", mà là <strong>giữ được sự hoài nghi lành mạnh</strong>
+và luôn có bước kiểm chứng, dù output nhìn có vẻ hoàn hảo đến đâu.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ — khép lại Phần I</span>
+Viết một "checklist an toàn" cá nhân gồm 4-5 dòng, trả lời: bạn sẽ không bao giờ dán loại dữ liệu gì vào
+chatbot AI cá nhân? Với loại quyết định nào bạn sẽ luôn tự kiểm chứng output của AI trước khi dùng? Giữ
+checklist này — bạn sẽ mở rộng nó thành chính sách đầy đủ hơn ở Chương 16 và Chương 23.
+</div>
+
+<p>Đến đây, Phần I đã cho bạn đủ nền tảng: AI/LLM là gì, hoạt động ra sao, hệ sinh thái hiện có, và giới
+hạn cần tôn trọng. Từ Chương 5, sách chuyển hẳn sang thực hành — bắt đầu với nguyên lý prompting cơ
+bản.</p>
+
+<nav class="chapter-nav">
+<a href="03-he-sinh-thai-mo-hinh.html">&larr; Chương 3: Hệ sinh thái mô hình &amp; nhà cung cấp</a>
+<a href="05-nguyen-ly-prompting-co-ban.html">Chương 5: Nguyên lý prompting cơ bản &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
