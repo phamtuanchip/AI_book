@@ -1,5 +1,10 @@
 /* AI_book — stylesheet dùng chung cho mọi chương (chapters/*.html) và phụ lục (templates/*.html) */
 
+/* Noto Serif/Sans có bộ glyph tiếng Việt (Latin Extended Additional) đầy đủ và nhất quán hơn
+   Georgia/Times New Roman trên nhiều máy Windows — tải qua Google Fonts khi có mạng, tự động
+   rơi về font hệ thống (đã có sẵn tiếng Việt) khi mở offline. */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@400;600;700&display=swap');
+
 :root {
   --bg: #fbfaf7;
   --text: #232323;
@@ -8,8 +13,8 @@
   --accent-soft: #f3e4de;
   --border: #e2ddd3;
   --code-bg: #f1efe9;
-  --serif: Georgia, "Noto Serif", "Times New Roman", serif;
-  --sans: -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+  --serif: "Noto Serif", "Times New Roman", Georgia, "Segoe UI", serif;
+  --sans: "Noto Sans", "Segoe UI", -apple-system, Roboto, Arial, sans-serif;
   --mono: "Cascadia Code", Consolas, "Courier New", monospace;
 }
 
