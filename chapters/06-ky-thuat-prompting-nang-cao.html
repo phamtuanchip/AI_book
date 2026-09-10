@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 6: Kỹ thuật prompting nâng cao</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 6: Kỹ thuật prompting nâng cao</h1>
+
+<p>Bốn thành phần ở Chương 5 giải quyết được phần lớn công việc hàng ngày. Chương này thêm vào bốn kỹ
+thuật xử lý các bài toán khó hơn: khi tác vụ cần suy luận nhiều bước, khi tác vụ quá lớn cho một prompt,
+và khi bạn muốn output đáng tin cậy hơn mà không cần con người review mọi lần.</p>
+
+<h2>1. Chain-of-thought — yêu cầu mô hình "suy nghĩ từng bước"</h2>
+
+<p>Nhớ lại Chương 2: mô hình sinh từng token nối tiếp nhau. Nếu bị ép trả lời ngay đáp án cuối cùng, nó
+không có "không gian" để suy luận — dễ nhảy đến kết luận sai, đặc biệt với bài toán logic, tính toán,
+hay debug nhiều bước. Yêu cầu mô hình trình bày các bước suy luận trước khi kết luận thường cho kết quả
+chính xác hơn hẳn:</p>
+
+<pre><code>Không có chain-of-thought:
+"Đoạn code này có bug gì?" → dễ đoán bừa
+
+Có chain-of-thought:
+"Đọc đoạn code sau. Trước khi kết luận, hãy liệt kê từng bước: (1) mô tả
+luồng chạy của hàm, (2) với mỗi biến, giá trị của nó thay đổi thế nào,
+(3) chỉ ra bước nào không khớp với hành vi mong đợi. Sau đó mới kết luận
+bug nằm ở đâu."</code></pre>
+
+<p>Nhiều mô hình hiện đại (đặc biệt các mô hình có chế độ "reasoning"/"extended thinking") tự làm điều
+này ở mức độ nhất định — nhưng với tác vụ phức tạp, việc chủ động yêu cầu các bước trung gian vẫn cải
+thiện độ chính xác và giúp bạn <em>kiểm tra được logic</em>, không chỉ đọc đáp án cuối.</p>
+
+<h2>2. Phân rã nhiệm vụ (task decomposition)</h2>
+
+<p>Một prompt duy nhất yêu cầu "xây cả một tính năng" thường cho kết quả hời hợt — mô hình phải trải mỏng
+sự chú ý cho quá nhiều việc cùng lúc. Chia nhỏ thành các bước tuần tự, mỗi bước một prompt (hoặc một lượt
+trong cùng hội thoại), cho kết quả sâu và kiểm soát được hơn nhiều:</p>
+
+<pre><code>Thay vì 1 prompt lớn:
+"Viết cho tôi tính năng đăng ký người dùng hoàn chỉnh"
+
+Chia thành chuỗi:
+1) "Liệt kê các bước cần làm để xây tính năng đăng ký người dùng an toàn
+   cho một REST API (không viết code vội)."
+2) "Với bước 'validate input', viết hàm validation chi tiết."
+3) "Với bước 'hash password', viết code dùng bcrypt, giải thích lựa chọn
+   cost factor."
+4) "Viết test cho toàn bộ luồng đăng ký vừa xây."</code></pre>
+
+<p>Đây cũng chính là nguyên lý nền tảng của AI agent (Phần III): agent thực chất là một hệ thống tự động
+hoá việc phân rã nhiệm vụ và thực thi tuần tự thay bạn.</p>
+
+<h2>3. Self-critique / self-refine</h2>
+
+<p>Yêu cầu mô hình tự phản biện câu trả lời của chính nó trước khi chốt, giống một vòng code review nội
+bộ. Kỹ thuật này đặc biệt hiệu quả cho code, văn bản kỹ thuật, và bất kỳ output nào có tiêu chí đúng/sai
+rõ ràng:</p>
+
+<pre><code>"Đây là câu trả lời bạn vừa đưa ra: {dán lại output}.
+
+Bây giờ hãy đóng vai một reviewer khó tính: liệt kê tối đa 3 vấn đề còn
+tồn tại (bug tiềm ẩn, thiếu edge case, vi phạm best practice). Với mỗi
+vấn đề, sửa lại phần code/nội dung tương ứng."</code></pre>
+
+<div class="callout">
+<span class="callout-label">Vì sao self-critique thường hiệu quả</span>
+Đánh giá một câu trả lời có sẵn thường dễ hơn tạo ra câu trả lời đúng ngay từ đầu — kể cả với con người.
+Tách "sinh" và "phê bình" thành hai bước riêng giúp mô hình phát hiện lỗi mà chính nó vừa mắc phải, dù
+không phải lúc nào cũng bắt được hết.
+</div>
+
+<h2>4. Prompt template tái sử dụng</h2>
+
+<p>Với các tác vụ lặp lại (viết PR description, review code theo checklist cố định, sinh test theo
+convention của team), đừng viết lại prompt từ đầu mỗi lần — hãy lưu thành <strong>template có biến</strong>,
+giống một hàm nhận tham số:</p>
+
+<pre><code>Template "Review PR theo checklist team":
+
+Bạn là reviewer cho một PR TypeScript. Kiểm tra đoạn diff sau theo đúng
+thứ tự checklist:
+1. Có test cho logic mới không?
+2. Có xử lý lỗi/edge case (null, rỗng, timeout) không?
+3. Có vi phạm naming convention của team ({quy ước cụ thể}) không?
+4. Có thay đổi breaking API không cần thiết không?
+
+Diff cần review:
+{dán diff vào đây}
+
+Trả lời theo format: mỗi vấn đề 1 dòng, ghi rõ số dòng, mức độ nghiêm
+trọng (blocker/nên sửa/gợi ý).</code></pre>
+
+<p>Lưu các template này ở nơi cả team dùng chung (repo, wiki nội bộ, hoặc file cấu hình của công cụ AI
+coding — sẽ nói ở Chương 8-9) để không ai phải "phát minh lại" prompt mỗi lần.</p>
+
+<div class="callout template">
+<span class="callout-label">Thư viện template đầy đủ hơn</span>
+Phụ lục A cuối sách tổng hợp thêm các template cho chain-of-thought, task decomposition, và self-critique
+theo nhiều tình huống khác nhau, sẵn sàng copy-chỉnh dùng ngay.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một tác vụ lập trình bạn làm ít nhất 1 lần/tuần (viết PR description, review code, viết test...).
+Viết nó thành một prompt template có biến (giống ví dụ "Review PR" ở trên), sao cho lần sau chỉ cần điền
+biến là dùng được ngay, không cần soạn lại từ đầu.
+</div>
+
+<nav class="chapter-nav">
+<a href="05-nguyen-ly-prompting-co-ban.html">&larr; Chương 5: Nguyên lý prompting cơ bản</a>
+<a href="07-prompting-cho-code.html">Chương 7: Prompting cho code &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
