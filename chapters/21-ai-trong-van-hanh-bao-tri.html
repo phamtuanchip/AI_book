@@ -102,6 +102,24 @@ Chương 7 (chain-of-thought, viết test tái hiện bug trước khi sửa —
 production chỉ vì đang là sự cố khẩn cấp, trừ khi tổ chức có quy trình hotfix khẩn cấp riêng đã được thiết
 kế và phê duyệt từ trước.</p>
 
+<h2>Hỗ trợ dự báo năng lực &amp; chi phí hạ tầng</h2>
+
+<p>Ngoài phản ứng với sự cố, AI có thể hỗ trợ nhìn trước: phân tích xu hướng tăng trưởng lưu lượng/dữ liệu
+theo thời gian để cảnh báo sớm điểm cần mở rộng hạ tầng, trước khi nó trở thành sự cố:</p>
+
+<pre><code>"Đây là số liệu sử dụng CPU/memory/dung lượng database của service
+{tên service} trong 6 tháng qua: {dán dữ liệu}. Ước tính xu hướng tăng
+trưởng, và cho biết với tốc độ này, khoảng bao lâu nữa sẽ chạm ngưỡng
+cảnh báo hiện tại (ví dụ 80% capacity). Chỉ ra giả định bạn đang dùng để
+ước tính (tăng trưởng tuyến tính hay theo mùa vụ)."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Ước tính, không phải cam kết</span>
+Dự báo dạng này hữu ích để lên kế hoạch sớm, nhưng luôn nêu rõ giả định và độ không chắc chắn — không nên
+dùng trực tiếp làm cơ sở duy nhất cho quyết định ngân sách/mở rộng hạ tầng mà không có người có kinh
+nghiệm domain xác nhận lại.
+</div>
+
 <h2>Cập nhật tài liệu tự động</h2>
 
 <p>Tài liệu kỹ thuật (runbook, tài liệu API, sơ đồ kiến trúc) là thứ luôn bị bỏ bê vì không ai có thời
