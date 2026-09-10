@@ -132,6 +132,28 @@ minh". Phần lớn trường hợp, vấn đề nằm ở thiếu 1 trong 4 th�
 tiêu chí thành công rõ ràng.
 </div>
 
+<h2>Các anti-pattern thường gặp khác</h2>
+
+<table>
+<thead>
+<tr><th>Anti-pattern</th><th>Vì sao có vấn đề</th><th>Cách sửa</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Nhồi quá nhiều yêu cầu trong 1 prompt</strong> ("viết API, viết test, viết docs, deploy
+luôn")</td><td>Mô hình dễ làm hời hợt từng phần, hoặc bỏ sót một phần</td><td>Phân rã thành chuỗi prompt
+tuần tự (Chương 6)</td></tr>
+<tr><td><strong>Câu hỏi dẫn dắt</strong> ("Cách này tối ưu đúng không?")</td><td>Dễ gặp hiện tượng
+sycophancy — mô hình chiều theo kỳ vọng ngầm thay vì đánh giá khách quan (Chương 4)</td><td>Đặt câu hỏi
+trung lập: "Liệt kê vấn đề nếu có"</td></tr>
+<tr><td><strong>Giả định mô hình "nhớ" ngữ cảnh từ lần trò chuyện trước</strong> (phiên mới, không có
+lịch sử)</td><td>Mỗi phiên mới không có context của phiên cũ trừ khi được cung cấp lại (Chương 2)</td>
+<td>Luôn cung cấp lại ngữ cảnh cần thiết, hoặc dùng bộ nhớ dài hạn (Chương 12) nếu công cụ hỗ trợ</td></tr>
+<tr><td><strong>Không nói rõ "không được làm gì"</strong> khi phạm vi dễ bị hiểu lan man</td><td>Mô hình có
+xu hướng "hào phóng" thêm thứ không ai yêu cầu (Chương 10)</td><td>Nêu rõ ràng buộc phạm vi, không chỉ mô
+tả việc cần làm</td></tr>
+</tbody>
+</table>
+
 <div class="callout exercise">
 <span class="callout-label">Bài tập nhỏ</span>
 Lấy một prompt bạn từng viết (hoặc viết mới một prompt cho việc thật đang làm). Áp khung 4 thành phần vào,
