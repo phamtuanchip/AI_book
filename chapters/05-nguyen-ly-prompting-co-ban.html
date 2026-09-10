@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 5: Nguyên lý prompting cơ bản</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 5: Nguyên lý prompting cơ bản</h1>
+
+<p>Từ chương này, sách chuyển hẳn sang thực hành. Prompting không phải "nói chuyện với máy tính cho vui"
+— đó là kỹ năng đặc tả yêu cầu rõ ràng, có cấu trúc, để một hệ thống không đọc được suy nghĩ của bạn vẫn
+tạo ra đúng thứ bạn cần. Bốn thành phần dưới đây là khung sườn cho mọi prompt tốt.</p>
+
+<h2>Bốn thành phần của một prompt tốt</h2>
+
+<h3>1. Vai trò (role)</h3>
+
+<p>Cho mô hình biết nó nên "đóng vai" ai khi trả lời — điều này định hướng giọng văn, mức độ chuyên sâu,
+và góc nhìn. Ví dụ khác biệt rõ giữa hai role:</p>
+
+<pre><code>Không có role:
+"Giải thích REST API là gì"
+
+Có role:
+"Bạn là một senior backend engineer đang giải thích REST API cho một
+thực tập sinh mới ra trường, chưa từng làm web backend. Dùng ví dụ cụ
+thể, tránh thuật ngữ không giải thích."</code></pre>
+
+<p>Role không đổi "kiến thức" của mô hình, nhưng đổi <em>cách trình bày</em> — điều quyết định câu trả
+lời có dùng được ngay hay phải chỉnh sửa lại.</p>
+
+<h3>2. Ngữ cảnh (context)</h3>
+
+<p>Mô hình chỉ biết những gì có trong context window (nhắc lại Chương 2) — nó không biết dự án của bạn,
+codebase của bạn, hay ràng buộc riêng của công việc, trừ khi bạn cung cấp. Ngữ cảnh càng cụ thể, output
+càng sát nhu cầu:</p>
+
+<pre><code>Thiếu ngữ cảnh:
+"Viết hàm kiểm tra email hợp lệ"
+
+Đủ ngữ cảnh:
+"Viết hàm kiểm tra email hợp lệ bằng TypeScript, dùng trong form đăng ký
+của một ứng dụng B2B. Yêu cầu: không dùng thư viện ngoài, trả về boolean,
+có xử lý input null/undefined, viết kèm 3 test case (1 hợp lệ, 2 không
+hợp lệ)."</code></pre>
+
+<h3>3. Ví dụ (few-shot)</h3>
+
+<p>Khi bạn cần output theo một định dạng/phong cách cụ thể, mô tả bằng lời thường kém hiệu quả hơn nhiều
+so với đưa 1-2 ví dụ mẫu (kỹ thuật gọi là <strong>few-shot prompting</strong>):</p>
+
+<pre><code>Chuyển các log lỗi sau thành báo cáo ngắn gọn, theo đúng định dạng ví dụ:
+
+Ví dụ:
+Input:  "NullPointerException at UserService.java:42"
+Output: "🔴 Lỗi null reference trong UserService (dòng 42) — cần kiểm
+        tra điều kiện null trước khi truy cập."
+
+Bây giờ hãy xử lý:
+Input: "TimeoutException at PaymentGateway.java:118"</code></pre>
+
+<h3>4. Định dạng đầu ra (output format)</h3>
+
+<p>Luôn nói rõ bạn muốn kết quả ở dạng gì — danh sách, bảng, JSON, đoạn code kèm giải thích hay chỉ code
+thuần — nếu không, mô hình sẽ tự chọn, và thường không khớp với cách bạn định dùng kết quả đó (ví dụ dán
+vào pipeline tự động cần JSON, chứ không cần đoạn văn giải thích dài dòng).</p>
+
+<div class="callout template">
+<span class="callout-label">Template — Prompt 4 thành phần (dùng chung)</span>
+<pre><code>Vai trò: Bạn là {vai trò chuyên môn}.
+Bối cảnh: {mô tả dự án/tình huống, ràng buộc kỹ thuật liên quan}.
+Yêu cầu: {việc cụ thể cần làm, càng chi tiết càng tốt}.
+Ví dụ (nếu có): {1-2 ví dụ input/output mẫu}.
+Định dạng đầu ra: {liệt kê/bảng/JSON/code kèm giải thích/chỉ code...}.</code></pre>
+Xem thêm các template chi tiết hơn theo từng tình huống ở <strong>Phụ lục A</strong> cuối sách.
+</div>
+
+<h2>Prompting là một quá trình lặp (iterate), không phải một lần ăn ngay</h2>
+
+<p>Rất hiếm khi prompt đầu tiên cho ra kết quả hoàn hảo — kể cả với người có kinh nghiệm. Quy trình thực
+tế luôn là một vòng lặp:</p>
+
+<figure>
+<svg viewBox="0 0 700 120" role="img" aria-label="Vòng lặp viết prompt, xem output, tinh chỉnh">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#232323">
+    <rect x="10" y="35" width="150" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="85" y="65" text-anchor="middle">Viết prompt</text>
+
+    <path d="M165 60 L200 60" stroke="#a4442f" stroke-width="2" marker-end="url(#a3)"/>
+
+    <rect x="205" y="35" width="150" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="280" y="65" text-anchor="middle">Xem output</text>
+
+    <path d="M360 60 L395 60" stroke="#a4442f" stroke-width="2" marker-end="url(#a3)"/>
+
+    <rect x="400" y="35" width="150" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="475" y="65" text-anchor="middle">Chỉ ra chỗ sai/thiếu</text>
+
+    <path d="M555 60 L590 60" stroke="#a4442f" stroke-width="2" marker-end="url(#a3)"/>
+
+    <rect x="595" y="35" width="95" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="642" y="65" text-anchor="middle">Tinh chỉnh</text>
+
+    <path d="M642 85 C 642 110, 85 110, 85 85" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+    <defs>
+      <marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Prompting hiệu quả là một vòng lặp ngắn, không phải viết một lần rồi chấp nhận kết quả.</figcaption>
+</figure>
+
+<p>Khi tinh chỉnh, đừng viết lại từ đầu — hãy phản hồi cụ thể trên câu trả lời vừa nhận, giống cách bạn
+review code của đồng nghiệp:</p>
+
+<pre><code>"Gần đúng rồi, nhưng sửa 2 điểm: (1) hàm đang throw exception thay vì
+trả về false khi input rỗng — đổi lại theo đúng yêu cầu ban đầu; (2)
+thêm JSDoc comment cho hàm."</code></pre>
+
+<div class="callout">
+<span class="callout-label">Sai lầm phổ biến của người mới</span>
+Viết prompt mơ hồ ("làm cho code này tốt hơn"), nhận output không như ý, rồi kết luận "AI không thông
+minh". Phần lớn trường hợp, vấn đề nằm ở thiếu 1 trong 4 thành phần trên — đặc biệt là thiếu ngữ cảnh và
+tiêu chí thành công rõ ràng.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Lấy một prompt bạn từng viết (hoặc viết mới một prompt cho việc thật đang làm). Áp khung 4 thành phần vào,
+liệt kê thành phần nào đang thiếu. Viết lại prompt đầy đủ 4 thành phần và so sánh chất lượng output trước/
+sau.
+</div>
+
+<nav class="chapter-nav">
+<a href="04-gioi-han-va-rui-ro.html">&larr; Chương 4: Giới hạn và rủi ro cần biết</a>
+<a href="06-ky-thuat-prompting-nang-cao.html">Chương 6: Kỹ thuật prompting nâng cao &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
