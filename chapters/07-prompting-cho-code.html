@@ -17,6 +17,57 @@
 trình phổ biến nhất: sinh code mới, giải thích code, refactor, sinh test, và debug. Mỗi tình huống có một
 "công thức" prompt riêng vì tiêu chí thành công khác nhau.</p>
 
+<figure>
+<svg viewBox="0 0 700 210" role="img" aria-label="Sơ đồ chọn loại prompt phù hợp theo tình huống lập trình">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+    <rect x="280" y="5" width="140" height="40" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="350" y="30" text-anchor="middle">Tình huống của bạn?</text>
+
+    <path d="M300 45 L100 90" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M330 45 L250 90" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M370 45 L450 90" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M400 45 L600 90" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+
+    <rect x="15" y="93" width="150" height="40" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="90" y="118" text-anchor="middle" font-size="11">Code chưa có gì</text>
+
+    <rect x="175" y="93" width="150" height="40" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="250" y="118" text-anchor="middle" font-size="11">Code lạ, khó hiểu</text>
+
+    <rect x="375" y="93" width="150" height="40" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="450" y="118" text-anchor="middle" font-size="11">Code chạy nhưng lỗi</text>
+
+    <rect x="535" y="93" width="150" height="40" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="610" y="118" text-anchor="middle" font-size="11">Code chạy đúng, cần cải thiện</text>
+
+    <path d="M90 133 L90 158" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M250 133 L250 158" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M450 133 L450 158" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+    <path d="M610 133 L610 158" stroke="#6b6b6b" stroke-width="1.3" marker-end="url(#c1)"/>
+
+    <rect x="15" y="161" width="150" height="38" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="90" y="184" text-anchor="middle" font-weight="700" font-size="11.5">Sinh code mới</text>
+
+    <rect x="175" y="161" width="150" height="38" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="250" y="184" text-anchor="middle" font-weight="700" font-size="11.5">Giải thích code</text>
+
+    <rect x="375" y="161" width="150" height="38" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="450" y="184" text-anchor="middle" font-weight="700" font-size="11.5">Debug</text>
+
+    <rect x="535" y="161" width="150" height="38" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="610" y="184" text-anchor="middle" font-weight="700" font-size="11.5">Refactor / Sinh test</text>
+
+    <defs>
+      <marker id="c1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#6b6b6b"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>5 tình huống lập trình phổ biến, mỗi tình huống có "công thức" prompt riêng — chi tiết bên
+dưới.</figcaption>
+</figure>
+
 <h2>Sinh code mới</h2>
 
 <p>Rủi ro lớn nhất khi sinh code mới là mô hình đoán bừa các ràng buộc bạn không nói ra — phiên bản
