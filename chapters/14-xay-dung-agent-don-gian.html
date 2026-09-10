@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 14: Xây dựng agent đơn giản</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần III — Công nghiệp Agentic: AI Agents trong công việc</p>
+<h1>Chương 14: Xây dựng agent đơn giản</h1>
+
+<p>Chương này đi từ lý thuyết (Chương 12-13) sang thực hành: xây một agent single-agent tối giản bằng mã
+giả (pseudocode) để thấy rõ vòng lặp Plan → Act → Observe được lập trình thế nào bên dưới các công cụ bạn
+đã dùng. Cú pháp SDK cụ thể thay đổi theo nhà cung cấp và phiên bản — hãy đọc phần này để hiểu
+<em>nguyên lý</em>, rồi tra tài liệu SDK chính thức (Claude Agent SDK/API, hoặc SDK tương đương) khi triển
+khai thật.</p>
+
+<h2>Hai lựa chọn: viết bằng SDK, hay dùng công cụ no-code</h2>
+
+<ul>
+<li><strong>SDK/API (Claude Agent SDK, Messages API với tool use...):</strong> kiểm soát tối đa, tích hợp
+sâu vào hệ thống nội bộ, phù hợp khi cần logic nghiệp vụ riêng hoặc bảo mật chặt. Cần biết lập trình.</li>
+<li><strong>Công cụ no-code/low-code</strong> (nền tảng automation có tích hợp AI, workflow builder kéo-
+thả): dựng nhanh, phù hợp prototype hoặc tự động hoá quy trình đơn giản, không cần viết code. Đánh đổi là
+ít kiểm soát chi tiết hơn và phụ thuộc vào nền tảng.</li>
+</ul>
+
+<p>Phần còn lại của chương minh hoạ bằng SDK vì nó bộc lộ rõ nhất cơ chế bên trong — nhưng nguyên lý vòng
+lặp áp dụng y hệt dù bạn dùng công cụ nào.</p>
+
+<h2>Định nghĩa tool cho agent</h2>
+
+<p>Mỗi tool cần: tên, mô tả (để mô hình biết <em>khi nào</em> nên dùng), và schema tham số. Ví dụ định
+nghĩa 2 tool cho một agent hỗ trợ vận hành đơn giản:</p>
+
+<pre><code>tools = [
+  {
+    name: "get_order_status",
+    description: "Tra cứu trạng thái đơn hàng theo mã đơn hàng.",
+    input_schema: {
+      order_id: "string, bắt buộc"
+    }
+  },
+  {
+    name: "send_notification",
+    description: "Gửi thông báo cho khách hàng qua email.",
+    input_schema: {
+      email: "string, bắt buộc",
+      message: "string, bắt buộc"
+    }
+  }
+]</code></pre>
+
+<h2>Vòng lặp agent tối giản (mã giả)</h2>
+
+<pre><code>conversation = [system_prompt, user_message]
+
+while chưa_xong and số_vòng_lặp < giới_hạn:
+    response = call_model(conversation, tools)
+
+    if response chứa tool_call:
+        for mỗi tool_call trong response:
+            result = execute_tool(tool_call.name, tool_call.input)
+            conversation.append(tool_call)
+            conversation.append(tool_result: result)
+        # quay lại đầu vòng lặp — mô hình "Observe" kết quả tool
+    else:
+        # mô hình trả lời bằng văn bản thường → coi như đã xong
+        chưa_xong = False
+        final_answer = response.text
+
+return final_answer</code></pre>
+
+<p>Đối chiếu với sơ đồ Plan → Act → Observe ở Chương 12: <code>call_model</code> chính là bước <em>Plan</em>
+(mô hình quyết định bước tiếp theo, có thể là gọi tool hoặc trả lời), <code>execute_tool</code> là
+<em>Act</em>, và việc đưa <code>tool_result</code> trở lại <code>conversation</code> chính là <em>Observe</em>
+— mô hình "nhìn thấy" kết quả ở vòng lặp kế tiếp.</p>
+
+<div class="callout warning">
+<span class="callout-label">Giới hạn số vòng lặp là bắt buộc, không phải tuỳ chọn</span>
+Không có <code>giới_hạn</code> số vòng lặp, một agent có thể lặp vô hạn (gọi tool, thất bại, thử lại, thất
+bại...) nếu gặp tình huống nó không tự thoát ra được — vừa tốn chi phí (mỗi vòng lặp là một lần gọi mô
+hình, tính phí theo token) vừa có thể gây hành động lặp lại không kiểm soát (ví dụ gửi email trùng nhiều
+lần). Luôn đặt giới hạn cứng.
+</div>
+
+<div class="callout template">
+<span class="callout-label">Template — System prompt cho agent chuyên biệt</span>
+<pre><code>Bạn là {tên vai trò agent}, chuyên trách {phạm vi công việc cụ thể}.
+
+Mục tiêu: {mục tiêu agent cần đạt được trong mỗi phiên làm việc}.
+
+Bạn có các công cụ sau: {liệt kê tool và khi nào nên dùng từng tool}.
+
+Ràng buộc:
+- Chỉ hành động trong phạm vi: {liệt kê rõ việc được làm}.
+- Không được: {liệt kê rõ việc KHÔNG được làm, đặc biệt hành động khó
+  hoàn tác — xoá dữ liệu, gửi tiền, deploy production}.
+- Nếu không chắc chắn hoặc thiếu quyền hạn cho một hành động, dừng lại
+  và hỏi con người thay vì tự đoán.
+
+Khi hoàn thành hoặc gặp bế tắc, tóm tắt rõ: đã làm gì, kết quả ra sao,
+còn việc gì cần con người xử lý tiếp.</code></pre>
+Xem thêm biến thể cho từng loại agent (coder, reviewer, planner...) ở <strong>Phụ lục C</strong>.
+</div>
+
+<h2>Từ agent tối giản đến agent dùng được thật</h2>
+
+<p>Agent mã giả trên đủ để hiểu nguyên lý, nhưng thiếu nhiều thứ một agent chạy thật cần có — sẽ được bàn
+kỹ ở Chương 16 và Chương 23: xử lý lỗi khi tool thất bại, giới hạn quyền hạn theo nguyên tắc least-
+privilege, log lại toàn bộ hành động để audit, và điểm dừng để con người phê duyệt trước hành động rủi
+ro cao.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một việc lặp lại trong công việc của bạn có thể mô tả bằng 2-3 tool đơn giản (ví dụ: tra cứu thông
+tin, gửi thông báo, cập nhật trạng thái). Viết ra: (1) danh sách tool với mô tả rõ ràng, (2) system prompt
+theo template trên, (3) ít nhất 2 ràng buộc "không được làm" quan trọng nhất cho agent đó.
+</div>
+
+<nav class="chapter-nav">
+<a href="13-kien-truc-agent-pho-bien.html">&larr; Chương 13: Kiến trúc agent phổ biến</a>
+<a href="15-agent-cong-viec-phi-lap-trinh.html">Chương 15: Agent trong công việc phi lập trình &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
