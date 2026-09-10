@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 20: AI trong code, test, review, CI/CD</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 20: AI trong code, test, review, CI/CD</h1>
+
+<p>Đây là giai đoạn SDLC quen thuộc nhất với bạn sau Phần II — nhưng góc nhìn ở chương này khác: không
+phải "tôi dùng AI để code nhanh hơn" (Chương 7-9), mà là <strong>làm sao đưa AI vào pipeline chung của cả
+team</strong> một cách nhất quán, thay vì mỗi người tự dùng theo cách riêng.</p>
+
+<h2>Từ dùng cá nhân đến chuẩn hoá cấp team</h2>
+
+<p>Nhắc lại Cấp độ 2 ở Chương 17: sự khác biệt giữa "cá nhân dùng AI giỏi" và "team có quy trình AI chuẩn"
+nằm ở việc các thực hành tốt (template Chương 6-7, checklist review Chương 10) được <strong>đóng gói và
+chia sẻ</strong>, thay vì tồn tại rời rạc trong đầu từng người:</p>
+
+<ul>
+<li>Prompt template dùng chung (Chương 6, Phụ lục B) được lưu trong repo, không phải mỗi người tự nhớ.</li>
+<li>File cấu hình agent cấp dự án (như <code>CLAUDE.md</code>, Chương 9) được review và cập nhật như một
+tài liệu sống của team, không phải file cá nhân của một người.</li>
+<li>Checklist review AI-generated code (Chương 10) trở thành một phần của checklist PR chính thức, áp
+dụng cho mọi người, không riêng ai chủ động nhớ làm.</li>
+</ul>
+
+<h2>AI trong pipeline CI/CD</h2>
+
+<figure>
+<svg viewBox="0 0 700 130" role="img" aria-label="Pipeline CI/CD có các bước AI hỗ trợ: review tự động, sinh test bổ sung, sinh release note">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+    <rect x="5" y="40" width="110" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="60" y="67" text-anchor="middle">Mở PR</text>
+
+    <path d="M118 62 L143 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a9)"/>
+
+    <rect x="148" y="40" width="130" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="213" y="58" text-anchor="middle">AI review tự động</text>
+    <text x="213" y="73" text-anchor="middle" font-size="10.5">(comment gợi ý)</text>
+
+    <path d="M281 62 L306 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a9)"/>
+
+    <rect x="311" y="40" width="130" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="376" y="58" text-anchor="middle">Chạy test +</text>
+    <text x="376" y="73" text-anchor="middle" font-size="10.5">gợi ý test thiếu</text>
+
+    <path d="M444 62 L469 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a9)"/>
+
+    <rect x="474" y="40" width="110" height="45" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="529" y="67" text-anchor="middle">Con người merge</text>
+
+    <path d="M587 62 L612 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a9)"/>
+
+    <rect x="617" y="40" width="78" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="656" y="58" text-anchor="middle" font-size="11">Sinh release</text>
+    <text x="656" y="72" text-anchor="middle" font-size="11">note</text>
+
+    <defs>
+      <marker id="a9" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>AI hỗ trợ ở nhiều điểm trong pipeline, nhưng bước merge — quyết định cuối cùng — luôn thuộc về
+con người.</figcaption>
+</figure>
+
+<h3>Code review tự động trong CI</h3>
+
+<p>Chạy AI review (theo checklist Chương 10) tự động mỗi khi có PR mới, đăng kết quả dưới dạng comment —
+bắt các vấn đề rõ ràng (thiếu xử lý lỗi, vi phạm convention, khả năng ảo giác API) trước khi con người
+review, giúp reviewer con người tập trung vào các vấn đề cần phán đoán sâu hơn (đúng kiến trúc, đúng
+nghiệp vụ) thay vì mất thời gian cho lỗi bề mặt.</p>
+
+<div class="callout warning">
+<span class="callout-label">AI review không thay thế reviewer con người</span>
+AI review tự động là lớp lọc bổ sung, không phải cửa chặn cuối cùng — luôn cần ít nhất một người thực sự
+hiểu nghiệp vụ approve trước khi merge, đặc biệt vì AI reviewer có thể bỏ sót vấn đề về ý định/nghiệp vụ
+mà chỉ con người hiểu bối cảnh mới nhận ra.
+</div>
+
+<h3>Sinh test bổ sung tự động</h3>
+
+<p>Một bước trong CI có thể phân tích coverage, gợi ý các case còn thiếu theo đúng 4 nhóm case ở Chương 7
+(happy path, input biên, input không hợp lệ, case lỗi) — đưa ra gợi ý cho tác giả PR bổ sung, thay vì tự
+động thêm test mà không ai kiểm tra tính đúng đắn của test đó.</p>
+
+<h3>Sinh release note / changelog</h3>
+
+<pre><code>"Đây là danh sách commit/PR đã merge trong đợt release này: {dán danh
+sách}. Viết release note theo 3 nhóm: Tính năng mới, Cải tiến, Sửa lỗi.
+Ngôn ngữ dành cho người dùng cuối, không dùng thuật ngữ kỹ thuật nội bộ.
+Bỏ qua các commit thuần refactor/chore không ảnh hưởng người dùng."</code></pre>
+
+<p>Đây là việc AI làm rất tốt và tiết kiệm thời gian đáng kể — tổng hợp thông tin có sẵn (danh sách
+commit) thành văn bản có cấu trúc, rủi ro hallucination thấp vì có nguồn dữ liệu rõ ràng để bám vào.</p>
+
+<h2>Đo lường hiệu quả pipeline có AI</h2>
+
+<p>Khi đưa AI vào pipeline cấp team, cần đo lường để biết nó thực sự giúp ích hay chỉ tạo thêm nhiễu —
+chủ đề đo lường đầy đủ sẽ quay lại ở Chương 24. Một vài chỉ số sớm nên theo dõi ngay từ giai đoạn này: tỷ
+lệ gợi ý của AI review được reviewer con người chấp nhận (nếu quá thấp, prompt/checklist cần điều chỉnh),
+và thời gian trung bình từ mở PR đến merge có giảm không.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một bước trong pipeline CI/CD hiện tại của team (review, test, release note...). Phác thảo cách đưa
+AI vào đúng bước đó theo ví dụ trên: input là gì, prompt/template nào cần dùng, và ai vẫn là người ra
+quyết định cuối cùng ở bước đó.
+</div>
+
+<nav class="chapter-nav">
+<a href="19-ai-trong-thiet-ke-kien-truc.html">&larr; Chương 19: AI trong thiết kế &amp; kiến trúc</a>
+<a href="21-ai-trong-van-hanh-bao-tri.html">Chương 21: AI trong vận hành &amp; bảo trì &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
