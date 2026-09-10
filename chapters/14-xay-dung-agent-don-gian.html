@@ -80,6 +80,44 @@ return final_answer</code></pre>
 <em>Act</em>, và việc đưa <code>tool_result</code> trở lại <code>conversation</code> chính là <em>Observe</em>
 — mô hình "nhìn thấy" kết quả ở vòng lặp kế tiếp.</p>
 
+<h2>Xử lý khi tool thất bại</h2>
+
+<p>Mã giả ở trên giả định <code>execute_tool</code> luôn thành công — thực tế, tool có thể lỗi (API bên
+ngoài timeout, tham số không hợp lệ, quyền truy cập bị từ chối). Vòng lặp agent cần xử lý rõ ràng thay vì
+để lỗi làm sập toàn bộ phiên:</p>
+
+<pre><code>for mỗi tool_call trong response:
+    try:
+        result = execute_tool(tool_call.name, tool_call.input)
+        conversation.append(tool_result: result, is_error: false)
+    except ToolError as e:
+        # Đưa lỗi trở lại cho mô hình như một "Observe" bình thường —
+        # agent có thể tự quyết định thử cách khác, không phải luôn cần
+        # con người can thiệp ngay lập tức
+        conversation.append(tool_result: e.message, is_error: true)</code></pre>
+
+<p>Đưa lỗi trở lại context (thay vì crash chương trình) cho phép mô hình tự "Observe" và điều chỉnh kế
+hoạch ở vòng lặp tiếp theo — ví dụ thử tham số khác, hoặc báo cáo với con người nếu đã thử nhiều cách
+không thành công (đúng giới hạn số vòng lặp bên dưới).</p>
+
+<h2>Structured output — ép đầu ra theo đúng schema</h2>
+
+<p>Với các bước cần dữ liệu có cấu trúc rõ ràng để hệ thống xung quanh xử lý tiếp (ví dụ orchestrator ở
+Chương 13 cần agent trả về đúng JSON để chuyển cho bước sau), nên ràng buộc mô hình trả lời theo đúng
+schema thay vì hy vọng nó tự định dạng đúng:</p>
+
+<pre><code>Yêu cầu: Trả lời DUY NHẤT một JSON object đúng theo schema sau, không
+kèm giải thích thêm:
+{
+  "status": "success" | "needs_review" | "failed",
+  "summary": string,
+  "next_action": string | null
+}</code></pre>
+
+<p>Nhiều SDK/framework agent hỗ trợ khai báo schema tường minh (thay vì chỉ mô tả bằng lời trong prompt) —
+cách này đáng tin cậy hơn nhiều so với yêu cầu bằng văn bản tự nhiên, đặc biệt khi output cần được một
+chương trình khác đọc và xử lý tiếp (ví dụ orchestrator ở Chương 22).</p>
+
 <div class="callout warning">
 <span class="callout-label">Giới hạn số vòng lặp là bắt buộc, không phải tuỳ chọn</span>
 Không có <code>giới_hạn</code> số vòng lặp, một agent có thể lặp vô hạn (gọi tool, thất bại, thử lại, thất
