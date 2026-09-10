@@ -148,6 +148,24 @@ thu thập được cho con người, không chỉ báo "thất bại" trống r
 khi Tester agent chưa xác nhận pass, dù orchestrator có logic retry phức tạp đến đâu.</li>
 </ul>
 
+<h2>Versioning cho system prompt của từng agent</h2>
+
+<p>Nhắc lại Phụ lục E: mỗi agent trong kiến trúc này có một system prompt (Chương 14) — và system prompt
+đó cần được quản lý version giống code, không kém phần quan trọng hơn code của chính agent. Một thay đổi
+nhỏ trong system prompt của Reviewer agent (ví dụ nới lỏng một tiêu chí) có thể làm giảm chất lượng review
+trên toàn bộ pipeline mà không ai nhận ra ngay — cho đến khi một PR có vấn đề "lọt qua" trót lọt. Áp dụng
+đúng vòng đời prompt (Draft → Test với golden set → Review → Deploy → Monitor, Phụ lục E) cho system prompt
+của từng agent trong kiến trúc này, không chỉ cho prompt/template dùng cho việc cá nhân.</p>
+
+<h2>Mở rộng theo chiều ngang — nhiều instance của cùng một agent</h2>
+
+<p>Khi khối lượng công việc tăng (nhiều PR đồng thời cần Reviewer agent xử lý), câu hỏi kiến trúc tiếp theo
+là mở rộng theo chiều ngang: chạy nhiều instance của cùng một agent song song, mỗi instance xử lý một PR
+độc lập. Điều này thường an toàn hơn với các agent không có trạng thái chia sẻ giữa các phiên (stateless)
+— Reviewer và Tester agent thường dễ mở rộng theo cách này; Deploy agent thường KHÔNG nên chạy nhiều
+instance song song trên cùng một môi trường đích, vì rủi ro hai deploy chạy đồng thời gây xung đột trạng
+thái hệ thống.</p>
+
 <h2>Áp dụng theo đúng quy mô — không phải mọi team cần cả 5 agent</h2>
 
 <div class="callout">
