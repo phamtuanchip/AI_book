@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 26: Tổng kết &amp; lộ trình tự học tiếp theo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Kết</p>
+<h1>Chương 26: Tổng kết &amp; lộ trình tự học tiếp theo</h1>
+
+<p>Từ Chương 1 đến 25, sách đi qua một hành trình rõ ràng: hiểu AI/LLM hoạt động thế nào (Phần I), thành
+thạo prompting và công cụ hỗ trợ lập trình (Phần II), nắm vững nguyên lý AI agent (Phần III), và cuối cùng
+áp dụng có hệ thống vào toàn bộ SDLC với tư duy của một Architect &amp; Manager, không chỉ Applyer (Phần
+IV). Chương này tổng hợp lại thành một checklist hành động và gợi ý hướng tự học tiếp theo.</p>
+
+<h2>Checklist tổng hợp theo từng phần</h2>
+
+<table>
+<thead>
+<tr><th>Phần</th><th>Bạn nên làm được gì sau phần này</th></tr>
+</thead>
+<tbody>
+<tr><td>I — Nhập môn</td><td>Giải thích được LLM hoạt động thế nào ở mức trực giác; nhận diện được
+hallucination và biết khi nào cần hoài nghi output AI</td></tr>
+<tr><td>II — Prompting &amp; coding</td><td>Viết prompt theo khung 4 thành phần; áp dụng chain-of-thought/
+phân rã nhiệm vụ cho việc phức tạp; review code AI-generated có checklist, không "vibe coding"</td></tr>
+<tr><td>III — Agents</td><td>Giải thích được vòng lặp Plan-Act-Observe; thiết kế được tool và system
+prompt cho một agent đơn giản; áp dụng nguyên tắc least-privilege và human-in-the-loop</td></tr>
+<tr><td>IV — AI SDLC</td><td>Vẽ được kiến trúc agentic cho SDLC; áp dụng checklist bảo mật 9 mục; đánh giá
+một hệ thống AI SDLC bằng khung kiến trúc và cặp chỉ số hiệu quả/rủi ro</td></tr>
+</tbody>
+</table>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập tổng hợp</span>
+Chọn một dự án/tình huống thật trong công việc của bạn. Viết một trang tóm tắt: (1) bạn sẽ dùng kỹ thuật
+prompting nào (Phần II) cho công việc hàng ngày, (2) có tác vụ nào đủ lặp lại/rõ ràng để xây thành agent
+không (Phần III), (3) nếu có, kiến trúc và các cổng phê duyệt/bảo mật cần thiết là gì (Phần IV). Đây chính
+là bài tập tổng hợp toàn bộ kỹ năng cuốn sách hướng tới.
+</div>
+
+<h2>Xu hướng cần tiếp tục theo dõi</h2>
+
+<p>Nhắc lại tinh thần xuyên suốt sách: chi tiết công nghệ (tên mô hình, tính năng công cụ) lỗi thời nhanh,
+nhưng các nhóm xu hướng sau đáng theo dõi vì ảnh hưởng lâu dài đến cách bạn áp dụng những gì đã học:</p>
+
+<ul>
+<li><strong>Context window và chi phí tiếp tục mở rộng/giảm</strong> — thay đổi tính khả thi của những
+việc "chưa làm được" hôm nay (ví dụ nạp toàn bộ codebase lớn vào một lần).</li>
+<li><strong>Chuẩn hoá giao thức cho tool/agent</strong> (như MCP và các giao thức tương tự) — ảnh hưởng
+trực tiếp đến rủi ro chuỗi cung ứng đã nói ở Chương 23, cần theo dõi khuyến nghị bảo mật mới khi chuẩn
+này trưởng thành thêm.</li>
+<li><strong>Quy định pháp lý về AI</strong> tại từng khu vực — ảnh hưởng trực tiếp đến phần compliance/
+data residency ở Chương 23.</li>
+<li><strong>Mức độ tự chủ (autonomy) của agent tiếp tục tăng</strong> — càng đòi hỏi tư duy quản trị rủi
+ro (Phần IV) vững hơn, không phải ít cần hơn.</li>
+</ul>
+
+<h2>Hướng đi tiếp theo tuỳ vai trò</h2>
+
+<ul>
+<li><strong>Nếu bạn là lập trình viên cá nhân:</strong> tiếp tục luyện Phần II hàng ngày, bắt đầu thử xây
+1 agent nhỏ (Chương 14) cho một việc lặp lại của riêng mình.</li>
+<li><strong>Nếu bạn là team lead:</strong> áp dụng khung 3 cấp độ (Chương 17) để đánh giá team đang ở đâu,
+bắt đầu chuẩn hoá 1-2 prompt template dùng chung (Phụ lục) trước khi nghĩ đến hệ thống agentic phức tạp.</li>
+<li><strong>Nếu bạn hướng tới vai trò AI SDLC Architect &amp; Manager:</strong> thực hành khung đánh giá
+kiến trúc (Chương 25) trên một hệ thống thật, dù nhỏ — kinh nghiệm thực tế quan trọng hơn đọc thêm lý
+thuyết ở giai đoạn này.</li>
+</ul>
+
+<div class="callout">
+<span class="callout-label">Lời kết</span>
+AI thay đổi nhanh hơn bất kỳ công nghệ nào bạn từng học trước đây — nhưng khung tư duy trong sách này
+(prompt có cấu trúc, đánh giá phê phán output, hiểu vòng lặp agent, quản trị rủi ro theo cấp độ) được thiết
+kế để vẫn đúng kể cả khi công cụ cụ thể đã đổi hoàn toàn. Đó là thứ đáng mang theo nhất sau khi gấp sách
+lại.
+</div>
+
+<p>Xem thêm thư viện prompt template mẫu ở các phụ lục để tra cứu nhanh khi áp dụng vào công việc thật.</p>
+
+<nav class="chapter-nav">
+<a href="25-tu-applyer-den-architect.html">&larr; Chương 25: Từ Applyer đến Architect &amp; Manager</a>
+<a href="index.html">Mục lục &amp; Phụ lục &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
