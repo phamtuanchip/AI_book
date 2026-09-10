@@ -31,6 +31,60 @@ xuất 3 hướng kiến trúc khác nhau (ví dụ: đồng bộ qua API trực
 những hướng bạn chưa nghĩ tới. Nhưng quyết định cuối cùng — hướng nào phù hợp với đội ngũ, hạ tầng, và
 ràng buộc thời gian của bạn — vẫn là việc của kiến trúc sư con người.</p>
 
+<figure>
+<svg viewBox="0 0 700 190" role="img" aria-label="Ba hướng kiến trúc cho hệ thống thông báo: đồng bộ qua API, hàng đợi message queue, event-driven pub/sub">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <text x="115" y="20" text-anchor="middle" font-weight="700">A. Đồng bộ qua API</text>
+    <rect x="20" y="35" width="70" height="35" rx="5" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="55" y="57" text-anchor="middle" font-size="10.5">App</text>
+    <path d="M90 52 L135 52" stroke="#a4442f" stroke-width="1.3" marker-end="url(#ar1)"/>
+    <rect x="140" y="35" width="70" height="35" rx="5" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="175" y="57" text-anchor="middle" font-size="10.5">Notify API</text>
+    <text x="115" y="90" text-anchor="middle" font-size="10.5" fill="#6b6b6b">Đơn giản, nhưng App</text>
+    <text x="115" y="104" text-anchor="middle" font-size="10.5" fill="#6b6b6b">chờ Notify phản hồi</text>
+
+    <line x1="240" y1="10" x2="240" y2="180" stroke="#e2ddd3"/>
+
+    <text x="355" y="20" text-anchor="middle" font-weight="700">B. Message queue</text>
+    <rect x="260" y="35" width="65" height="35" rx="5" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="292" y="57" text-anchor="middle" font-size="10.5">App</text>
+    <path d="M325 52 L365 52" stroke="#a4442f" stroke-width="1.3" marker-end="url(#ar1)"/>
+    <rect x="370" y="35" width="60" height="35" rx="5" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="400" y="57" text-anchor="middle" font-size="10.5">Queue</text>
+    <path d="M400 70 L400 90" stroke="#a4442f" stroke-width="1.3" marker-end="url(#ar1)"/>
+    <rect x="365" y="93" width="70" height="35" rx="5" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="400" y="115" text-anchor="middle" font-size="10.5">Notify worker</text>
+    <text x="355" y="150" text-anchor="middle" font-size="10.5" fill="#6b6b6b">App không chờ — tách rời,</text>
+    <text x="355" y="164" text-anchor="middle" font-size="10.5" fill="#6b6b6b">chịu tải tốt hơn</text>
+
+    <line x1="470" y1="10" x2="470" y2="180" stroke="#e2ddd3"/>
+
+    <text x="590" y="20" text-anchor="middle" font-weight="700">C. Event-driven pub/sub</text>
+    <rect x="495" y="35" width="60" height="35" rx="5" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="525" y="57" text-anchor="middle" font-size="10.5">App</text>
+    <path d="M555 52 L590 52" stroke="#a4442f" stroke-width="1.3" marker-end="url(#ar1)"/>
+    <rect x="595" y="35" width="65" height="35" rx="5" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="627" y="57" text-anchor="middle" font-size="10.5">Event bus</text>
+    <path d="M615 70 L580 90" stroke="#a4442f" stroke-width="1.2" marker-end="url(#ar1)"/>
+    <path d="M640 70 L670 90" stroke="#a4442f" stroke-width="1.2" marker-end="url(#ar1)"/>
+    <rect x="540" y="93" width="70" height="32" rx="5" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="575" y="113" text-anchor="middle" font-size="10">Notify</text>
+    <rect x="635" y="93" width="60" height="32" rx="5" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="665" y="113" text-anchor="middle" font-size="10">Khác...</text>
+    <text x="590" y="150" text-anchor="middle" font-size="10.5" fill="#6b6b6b">Nhiều consumer độc lập,</text>
+    <text x="590" y="164" text-anchor="middle" font-size="10.5" fill="#6b6b6b">phức tạp nhất để vận hành</text>
+
+    <defs>
+      <marker id="ar1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Ba hướng AI đề xuất cho ví dụ hệ thống thông báo ở trên — quyết định chọn hướng nào vẫn thuộc
+về kiến trúc sư con người, dựa trên ràng buộc thực tế của tổ chức.</figcaption>
+</figure>
+
 <h2>Sinh tài liệu kỹ thuật &amp; ADR</h2>
 
 <p><strong>ADR (Architecture Decision Record)</strong> — tài liệu ghi lại một quyết định kiến trúc, bối
