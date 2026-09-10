@@ -189,6 +189,37 @@ thống (mục 5), không tin tool/server bên thứ ba chỉ vì đã tích h�
 quyền hạn đều tối thiểu (mục 3), mọi hành động đều được ghi log (mục 6), và hành động rủi ro cao luôn có
 điểm con người xác nhận (mục 7).</p>
 
+<h2>Red-teaming hệ thống agentic của chính bạn</h2>
+
+<p>Đừng chờ injection/rò rỉ dữ liệu xảy ra thật rồi mới biết hệ thống có lỗ hổng — chủ động thử tấn công
+hệ thống của chính mình (red-teaming) trước khi đối phương làm điều đó. Vài bài kiểm tra cụ thể nên chạy
+định kỳ:</p>
+
+<ul>
+<li><strong>Thử prompt injection gián tiếp:</strong> cố tình đặt hướng dẫn ẩn trong một ticket/comment PR
+thử nghiệm, xem Reviewer/Coder agent có bị "nghe theo" không.</li>
+<li><strong>Thử vượt quyền hạn:</strong> yêu cầu agent thực hiện hành động ngoài phạm vi được cấp (Chương
+16) qua cách diễn đạt gián tiếp, xác nhận guardrail có chặn đúng không.</li>
+<li><strong>Thử injection qua mô tả tool:</strong> nếu dùng tool/MCP server bên thứ ba, kiểm tra xem mô tả
+tool có bị chỉnh sửa/thêm nội dung lạ theo thời gian không (nhắc lại mục 4).</li>
+</ul>
+
+<h2>Kế hoạch phản ứng sự cố riêng cho hệ thống agentic</h2>
+
+<p>Nhắc lại incident response thông thường ở Chương 21, nhưng sự cố liên quan agent có đặc thù riêng cần
+chuẩn bị trước:</p>
+
+<ol>
+<li><strong>Xác định phạm vi ảnh hưởng nhanh</strong> qua audit trail (mục 6) — agent nào, tool nào, dữ
+liệu nào đã bị chạm vào.</li>
+<li><strong>Kích hoạt kill switch</strong> (mục 7) để dừng agent liên quan trước khi điều tra sâu hơn,
+tránh thiệt hại tiếp diễn.</li>
+<li><strong>Đánh giá cần thông báo ai</strong> — nếu có rò rỉ dữ liệu khách hàng, nghĩa vụ thông báo có
+thể vượt ra ngoài đội kỹ thuật (pháp lý, tuân thủ — mục 8).</li>
+<li><strong>Sau khi xử lý, chạy lại checklist bảo mật đầy đủ</strong> cho phần hệ thống liên quan trước
+khi bật lại agent, không chỉ vá đúng lỗ hổng vừa phát hiện.</li>
+</ol>
+
 <h2>Checklist bảo mật tổng hợp</h2>
 
 <table>
