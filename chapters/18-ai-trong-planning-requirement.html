@@ -37,6 +37,30 @@ tính đến mọi trường hợp, chỉ ra lỗ hổng trong requirement <em>t
 cãi giữa dev và product owner ở giai đoạn review.
 </div>
 
+<div class="callout">
+<span class="callout-label">Ví dụ đầu ra thật</span>
+<p style="margin-top:0"><strong>Input thô:</strong> "Cho phép user export danh sách đơn hàng ra file."</p>
+<pre><code>User story:
+Là chủ shop, tôi muốn export danh sách đơn hàng ra file, để đối chiếu
+số liệu với kế toán ngoài hệ thống.
+
+Acceptance criteria:
+- Given tôi ở trang danh sách đơn hàng, When tôi chọn "Export", Then hệ
+  thống tải về file chứa đúng danh sách đang hiển thị (đã áp filter).
+- Given file export đã tải về, When tôi mở file, Then dữ liệu khớp
+  100% với dữ liệu trên màn hình tại thời điểm export.
+
+Câu hỏi cần làm rõ với product owner:
+1. Định dạng file: CSV, Excel, hay cả hai?
+2. Giới hạn số dòng export tối đa là bao nhiêu?
+3. Có cần export bất đồng bộ (gửi email khi xong) nếu dữ liệu lớn không?
+4. User không có quyền xem 1 số trường (ví dụ giá vốn) — export có cần
+   ẩn các trường đó theo đúng quyền xem không?</code></pre>
+</div>
+
+<p>Đây chính là input đã dùng cho case study "export CSV" ở Chương 11 — bạn có thể thấy 4 câu hỏi trên
+tương ứng trực tiếp với các quyết định thiết kế mà case study đó phải chốt trước khi viết code.</p>
+
 <h2>Phân tích yêu cầu — tìm mâu thuẫn và phụ thuộc</h2>
 
 <p>Với dự án đã có nhiều tài liệu yêu cầu tích luỹ theo thời gian, AI hữu ích trong việc rà soát chéo để
