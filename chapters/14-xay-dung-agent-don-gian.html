@@ -109,6 +109,60 @@ Xem thêm biến thể cho từng loại agent (coder, reviewer, planner...) ở
 <a href="../templates/phu-luc-c-system-prompt-agent.html"><strong>Phụ lục C</strong></a>.
 </div>
 
+<h2>Ví dụ chạy thật: theo dõi một phiên làm việc cụ thể</h2>
+
+<p>Áp vòng lặp mã giả ở trên vào ví dụ cụ thể: người dùng yêu cầu "Kiểm tra đơn hàng #4471, nếu bị trễ
+giao hàng thì báo cho khách qua email". Sơ đồ tuần tự dưới đây cho thấy từng lượt gọi thật:</p>
+
+<figure>
+<svg viewBox="0 0 700 320" role="img" aria-label="Sơ đồ tuần tự: User gửi yêu cầu, Agent gọi tool get_order_status rồi send_notification, trả lời User">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <!-- lifelines -->
+    <line x1="80" y1="40" x2="80" y2="300" stroke="#e2ddd3" stroke-width="1.5"/>
+    <line x1="350" y1="40" x2="350" y2="300" stroke="#e2ddd3" stroke-width="1.5"/>
+    <line x1="600" y1="40" x2="600" y2="300" stroke="#e2ddd3" stroke-width="1.5"/>
+
+    <rect x="30" y="10" width="100" height="28" rx="5" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="80" y="29" text-anchor="middle" font-weight="700">User</text>
+    <rect x="290" y="10" width="120" height="28" rx="5" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="350" y="29" text-anchor="middle" font-weight="700">Agent</text>
+    <rect x="540" y="10" width="120" height="28" rx="5" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="600" y="29" text-anchor="middle" font-weight="700">Tools</text>
+
+    <path d="M80 55 L345 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#sq1)"/>
+    <text x="215" y="48" text-anchor="middle" font-size="10.5">"Kiểm tra đơn #4471, báo khách nếu trễ"</text>
+
+    <path d="M350 75 L595 75" stroke="#a4442f" stroke-width="1.5" marker-end="url(#sq1)"/>
+    <text x="470" y="68" text-anchor="middle" font-size="10.5">get_order_status(4471)</text>
+
+    <path d="M600 95 L355 95" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#sq1)" stroke-dasharray="3 3"/>
+    <text x="470" y="88" text-anchor="middle" font-size="10.5">{status: "delayed", email: "a@x.com"}</text>
+
+    <text x="470" y="120" text-anchor="middle" font-size="10.5" fill="#6b6b6b">Agent Plan: trạng thái "delayed" → cần gửi thông báo</text>
+
+    <path d="M350 145 L595 145" stroke="#a4442f" stroke-width="1.5" marker-end="url(#sq1)"/>
+    <text x="470" y="138" text-anchor="middle" font-size="10.5">send_notification(a@x.com, "Đơn #4471 bị trễ...")</text>
+
+    <path d="M600 165 L355 165" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#sq1)" stroke-dasharray="3 3"/>
+    <text x="470" y="158" text-anchor="middle" font-size="10.5">{sent: true}</text>
+
+    <path d="M350 195 L85 195" stroke="#a4442f" stroke-width="1.5" marker-end="url(#sq1)"/>
+    <text x="215" y="188" text-anchor="middle" font-size="10.5">"Đơn #4471 đang trễ, đã gửi email báo khách."</text>
+
+    <text x="350" y="230" text-anchor="middle" fill="#6b6b6b" font-size="11">2 vòng lặp Plan→Act→Observe (Chương 12) trước khi trả lời cuối cùng</text>
+    <text x="350" y="248" text-anchor="middle" fill="#6b6b6b" font-size="11">— nếu status "on_time", agent sẽ KHÔNG gọi send_notification (đúng system prompt)</text>
+
+    <defs>
+      <marker id="sq1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Nét liền = lời gọi; nét đứt = kết quả trả về. Agent chỉ gọi <code>send_notification</code> vì
+tự suy luận điều kiện "delayed" khớp với mục tiêu ban đầu — không có bước nào được lập trình cứng.</figcaption>
+</figure>
+
 <h2>Từ agent tối giản đến agent dùng được thật</h2>
 
 <p>Agent mã giả trên đủ để hiểu nguyên lý, nhưng thiếu nhiều thứ một agent chạy thật cần có — sẽ được bàn
