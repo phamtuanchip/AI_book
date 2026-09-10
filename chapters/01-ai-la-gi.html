@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 1: AI là gì, vì sao quan tâm lúc này</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần I — Nhập môn AI nhanh</p>
+<h1>Chương 1: AI là gì, vì sao quan tâm lúc này</h1>
+
+<p>Nếu bạn đang đọc cuốn sách này, nhiều khả năng bạn đã dùng qua ChatGPT, Copilot, Claude, hay ít nhất
+nghe đồng nghiệp nhắc đến chúng mỗi ngày. Chương này không cố biến bạn thành nhà nghiên cứu AI — mục
+tiêu chỉ là giúp bạn có đủ bối cảnh để hiểu <em>vì sao</em> công cụ mình sắp dùng lại hoạt động như vậy,
+trước khi đi thẳng vào phần thực hành ở các chương sau.</p>
+
+<h2>AI, Machine Learning, Deep Learning, LLM — phân biệt nhanh</h2>
+
+<p>Bốn thuật ngữ này hay bị dùng lẫn lộn. Cách dễ nhớ nhất là hình dung chúng như các vòng tròn lồng
+nhau, từ rộng đến hẹp:</p>
+
+<ul>
+<li><strong>Trí tuệ nhân tạo (AI)</strong> — khái niệm rộng nhất: bất kỳ hệ thống nào mô phỏng hành vi
+"thông minh" của con người, từ luật if/else đơn giản đến hệ thống phức tạp nhất.</li>
+<li><strong>Machine Learning (ML)</strong> — một nhánh của AI, nơi hệ thống <em>học từ dữ liệu</em> thay
+vì được lập trình luật cứng. Ví dụ: hệ thống gợi ý sản phẩm học từ lịch sử mua hàng.</li>
+<li><strong>Deep Learning</strong> — một nhánh của ML, dùng mạng nơ-ron nhiều lớp (deep neural network)
+để tự học các đặc trưng (feature) từ dữ liệu thô, không cần con người tự tay thiết kế đặc trưng.</li>
+<li><strong>Large Language Model (LLM)</strong> — một loại mô hình deep learning chuyên biệt cho văn bản
+(và ngày càng đa phương thức: ảnh, âm thanh), được huấn luyện trên lượng văn bản khổng lồ để dự đoán và
+sinh ra ngôn ngữ tự nhiên. GPT, Claude, Gemini, Llama đều là LLM.</li>
+</ul>
+
+<p>Cuốn sách này gần như chỉ nói về LLM và các hệ thống xây trên nền LLM (agent, công cụ coding...), vì
+đó là thứ bạn sẽ dùng hàng ngày.</p>
+
+<h2>Lược sử rất ngắn: vì sao 2022 là bước ngoặt</h2>
+
+<figure>
+<svg viewBox="0 0 720 190" role="img" aria-label="Dòng thời gian AI từ 1956 đến 2026">
+  <line x1="40" y1="100" x2="680" y2="100" stroke="#a4442f" stroke-width="2"/>
+  <!-- points -->
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+    <circle cx="70" cy="100" r="5" fill="#a4442f"/>
+    <text x="70" y="80" text-anchor="middle">1956</text>
+    <text x="70" y="130" text-anchor="middle">AI ra đời</text>
+    <text x="70" y="146" text-anchor="middle">(hội nghị</text>
+    <text x="70" y="162" text-anchor="middle">Dartmouth)</text>
+
+    <circle cx="220" cy="100" r="5" fill="#a4442f"/>
+    <text x="220" y="80" text-anchor="middle">1997</text>
+    <text x="220" y="130" text-anchor="middle">Deep Blue</text>
+    <text x="220" y="146" text-anchor="middle">thắng cờ vua</text>
+
+    <circle cx="370" cy="100" r="5" fill="#a4442f"/>
+    <text x="370" y="80" text-anchor="middle">2012</text>
+    <text x="370" y="130" text-anchor="middle">Deep learning</text>
+    <text x="370" y="146" text-anchor="middle">bùng nổ (ảnh)</text>
+
+    <circle cx="470" cy="100" r="5" fill="#a4442f"/>
+    <text x="470" y="80" text-anchor="middle">2017</text>
+    <text x="470" y="130" text-anchor="middle">Kiến trúc</text>
+    <text x="470" y="146" text-anchor="middle">Transformer</text>
+
+    <circle cx="570" cy="100" r="6" fill="#a4442f"/>
+    <text x="570" y="76" text-anchor="middle" font-weight="700">2022</text>
+    <text x="570" y="130" text-anchor="middle" font-weight="700">ChatGPT ra mắt</text>
+    <text x="570" y="146" text-anchor="middle">— AI đại chúng</text>
+
+    <circle cx="660" cy="100" r="5" fill="#a4442f"/>
+    <text x="660" y="80" text-anchor="middle">2024-26</text>
+    <text x="660" y="130" text-anchor="middle">Kỷ nguyên</text>
+    <text x="660" y="146" text-anchor="middle">AI agent</text>
+  </g>
+</svg>
+<figcaption>Dòng thời gian rút gọn: từ khái niệm AI (1956) đến kỷ nguyên agentic AI hiện nay.</figcaption>
+</figure>
+
+<p>AI không phải là công nghệ mới — thuật ngữ này đã tồn tại từ 1956. Nhưng phần lớn lịch sử của nó là
+chuỗi những đợt "mùa đông AI" (kỳ vọng cao, thất vọng, ít đầu tư) xen giữa các đợt bùng nổ. Ba mốc đáng
+nhớ nhất dẫn đến hiện tại:</p>
+
+<ul>
+<li><strong>2012</strong> — mạng nơ-ron sâu (deep learning) chứng minh vượt trội trong nhận diện ảnh,
+mở ra làn sóng đầu tư mới vào deep learning.</li>
+<li><strong>2017</strong> — nhóm nghiên cứu tại Google công bố kiến trúc <strong>Transformer</strong>
+(bài báo "Attention Is All You Need"). Đây là nền tảng kỹ thuật của mọi LLM hiện đại — GPT, Claude,
+Gemini, Llama đều xây trên biến thể của kiến trúc này.</li>
+<li><strong>2022</strong> — ChatGPT ra mắt, lần đầu tiên đưa LLM đến hàng trăm triệu người dùng phổ
+thông chỉ trong vài tháng. Đây là điểm AI chuyển từ "công nghệ trong phòng lab" sang "công cụ ai cũng
+dùng được", kéo theo làn sóng đầu tư và cạnh tranh chưa từng có giữa các hãng công nghệ.</li>
+</ul>
+
+<p>Từ 2022 đến nay, tốc độ cải tiến rất nhanh: context window (lượng văn bản mô hình "nhớ" được trong
+một lần trò chuyện) tăng từ vài nghìn lên hàng trăm nghìn token; mô hình biết dùng công cụ (tool use),
+biết "suy nghĩ" nhiều bước (reasoning) trước khi trả lời; và gần đây nhất — trọng tâm của cuốn sách này
+— là khả năng hoạt động như <strong>agent</strong>: tự lập kế hoạch, tự gọi công cụ, tự kiểm tra kết
+quả, thực hiện cả một chuỗi công việc gần như không cần con người can thiệp từng bước.</p>
+
+<h2>Vì sao người lập trình nên quan tâm ngay bây giờ</h2>
+
+<p>Ba lý do cụ thể, không phải vì "ai cũng nói AI là tương lai":</p>
+
+<ol>
+<li><strong>Năng suất cá nhân thay đổi rõ rệt.</strong> Việc sinh code boilerplate, viết test, đọc hiểu
+codebase lạ, hay debug lỗi quen thuộc — những việc từng tốn hàng giờ — giờ có thể rút xuống vài phút nếu
+biết dùng đúng công cụ và prompt đúng cách.</li>
+<li><strong>Vai trò của lập trình viên đang dịch chuyển.</strong> Từ người gõ từng dòng code, dần dịch
+sang người <em>ra quyết định, review, và giám sát</em> một hệ thống có AI làm phần việc lặp lại. Ai
+thích nghi sớm sẽ có lợi thế rõ rệt trong 3-5 năm tới.</li>
+<li><strong>AI agent đang bắt đầu chạm vào toàn bộ vòng đời phần mềm (SDLC)</strong> — không chỉ viết
+code, mà cả lên kế hoạch, review, test, deploy, và giám sát vận hành. Đây là chủ đề Phần IV của sách —
+nhưng để hiểu nó, bạn cần nắm chắc nền tảng ở các chương tiếp theo trước.</li>
+</ol>
+
+<div class="callout warning">
+<span class="callout-label">Lưu ý</span>
+AI hiện tại vẫn có giới hạn thật sự: có thể "bịa" thông tin nghe rất tự tin (hallucination), có thể sai
+về logic, và không "hiểu" theo nghĩa con người hiểu. Chương 4 sẽ đi sâu vào các giới hạn này — đừng bỏ
+qua chương đó trước khi đưa AI vào công việc thật.
+</div>
+
+<h2>Lộ trình các chương tiếp theo</h2>
+
+<p>Chương 2 sẽ giải thích LLM hoạt động thế nào ở mức trực giác (không cần biết toán). Chương 3 điểm qua
+hệ sinh thái mô hình hiện nay để bạn biết nên chọn công cụ nào. Chương 4 khép lại Phần I bằng các giới
+hạn và rủi ro cần biết trước khi bước sang Phần II — nơi sách bắt đầu đi vào thực hành prompting và công
+cụ AI hỗ trợ lập trình.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Trước khi đọc tiếp, hãy liệt kê 3 công cụ AI bạn đã dùng qua (chatbot, coding assistant, hay bất cứ thứ
+gì) và với mỗi công cụ, viết 1 câu trả lời cho câu hỏi: "Nó có làm tôi bất ngờ vì sai điều gì đó không?"
+Giữ lại danh sách này — bạn sẽ dùng lại ở Chương 4 và Chương 10.
+</div>
+
+<nav class="chapter-nav">
+<a href="index.html">&larr; Mục lục</a>
+<a href="02-lam-viec-cua-llm.html">Chương 2: Mô hình ngôn ngữ lớn hoạt động thế nào &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
