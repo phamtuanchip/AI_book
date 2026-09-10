@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 13: Kiến trúc agent phổ biến</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần III — Công nghiệp Agentic: AI Agents trong công việc</p>
+<h1>Chương 13: Kiến trúc agent phổ biến</h1>
+
+<p>Chương 12 giải thích một agent hoạt động thế nào ở mức đơn lẻ. Khi bài toán phức tạp hơn, bạn cần chọn
+giữa vài mẫu kiến trúc (pattern) khác nhau — nắm được các mẫu này là nền tảng bắt buộc trước khi đọc
+Chương 22 (kiến trúc agentic cho SDLC).</p>
+
+<h2>Single-agent: đơn giản, dễ kiểm soát</h2>
+
+<p>Một agent, một bộ tool, xử lý toàn bộ tác vụ từ đầu đến cuối. Phù hợp cho tác vụ có phạm vi rõ ràng,
+không cần chuyên môn hoá — ví dụ CLI coding agent ở Chương 9 khi làm một tác vụ vừa phải. Ưu điểm: dễ
+debug, dễ theo dõi toàn bộ luồng suy luận trong một chuỗi hội thoại. Nhược điểm: khi tác vụ quá rộng, một
+agent phải "ôm" quá nhiều loại việc khác nhau, dễ lạc hướng hoặc dùng sai tool.</p>
+
+<h2>Multi-agent: chia việc theo chuyên môn</h2>
+
+<p>Khi tác vụ đủ lớn/đa dạng, chia thành nhiều agent chuyên biệt, mỗi agent giỏi một việc, phối hợp với
+nhau. Hai mẫu phổ biến:</p>
+
+<figure>
+<svg viewBox="0 0 700 260" role="img" aria-label="Hai mẫu kiến trúc multi-agent: orchestrator-subagent và pipeline tuần tự">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#232323">
+    <text x="170" y="20" text-anchor="middle" font-weight="700">Orchestrator / Sub-agent</text>
+    <rect x="105" y="35" width="130" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="170" y="62" text-anchor="middle">Orchestrator</text>
+
+    <rect x="10" y="130" width="110" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="65" y="157" text-anchor="middle">Sub-agent A</text>
+    <rect x="130" y="130" width="110" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="185" y="157" text-anchor="middle">Sub-agent B</text>
+    <rect x="250" y="130" width="110" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="305" y="157" text-anchor="middle">Sub-agent C</text>
+
+    <path d="M150 80 L80 128" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a6)"/>
+    <path d="M170 80 L185 128" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a6)"/>
+    <path d="M195 80 L295 128" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a6)"/>
+
+    <text x="170" y="215" text-anchor="middle" fill="#6b6b6b" font-size="11">Orchestrator giao việc, gộp kết quả,</text>
+    <text x="170" y="230" text-anchor="middle" fill="#6b6b6b" font-size="11">quyết định bước tiếp theo</text>
+
+    <line x1="400" y1="10" x2="400" y2="250" stroke="#e2ddd3"/>
+
+    <text x="560" y="20" text-anchor="middle" font-weight="700">Pipeline tuần tự</text>
+    <rect x="430" y="100" width="100" height="45" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="480" y="127" text-anchor="middle">Agent 1</text>
+    <path d="M535 122 L565 122" stroke="#a4442f" stroke-width="1.5" marker-end="url(#a6)"/>
+    <rect x="570" y="100" width="100" height="45" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="620" y="127" text-anchor="middle">Agent 2</text>
+
+    <text x="560" y="215" text-anchor="middle" fill="#6b6b6b" font-size="11">Mỗi agent hoàn thành xong</text>
+    <text x="560" y="230" text-anchor="middle" fill="#6b6b6b" font-size="11">mới chuyển tiếp cho agent sau</text>
+
+    <defs>
+      <marker id="a6" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Orchestrator/sub-agent: một agent điều phối giao việc cho các agent chuyên biệt. Pipeline: các
+agent nối tiếp nhau theo trình tự cố định.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Orchestrator / sub-agent:</strong> một agent "điều phối" nhận yêu cầu, chia nhỏ, giao cho các
+sub-agent chuyên biệt (ví dụ: agent tìm kiếm thông tin, agent viết code, agent viết test), rồi tổng hợp
+kết quả. Linh hoạt, nhưng phức tạp hơn để debug vì luồng điều phối động.</li>
+<li><strong>Pipeline tuần tự:</strong> các agent nối tiếp nhau theo thứ tự cố định, mỗi agent nhận đầu ra
+của agent trước làm đầu vào — giống một dây chuyền lắp ráp. Dễ dự đoán và debug hơn orchestrator động, vì
+thứ tự cố định, nhưng kém linh hoạt khi cần xử lý ngoại lệ giữa chừng.</li>
+</ul>
+
+<div class="callout warning">
+<span class="callout-label">Đánh đổi cần cân nhắc</span>
+Multi-agent không tự động "tốt hơn" single-agent. Nó tốn nhiều token hơn (mỗi agent có context riêng),
+khó debug hơn (lỗi có thể xảy ra ở tầng điều phối, không chỉ ở một agent), và cần thiết kế rõ ràng
+"ai chịu trách nhiệm gì" — nếu không, các agent dễ giẫm chân nhau hoặc bỏ sót việc. Chỉ tách multi-agent
+khi single-agent thực sự không đủ chuyên môn hoá hoặc quá tải context.
+</div>
+
+<h2>RAG kết hợp agent: bù đắp giới hạn kiến thức</h2>
+
+<p>Nhắc lại Chương 4: mô hình có kiến thức lỗi thời (training cutoff) và có thể hallucination khi thiếu
+thông tin. <strong>RAG (Retrieval-Augmented Generation)</strong> là kỹ thuật giải quyết việc này: trước
+khi mô hình trả lời, hệ thống tìm kiếm (retrieve) thông tin liên quan từ một nguồn dữ liệu ngoài (tài
+liệu nội bộ, codebase, cơ sở tri thức), rồi đưa thông tin đó vào context để mô hình dùng làm căn cứ trả
+lời — thay vì dựa hoàn toàn vào "trí nhớ" từ lúc huấn luyện.</p>
+
+<pre><code>Câu hỏi người dùng
+      │
+      ▼
+Tìm kiếm ngữ nghĩa (embedding) trong kho tài liệu nội bộ
+      │
+      ▼
+Lấy ra đoạn tài liệu liên quan nhất
+      │
+      ▼
+Đưa vào context: "Dựa trên tài liệu sau, trả lời câu hỏi: ..."
+      │
+      ▼
+Mô hình trả lời, có thể trích dẫn nguồn</code></pre>
+
+<p>RAG thường được kết hợp làm một <em>tool</em> mà agent có thể gọi ("tìm trong tài liệu nội bộ") thay
+vì một bước cố định — agent tự quyết định khi nào cần tra cứu thêm thông tin trước khi trả lời hoặc hành
+động, đúng theo vòng lặp Plan → Act → Observe ở Chương 12.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Với một bài toán bạn đang cân nhắc tự động hoá bằng AI (lập trình hoặc không), thử phác thảo: nó phù hợp
+với single-agent hay cần multi-agent? Nếu multi-agent, bạn sẽ chọn orchestrator/sub-agent hay pipeline
+tuần tự, và vì sao? Có cần thêm RAG để bù đắp kiến thức mô hình không có sẵn không?
+</div>
+
+<nav class="chapter-nav">
+<a href="12-ai-agent-la-gi.html">&larr; Chương 12: AI agent là gì</a>
+<a href="14-xay-dung-agent-don-gian.html">Chương 14: Xây dựng agent đơn giản &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
