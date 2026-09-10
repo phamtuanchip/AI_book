@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 18: AI trong planning &amp; requirement</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 18: AI trong planning &amp; requirement</h1>
+
+<p>Giai đoạn đầu tiên của SDLC (Chương 17) là nơi AI ít được nhắc đến nhất, nhưng lại là nơi chất lượng
+đầu vào quyết định chất lượng toàn bộ chuỗi sau — requirement mơ hồ dẫn đến code sai, test thiếu, và
+review không biết chấm điểm theo tiêu chí gì.</p>
+
+<h2>Sinh và làm rõ user story</h2>
+
+<p>AI giỏi ở việc chuyển một ý tưởng thô thành user story có cấu trúc, và quan trọng hơn — <strong>chỉ ra
+những câu hỏi còn bỏ ngỏ</strong> mà người viết yêu cầu ban đầu chưa nghĩ tới:</p>
+
+<pre><code>"Đây là mô tả tính năng thô từ product owner: '{dán mô tả thô}'.
+
+Chuyển thành user story theo format: Là {vai trò}, tôi muốn {mục tiêu},
+để {giá trị mang lại}. Kèm theo:
+- Acceptance criteria (dạng Given/When/Then)
+- Danh sách câu hỏi cần làm rõ với product owner trước khi bắt đầu code
+  (đặc biệt các case biên, quyền hạn, hành vi khi lỗi)"</code></pre>
+
+<div class="callout">
+<span class="callout-label">Giá trị thật nằm ở "danh sách câu hỏi cần làm rõ"</span>
+Bất kỳ ai cũng viết được user story đúng cú pháp. Giá trị của AI ở bước này là đóng vai một người đọc kỹ
+tính đến mọi trường hợp, chỉ ra lỗ hổng trong requirement <em>trước khi</em> nó biến thành bug hoặc tranh
+cãi giữa dev và product owner ở giai đoạn review.
+</div>
+
+<h2>Phân tích yêu cầu — tìm mâu thuẫn và phụ thuộc</h2>
+
+<p>Với dự án đã có nhiều tài liệu yêu cầu tích luỹ theo thời gian, AI hữu ích trong việc rà soát chéo để
+tìm mâu thuẫn hoặc phụ thuộc bị bỏ sót — việc con người dễ bỏ lỡ khi tài liệu quá dài hoặc rải rác nhiều
+nơi:</p>
+
+<pre><code>"Đọc các tài liệu yêu cầu sau cho tính năng {tên tính năng}: {đính kèm
+nhiều tài liệu/ticket liên quan}.
+
+Rà soát và chỉ ra: (1) các điểm mâu thuẫn giữa các tài liệu, (2) yêu
+cầu nào phụ thuộc vào tính năng/hệ thống khác chưa được nhắc đến rõ
+ràng, (3) yêu cầu nào thiếu tiêu chí đo lường được (không thể viết
+acceptance criteria rõ ràng)."</code></pre>
+
+<h2>Hỗ trợ ước lượng (estimation)</h2>
+
+<p>AI không nên là nguồn ước lượng cuối cùng — nó không biết năng lực thật của team, tốc độ (velocity)
+lịch sử, hay các ràng buộc ngầm của tổ chức. Nhưng nó hữu ích như một công cụ <strong>hỗ trợ tư duy</strong>
+trước khi team tự chốt số liệu:</p>
+
+<pre><code>"Với user story sau: {dán user story + acceptance criteria}, hãy liệt
+kê các công việc con cần làm (backend, frontend, test, migration dữ
+liệu nếu có...), và với mỗi việc, chỉ ra yếu tố có thể làm nó phức tạp
+hơn ước lượng ban đầu (dependency ngoài, thiếu thông tin, rủi ro kỹ
+thuật chưa rõ)."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Ranh giới quan trọng</span>
+Dùng AI để <em>liệt kê đầy đủ công việc con</em> và <em>rủi ro tiềm ẩn</em> — rất hữu ích, vì con người dễ
+bỏ sót khi quen việc. Không dùng AI để <em>tự quyết định con số story point/giờ công cuối cùng</em> — đó
+vẫn là quyết định của team, dựa trên bối cảnh mà AI không có.
+</div>
+
+<h2>Prompt cho quy trình planning — nhìn xa hơn</h2>
+
+<p>Ở cấp độ tổ chức (Cấp 2-3 trong bảng Chương 17), các prompt trên nên được chuẩn hoá thành template dùng
+chung cho cả team, thay vì mỗi người tự viết theo cách riêng — đảm bảo mọi user story được rà soát theo
+cùng một tiêu chuẩn chất lượng, bất kể ai là người viết ban đầu.</p>
+
+<div class="callout template">
+<span class="callout-label">Phụ lục D</span>
+Các template đầy đủ hơn cho user story, phân tích yêu cầu, và hỗ trợ ước lượng — bao gồm cả biến thể cho
+dự án Agile/Scrum và dự án theo mô hình khác — được tổng hợp ở <strong>Phụ lục D — Prompt cho từng giai
+đoạn SDLC</strong>.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Lấy một yêu cầu/ticket thật đang chờ làm trong backlog của bạn. Dùng template "phân tích yêu cầu" ở trên.
+Đếm số câu hỏi làm rõ mà AI đưa ra — có bao nhiêu câu hỏi mà nếu không có bước này, sẽ chỉ được phát hiện
+giữa chừng lúc code hoặc tệ hơn là sau khi release?
+</div>
+
+<nav class="chapter-nav">
+<a href="17-buc-tranh-sdlc-voi-ai.html">&larr; Chương 17: Bức tranh SDLC với AI</a>
+<a href="19-ai-trong-thiet-ke-kien-truc.html">Chương 19: AI trong thiết kế &amp; kiến trúc &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
