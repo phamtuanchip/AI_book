@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 21: AI trong vận hành &amp; bảo trì</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 21: AI trong vận hành &amp; bảo trì</h1>
+
+<p>Giai đoạn cuối vòng lặp SDLC (Chương 17) — và thường là giai đoạn tốn nhiều thời gian nhất trong vòng
+đời thực tế của một hệ thống, dù ít được nhắc đến nhất khi nói về "AI cho lập trình". Đây cũng là nơi
+nguyên lý agent hỗ trợ vận hành ở Chương 15 được áp dụng cụ thể vào bối cảnh kỹ thuật.</p>
+
+<h2>Giám sát &amp; phát hiện bất thường</h2>
+
+<p>AI có thể hỗ trợ đọc lượng lớn dữ liệu giám sát (metrics, log) mà con người khó theo dõi liên tục theo
+thời gian thực, tổng hợp thành tín hiệu dễ hiểu:</p>
+
+<pre><code>"Đây là số liệu latency/error rate của service {tên service} trong 24h
+qua: {dán dữ liệu/link dashboard}. So với baseline 7 ngày trước, chỉ ra
+điểm bất thường đáng chú ý, và với mỗi điểm, gợi ý 1-2 giả thuyết nguyên
+nhân dựa trên thời điểm xảy ra (có trùng với đợt deploy, thay đổi traffic
+đột biến, hay job định kỳ nào không)."</code></pre>
+
+<h2>Phân tích incident — tăng tốc giai đoạn điều tra ban đầu</h2>
+
+<p>Khi có sự cố, thời gian quý giá nhất là những phút đầu tiên tìm hiểu "chuyện gì đang xảy ra" trước khi
+biết phải sửa gì. Agent có tool đọc log, đọc lịch sử deploy, và tra cứu runbook (nhắc lại mẫu ở Chương 15)
+có thể chuẩn bị sẵn bối cảnh này cho người trực (on-call), rút ngắn đáng kể bước điều tra thủ công:</p>
+
+<pre><code>System prompt (rút gọn) cho "Incident triage agent":
+
+Khi nhận alert, hãy: (1) tra_log_gan_day(service, thời_gian_alert),
+(2) tra_lich_su_deploy(service, khoảng 24h trước alert), (3) tra_runbook
+(loại lỗi tương ứng nếu có). Tổng hợp thành báo cáo ngắn: có gì thay đổi
+gần đây, log cho thấy điều gì, runbook liên quan nào có thể áp dụng.
+
+KHÔNG tự thực hiện hành động khắc phục (rollback, restart service, thay
+đổi cấu hình) — chỉ tổng hợp bối cảnh cho người trực quyết định.</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Ranh giới bắt buộc: chỉ hỗ trợ điều tra, không tự khắc phục</span>
+Nhắc lại nguyên tắc phân cấp quyền hạn ở Chương 16: hành động khắc phục sự cố (rollback, restart, đổi
+cấu hình) thuộc nhóm "khó hoàn tác/ảnh hưởng hệ thống chung" — luôn cần con người quyết định, dù agent có
+thể đề xuất phương án. Một agent tự động rollback sai service trong lúc sự cố có thể biến một incident
+nhỏ thành sự cố lớn hơn.
+</div>
+
+<h2>Đề xuất fix — nhưng qua đúng quy trình review</h2>
+
+<p>Sau khi xác định nguyên nhân gốc (root cause), AI có thể hỗ trợ soạn fix theo đúng quy trình debug ở
+Chương 7 (chain-of-thought, viết test tái hiện bug trước khi sửa — như case study Chương 11) — nhưng fix
+đó vẫn đi qua PR, review, và pipeline CI/CD bình thường (Chương 20), không có "đường tắt" merge thẳng vào
+production chỉ vì đang là sự cố khẩn cấp, trừ khi tổ chức có quy trình hotfix khẩn cấp riêng đã được thiết
+kế và phê duyệt từ trước.</p>
+
+<h2>Cập nhật tài liệu tự động</h2>
+
+<p>Tài liệu kỹ thuật (runbook, tài liệu API, sơ đồ kiến trúc) là thứ luôn bị bỏ bê vì không ai có thời
+gian cập nhật sau mỗi thay đổi. AI hữu ích ở việc phát hiện tài liệu đã lỗi thời so với code thật, và
+soạn bản cập nhật cho con người review:</p>
+
+<pre><code>"So sánh tài liệu API sau {đính kèm tài liệu hiện có} với code thực tế
+của các endpoint liên quan {đính kèm/trỏ tới code}. Liệt kê chỗ tài
+liệu không khớp với code (tham số đã đổi, endpoint đã xoá, response
+schema đã thay đổi). Soạn bản cập nhật cho các chỗ không khớp đó."</code></pre>
+
+<div class="callout">
+<span class="callout-label">Vòng khép kín của SDLC</span>
+Thông tin từ giai đoạn vận hành (bug thường gặp, điểm hệ thống hay gặp sự cố) nên quay ngược lại nuôi
+dưỡng giai đoạn planning/thiết kế (Chương 18-19) — ví dụ, một loại sự cố lặp lại nhiều lần nên trở thành
+input cho một ADR về việc thiết kế lại phần đó. Đây chính là mũi tên hồi tiếp trong sơ đồ vòng đời SDLC ở
+Chương 17.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Nhớ lại một incident/sự cố gần đây trong công việc của bạn. Với "Incident triage agent" ở template trên,
+liệt kê: 3 tool cụ thể nó cần có để hỗ trợ điều tra sự cố đó nhanh hơn, và thông tin gì trong báo cáo tổng
+hợp sẽ hữu ích nhất cho người trực ở phút đầu tiên.
+</div>
+
+<p>Chương 18-21 đã đi hết bốn giai đoạn SDLC cụ thể — Cấp độ 2 trong bảng Chương 17. Chương 22 nâng toàn
+bộ những gì đã học lên Cấp độ 3: kiến trúc agentic đầy đủ, nơi các agent ở từng giai đoạn phối hợp với
+nhau thành một hệ thống thống nhất.</p>
+
+<nav class="chapter-nav">
+<a href="20-ai-trong-code-test-review-cicd.html">&larr; Chương 20: AI trong code, test, review, CI/CD</a>
+<a href="22-kien-truc-agentic-sdlc.html">Chương 22: Kiến trúc Agentic AI cho SDLC &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
