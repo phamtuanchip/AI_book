@@ -119,6 +119,41 @@ prompt</em> — giống cách một người mới việc sẽ làm tốt hơn n
 tiêu chí thành công. Đây chính là nền tảng của toàn bộ Phần II trong sách này.
 </div>
 
+<h2>Attention: cách mô hình biết "chú ý" đúng chỗ</h2>
+
+<p>Kiến trúc Transformer (nhắc ở Chương 1) có một cơ chế cốt lõi tên là <strong>attention</strong> —
+đây là thứ giúp mô hình, khi đoán token tiếp theo, biết <em>token nào trong câu trước đó quan trọng
+nhất</em> để tham chiếu. Ví dụ với câu "Con mèo đuổi theo con chuột vì nó đói", khi xử lý từ "nó", cơ chế
+attention giúp mô hình "chú ý" nhiều hơn đến "con mèo" (chủ ngữ hợp lý cho việc "đói") hơn là "con
+chuột".</p>
+
+<p>Không cần hiểu công thức toán đằng sau, chỉ cần nắm ý tưởng: <strong>attention cho phép mô hình xử lý
+mối quan hệ giữa các phần xa nhau trong văn bản</strong>, không chỉ nhìn từ liền kề — đây là lý do LLM xử
+lý tốt các đoạn văn bản dài, hiểu được ngữ cảnh xa (ví dụ một biến được định nghĩa ở đầu file, dùng ở cuối
+file) miễn là còn nằm trong context window (đã nhắc ở trên).</p>
+
+<h2>Vì sao mô hình lớn hơn thường giỏi hơn (và vì sao không phải lúc nào cũng cần "lớn nhất")</h2>
+
+<p>"Kích thước" của một mô hình thường được đo bằng số <strong>tham số (parameters)</strong> — các con số
+mô hình học được trong quá trình pretraining, có thể lên đến hàng trăm tỷ. Nghiên cứu cho thấy một quy
+luật khá nhất quán gọi là <strong>scaling laws</strong>: mô hình càng nhiều tham số, huấn luyện trên càng
+nhiều dữ liệu, càng nhiều tính toán — thì càng giỏi, theo một đường cong khá dự đoán được.</p>
+
+<p>Nhưng "giỏi hơn" không đồng nghĩa "luôn nên dùng" — nhắc lại Chương 3 (sẽ đọc tiếp): mô hình lớn hơn
+thường chậm hơn và đắt hơn. Nhiều tác vụ đơn giản (phân loại email, trích xuất dữ liệu có cấu trúc rõ
+ràng) không cần đến năng lực của mô hình lớn nhất — đây là lý do các nhà cung cấp luôn có nhiều "cỡ" mô
+hình khác nhau, không chỉ một.</p>
+
+<h2>Base model vs Instruct/Chat model — bạn đang nói chuyện với cái nào?</h2>
+
+<p>Một điểm hay gây nhầm lẫn: mô hình <strong>base</strong> (chỉ mới qua pretraining, Chương ở trên) và mô
+hình <strong>instruct/chat</strong> (đã qua fine-tuning + RLHF) hành xử rất khác nhau dù dùng chung kiến
+trúc. Hỏi một base model "Thủ đô của Việt Nam là gì?", nó có thể tiếp tục viết thêm câu hỏi khác thay vì
+trả lời — vì nó chỉ học "viết tiếp văn bản giống dữ liệu huấn luyện", chưa học "đây là câu hỏi, hãy trả
+lời". Hầu hết sản phẩm bạn dùng hàng ngày (ChatGPT, Claude, Copilot...) đều là bản instruct/chat — nhưng
+khi làm việc với API/SDK ở Phần III, việc phân biệt rõ hai loại này giúp bạn hiểu tại sao đôi khi cần chọn
+đúng biến thể mô hình cho đúng mục đích.</p>
+
 <h2>Vài khái niệm khác bạn sẽ gặp lại</h2>
 
 <ul>
