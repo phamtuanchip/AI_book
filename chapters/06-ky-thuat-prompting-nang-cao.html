@@ -143,6 +143,32 @@ trọng (blocker/nên sửa/gợi ý).</code></pre>
 <p>Lưu các template này ở nơi cả team dùng chung (repo, wiki nội bộ, hoặc file cấu hình của công cụ AI
 coding — sẽ nói ở Chương 8-9) để không ai phải "phát minh lại" prompt mỗi lần.</p>
 
+<h2>5. Meta-prompting — dùng AI để viết prompt cho chính nó</h2>
+
+<p>Khi chưa chắc nên diễn đạt prompt thế nào cho một tác vụ mới, một kỹ thuật hữu ích là nhờ chính mô hình
+<em>đề xuất/cải thiện prompt</em>, trước khi dùng prompt đó cho việc thật:</p>
+
+<pre><code>"Tôi muốn viết một prompt để {mô tả mục tiêu, ví dụ: yêu cầu AI tóm tắt
+điều khoản hợp đồng thành bảng có cấu trúc}. Đây là bản nháp prompt của
+tôi: '{dán prompt nháp}'.
+
+Đóng vai chuyên gia prompt engineering, chỉ ra: (1) phần nào mơ hồ, dễ
+bị hiểu nhiều cách, (2) thiếu ràng buộc gì về định dạng/phạm vi, (3)
+viết lại bản cải thiện."</code></pre>
+
+<p>Meta-prompting đặc biệt hữu ích khi xây dựng prompt/system prompt cho agent (Chương 14) — nơi một prompt
+viết chưa tốt có thể gây ra hành vi sai lệch lặp lại nhiều lần, không chỉ một câu trả lời sai đơn lẻ.</p>
+
+<h2>Đánh đổi: kỹ thuật nâng cao không miễn phí</h2>
+
+<div class="callout warning">
+<span class="callout-label">Cân nhắc trước khi dùng</span>
+Chain-of-thought, decomposition, và self-critique đều làm tăng số token sử dụng (Chương 3) — mô hình phải
+sinh thêm phần suy luận/phê bình trước khi ra kết quả cuối, và với decomposition, bạn tốn nhiều lượt gọi
+hơn một prompt duy nhất. Với tác vụ đơn giản, việc này chỉ làm chậm và tốn chi phí không cần thiết — dùng
+đúng lúc (bảng "khi nào dùng kỹ thuật nào" ở trên), không áp dụng mặc định cho mọi prompt.
+</div>
+
 <div class="callout template">
 <span class="callout-label">Thư viện template đầy đủ hơn</span>
 <a href="../templates/phu-luc-a-prompting-co-ban.html">Phụ lục A</a> cuối sách tổng hợp thêm các template cho
