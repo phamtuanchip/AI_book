@@ -32,6 +32,41 @@ chính sách (ví dụ nghỉ trùng đợt cao điểm đã khoá) → tự app
 Nếu không đủ điều kiện hoặc có ngoại lệ chính sách → notify_manager kèm
 tóm tắt lý do, KHÔNG tự ý approve."</code></pre>
 
+<figure>
+<svg viewBox="0 0 700 220" role="img" aria-label="Sơ đồ quyết định của agent xử lý yêu cầu nghỉ phép">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+    <rect x="270" y="10" width="160" height="42" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="350" y="36" text-anchor="middle">Nhận yêu cầu nghỉ phép</text>
+
+    <path d="M350 52 L350 75" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#lv1)"/>
+
+    <rect x="235" y="78" width="230" height="45" rx="6" fill="#fbeaea" stroke="#a4442f"/>
+    <text x="350" y="98" text-anchor="middle" font-weight="700" font-size="11.5">Đủ ngày phép VÀ không vi phạm</text>
+    <text x="350" y="113" text-anchor="middle" font-size="11.5">chính sách?</text>
+
+    <path d="M235 100 L110 100 L110 140" stroke="#a4442f" stroke-width="1.5" fill="none" marker-end="url(#lv1)"/>
+    <text x="150" y="93" font-size="11" fill="#6b6b6b">Có</text>
+    <rect x="30" y="143" width="160" height="42" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="110" y="169" text-anchor="middle" font-size="11.5">approve_request</text>
+    <text x="110" y="200" text-anchor="middle" font-size="10.5" fill="#6b6b6b">(agent tự làm)</text>
+
+    <path d="M465 100 L590 100 L590 140" stroke="#a4442f" stroke-width="1.5" fill="none" marker-end="url(#lv1)"/>
+    <text x="550" y="93" font-size="11" fill="#6b6b6b">Không</text>
+    <rect x="510" y="143" width="160" height="42" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="590" y="169" text-anchor="middle" font-size="11.5">notify_manager</text>
+    <text x="590" y="200" text-anchor="middle" font-size="10.5" fill="#6b6b6b">(con người quyết định)</text>
+
+    <defs>
+      <marker id="lv1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#6b6b6b"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Ranh giới rõ ràng giữa "agent tự xử lý" và "chuyển cho con người" — đúng nguyên tắc guardrail
+sẽ nói kỹ ở Chương 16.</figcaption>
+</figure>
+
 <h2>Xử lý tài liệu (document processing)</h2>
 
 <p>Agent kết hợp RAG (Chương 13) rất mạnh trong việc đọc, trích xuất, phân loại, và tóm tắt số lượng lớn
