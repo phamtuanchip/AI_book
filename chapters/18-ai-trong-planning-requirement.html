@@ -129,6 +129,19 @@ bỏ sót khi quen việc. Không dùng AI để <em>tự quyết định con s�
 vẫn là quyết định của team, dựa trên bối cảnh mà AI không có.
 </div>
 
+<h2>Hỗ trợ backlog grooming</h2>
+
+<p>Ngoài việc xử lý một yêu cầu đơn lẻ, AI hữu ích khi rà soát cả một backlog tồn đọng — việc mà con người
+dễ ngại làm vì tốn thời gian đọc lại hàng chục ticket cũ:</p>
+
+<pre><code>"Đây là danh sách {số lượng} ticket đang tồn đọng trong backlog: {đính
+kèm danh sách}. Nhóm chúng theo chủ đề liên quan, chỉ ra ticket nào có
+khả năng đã lỗi thời (nhắc đến tính năng/hệ thống không còn tồn tại),
+và ticket nào mô tả trùng lặp với ticket khác trong danh sách."</code></pre>
+
+<p>Đây là việc "tổng hợp thông tin có sẵn" — rủi ro hallucination thấp (giống sinh release note ở Chương
+20) — nhưng giá trị thời gian tiết kiệm được khá lớn với backlog đã tồn đọng lâu.</p>
+
 <h2>Prompt cho quy trình planning — nhìn xa hơn</h2>
 
 <p>Ở cấp độ tổ chức (Cấp 2-3 trong bảng Chương 17), các prompt trên nên được chuẩn hoá thành template dùng
