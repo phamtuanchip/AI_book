@@ -17,6 +17,20 @@
 thuật xử lý các bài toán khó hơn: khi tác vụ cần suy luận nhiều bước, khi tác vụ quá lớn cho một prompt,
 và khi bạn muốn output đáng tin cậy hơn mà không cần con người review mọi lần.</p>
 
+<h2>Khi nào dùng kỹ thuật nào</h2>
+
+<table>
+<thead>
+<tr><th>Dấu hiệu bài toán</th><th>Kỹ thuật nên dùng</th></tr>
+</thead>
+<tbody>
+<tr><td>Cần suy luận logic/tính toán nhiều bước, dễ nhảy cóc kết luận</td><td>Chain-of-thought</td></tr>
+<tr><td>Việc quá lớn, nhiều phần khác nhau, một prompt không đủ "chứa"</td><td>Task decomposition</td></tr>
+<tr><td>Cần output đạt tiêu chuẩn cao, có checklist đúng/sai rõ ràng</td><td>Self-critique</td></tr>
+<tr><td>Việc lặp lại nhiều lần theo cùng khuôn mẫu</td><td>Prompt template tái sử dụng</td></tr>
+</tbody>
+</table>
+
 <h2>1. Chain-of-thought — yêu cầu mô hình "suy nghĩ từng bước"</h2>
 
 <p>Nhớ lại Chương 2: mô hình sinh từng token nối tiếp nhau. Nếu bị ép trả lời ngay đáp án cuối cùng, nó
@@ -58,6 +72,35 @@ Chia thành chuỗi:
 hoá việc phân rã nhiệm vụ và thực thi tuần tự thay bạn.</p>
 
 <h2>3. Self-critique / self-refine</h2>
+
+<figure>
+<svg viewBox="0 0 640 150" role="img" aria-label="Vòng lặp self-refine: Draft, Critique, Refine, lặp lại đến khi đạt chất lượng">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#232323">
+    <rect x="10" y="45" width="140" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="80" y="75" text-anchor="middle">Draft (bản nháp)</text>
+
+    <path d="M155 70 L185 70" stroke="#a4442f" stroke-width="2" marker-end="url(#sr1)"/>
+
+    <rect x="190" y="45" width="140" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="260" y="75" text-anchor="middle">Critique (tự phê)</text>
+
+    <path d="M335 70 L365 70" stroke="#a4442f" stroke-width="2" marker-end="url(#sr1)"/>
+
+    <rect x="370" y="45" width="140" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="440" y="75" text-anchor="middle">Refine (sửa lại)</text>
+
+    <path d="M440 95 C 440 125, 80 125, 80 95" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#sr1)"/>
+    <text x="260" y="138" text-anchor="middle" fill="#6b6b6b" font-size="11">Lặp lại 1-2 vòng — quá nhiều vòng thường không còn cải thiện đáng kể</text>
+
+    <defs>
+      <marker id="sr1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Self-refine: tách sinh và phê bình thành 2 bước riêng, lặp lại có kiểm soát.</figcaption>
+</figure>
 
 <p>Yêu cầu mô hình tự phản biện câu trả lời của chính nó trước khi chốt, giống một vòng code review nội
 bộ. Kỹ thuật này đặc biệt hiệu quả cho code, văn bản kỹ thuật, và bất kỳ output nào có tiêu chí đúng/sai
