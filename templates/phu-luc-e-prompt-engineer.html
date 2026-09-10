@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục E: Prompt Engineering như một nghề</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="../chapters/index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phụ lục E</p>
+<h1>Prompt Engineering như một nghề</h1>
+
+<p>Các chương ở Phần II (Chương 5-11) dạy prompting như một <strong>kỹ năng</strong> ai cũng nên có. Phụ
+lục này đi xa hơn: nhìn prompting như một <strong>nghề/vai trò chuyên biệt</strong> — Prompt Engineer —
+với trách nhiệm, quy trình làm việc, và cách đo lường riêng, đồng thời cho thấy vai trò này khớp thế nào
+với đích đến "AI SDLC Architect &amp; Manager" mà sách hướng tới ở Chương 25.</p>
+
+<h2>Prompt Engineer là ai, làm gì</h2>
+
+<p>Không phải "người viết prompt hay" theo nghĩa hẹp — một Prompt Engineer chịu trách nhiệm cho
+<strong>chất lượng và độ tin cậy của lớp giao tiếp giữa hệ thống và mô hình AI</strong>, trong cả ứng dụng
+đơn lẻ lẫn hệ thống agentic phức tạp (Chương 22). Công việc cụ thể thường gồm:</p>
+
+<ul>
+<li><strong>Thiết kế prompt/system prompt</strong> cho một tính năng hoặc một agent cụ thể (áp dụng trực
+tiếp kỹ thuật Chương 5-6, 14).</li>
+<li><strong>Kiểm thử và đánh giá prompt</strong> một cách có hệ thống, không chỉ "thử vài câu thấy ổn là
+xong" (mở rộng Chương 10 thành quy trình chính thức — xem mục dưới).</li>
+<li><strong>Gỡ lỗi khi mô hình cư xử sai</strong> — phân biệt lỗi do prompt viết chưa tốt, do model không
+đủ khả năng cho tác vụ, hay do dữ liệu/ngữ cảnh đưa vào không đủ (RAG, Chương 13).</li>
+<li><strong>Quản lý thư viện prompt dùng chung cho team</strong> — đúng tinh thần Phụ lục A-D của sách
+này, nhưng ở quy mô sản phẩm thật, có versioning và review.</li>
+<li><strong>Làm việc chặt với domain expert</strong> (kế toán, vận hành, pháp lý...) để mã hoá đúng kiến
+thức nghiệp vụ vào prompt — đây là phần "phi kỹ thuật" nhưng thường quyết định prompt có thực sự đúng hay
+không.</li>
+</ul>
+
+<h2>Kỹ năng cần có</h2>
+
+<table>
+<thead>
+<tr><th>Nhóm</th><th>Kỹ năng cụ thể</th><th>Chương liên quan</th></tr>
+</thead>
+<tbody>
+<tr><td>Kỹ thuật prompting</td><td>4 thành phần, chain-of-thought, decomposition, self-critique</td>
+<td>Chương 5-6</td></tr>
+<tr><td>Hiểu mô hình</td><td>Token, context window, temperature, base vs instruct model, giới hạn/
+hallucination</td><td>Chương 2-4</td></tr>
+<tr><td>Kỹ năng lập trình</td><td>Đọc/viết code để tích hợp prompt vào hệ thống thật, viết eval script</td>
+<td>Chương 7, 14</td></tr>
+<tr><td>Tư duy hệ thống agent</td><td>Tool design, vòng lặp plan-act-observe, quyền hạn</td><td>Chương
+12-16</td></tr>
+<tr><td>Đánh giá rủi ro</td><td>Nhận diện injection, rò rỉ dữ liệu, giới hạn bảo mật</td><td>Chương 4, 23</td></tr>
+<tr><td>Giao tiếp phi kỹ thuật</td><td>Khai thác đúng kiến thức nghiệp vụ từ domain expert, giải thích
+giới hạn AI cho người không rành kỹ thuật</td><td>Chương 24</td></tr>
+</tbody>
+</table>
+
+<h2>Prompt như code: version, test, review</h2>
+
+<p>Sai lầm phổ biến nhất ở giai đoạn "điểm lẻ" (Cấp độ 1, Chương 17): prompt sống trong đầu một người, sửa
+tuỳ hứng, không ai biết bản nào đang chạy production. Một Prompt Engineer chuyên nghiệp đối xử với prompt
+giống hệt code:</p>
+
+<figure>
+<svg viewBox="0 0 700 130" role="img" aria-label="Vòng đời prompt giống CI/CD: Draft, Test với golden set, Review, Deploy, Monitor, quay lại Draft nếu cần điều chỉnh">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <rect x="5" y="40" width="110" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="60" y="67" text-anchor="middle">Draft prompt</text>
+
+    <path d="M120 62 L145 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe1)"/>
+
+    <rect x="150" y="40" width="120" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="210" y="58" text-anchor="middle">Test với</text>
+    <text x="210" y="73" text-anchor="middle" font-size="10.5">golden set</text>
+
+    <path d="M275 62 L300 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe1)"/>
+
+    <rect x="305" y="40" width="100" height="45" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="355" y="67" text-anchor="middle">Review</text>
+
+    <path d="M410 62 L435 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe1)"/>
+
+    <rect x="440" y="40" width="100" height="45" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="490" y="67" text-anchor="middle">Deploy</text>
+
+    <path d="M545 62 L570 62" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe1)"/>
+
+    <rect x="575" y="40" width="115" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="632" y="67" text-anchor="middle">Monitor</text>
+
+    <path d="M632 85 C 632 115, 60 115, 60 85" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#pe1)"/>
+    <text x="350" y="118" text-anchor="middle" fill="#6b6b6b" font-size="11">Phát hiện lệch chất lượng ở bước Monitor → quay lại Draft</text>
+
+    <defs>
+      <marker id="pe1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Vòng đời prompt lặp lại chính cấu trúc CI/CD của code (Chương 20) — không phải trùng hợp, vì
+prompt chính là một loại "logic nghiệp vụ" cần được kiểm soát chất lượng như code.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Version control:</strong> lưu prompt trong repo (như <code>CLAUDE.md</code>, Chương 9, hoặc
+file cấu hình riêng), mỗi thay đổi đi qua PR như code, có changelog rõ ràng.</li>
+<li><strong>Golden test set:</strong> một tập input mẫu cố định (kèm output mong đợi hoặc tiêu chí đánh
+giá) — chạy lại mỗi khi sửa prompt <em>hoặc đổi mô hình</em>, để phát hiện sớm khi thay đổi làm hỏng case
+đã từng đúng (gọi là <strong>prompt regression</strong>).</li>
+<li><strong>Review có người thứ hai:</strong> giống code review — một prompt viết mơ hồ hoặc thiếu ràng
+buộc (Chương 5, 16) dễ lọt qua nếu chỉ một người tự kiểm tra.</li>
+</ul>
+
+<div class="callout template">
+<span class="callout-label">Template — Golden test case cho prompt</span>
+<pre><code>Test case: {mô tả ngắn tình huống test}
+Input: {input mẫu đưa vào prompt}
+Kỳ vọng: {output đúng phải có đặc điểm gì — không nhất thiết khớp chữ
+  từng từ, có thể là "phải chứa X", "không được chứa Y", "đúng định
+  dạng JSON theo schema Z"}
+Mức độ quan trọng: {blocker nếu fail / nên sửa / theo dõi}</code></pre>
+</div>
+
+<h2>Đo lường chất lượng prompt</h2>
+
+<p>Mở rộng trực tiếp từ đo lường hiệu quả AI trong SDLC ở Chương 24, áp riêng cho cấp độ một prompt/agent
+cụ thể:</p>
+
+<table>
+<thead>
+<tr><th>Chỉ số</th><th>Cách đo</th></tr>
+</thead>
+<tbody>
+<tr><td>Độ chính xác/phù hợp</td><td>Tỷ lệ pass trên golden test set; với tác vụ không có đáp án đúng
+tuyệt đối (viết văn bản), dùng rubric chấm điểm hoặc AI-as-judge (một mô hình khác chấm điểm output)</td></tr>
+<tr><td>Chi phí</td><td>Số token trung bình mỗi lần gọi × giá — theo dõi khi prompt dài dần theo thời gian
+("prompt creep")</td></tr>
+<tr><td>Độ trễ</td><td>Thời gian phản hồi trung bình/p95 — đặc biệt quan trọng với prompt dùng trong luồng
+tương tác thời gian thực</td></tr>
+<tr><td>Tỷ lệ từ chối/an toàn</td><td>Tần suất mô hình từ chối trả lời hợp lệ (false refusal) hoặc trả lời
+điều không nên (Chương 4, 23)</td></tr>
+</tbody>
+</table>
+
+<h2>Sai lầm thường gặp</h2>
+
+<ul>
+<li><strong>Tối ưu prompt cho 1-2 ví dụ quen thuộc</strong> rồi coi là xong — không có golden test set đủ
+đa dạng để phát hiện case lạ.</li>
+<li><strong>Prompt ngày càng dài</strong> vì liên tục thêm "vá lỗi" từng case riêng lẻ, không refactor lại
+tổng thể — giống nợ kỹ thuật trong code, cần review định kỳ để gộp/đơn giản hoá.</li>
+<li><strong>Không theo dõi khi nhà cung cấp cập nhật mô hình</strong> — một prompt hoạt động tốt với bản
+mô hình cũ có thể cư xử khác đi với bản mới (nhắc lại Chương 3: chọn đúng thời điểm rồi vẫn cần theo dõi
+tiếp).</li>
+<li><strong>Không phân biệt "lỗi do prompt" và "lỗi do thiếu ngữ cảnh/dữ liệu"</strong> — nhiều khi vấn đề
+không nằm ở cách diễn đạt prompt mà ở việc mô hình không có đủ thông tin (cần RAG, Chương 13) để trả lời
+đúng.</li>
+</ul>
+
+<h2>Lộ trình: từ Prompt Engineer đến AI SDLC Architect &amp; Manager</h2>
+
+<figure>
+<svg viewBox="0 0 700 110" role="img" aria-label="Lộ trình nghề nghiệp: từ Applyer cá nhân, qua Prompt Engineer chuyên trách, đến AI SDLC Architect và Manager">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <rect x="5" y="30" width="180" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="95" y="50" text-anchor="middle" font-weight="700">Applyer cá nhân</text>
+    <text x="95" y="66" text-anchor="middle" font-size="10">Phần II</text>
+
+    <path d="M190 55 L220 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe2)"/>
+
+    <rect x="225" y="30" width="220" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="335" y="50" text-anchor="middle" font-weight="700">Prompt Engineer chuyên trách</text>
+    <text x="335" y="66" text-anchor="middle" font-size="10">Phụ lục E</text>
+
+    <path d="M450 55 L480 55" stroke="#a4442f" stroke-width="1.5" marker-end="url(#pe2)"/>
+
+    <rect x="485" y="30" width="210" height="50" rx="6" fill="#a4442f" stroke="#7a3223"/>
+    <text x="590" y="50" text-anchor="middle" font-weight="700" fill="#fff">AI SDLC Architect &amp; Manager</text>
+    <text x="590" y="66" text-anchor="middle" font-size="10" fill="#fff">Chương 25</text>
+
+    <defs>
+      <marker id="pe2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Prompt Engineer không phải một hướng đi khác với AI SDLC Architect &amp; Manager — đó là bước
+chuyên môn hoá tự nhiên ở giữa: người làm chủ được chất lượng prompt/agent ở cấp <em>một hệ thống cụ thể</em>
+trước khi mở rộng trách nhiệm sang <em>kiến trúc và quản trị toàn bộ SDLC</em> (Chương 17-25).</figcaption>
+</figure>
+
+<p>Nói cách khác: mọi kỹ năng ở phụ lục này là điều kiện cần cho vai trò Architect &amp; Manager ở Chương
+25, không phải một lựa chọn nghề nghiệp tách biệt. Một AI SDLC Architect giỏi luôn từng là (hoặc vẫn đang
+là) một Prompt Engineer giỏi ở cấp độ chi tiết hơn.</p>
+
+<nav class="chapter-nav">
+<a href="phu-luc-d-prompt-sdlc.html">&larr; Phụ lục D: Prompt cho từng giai đoạn SDLC</a>
+<a href="../chapters/index.html">Mục lục &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
