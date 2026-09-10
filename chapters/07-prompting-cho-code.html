@@ -150,6 +150,41 @@ Không cung cấp thông tin này, mô hình dễ lặp lại chính hướng de
 nào biết bạn đã thử gì, dẫn tới vòng lặp hỏi-đáp lãng phí thời gian cả hai bên.
 </div>
 
+<h2>Prompting cho code legacy/thiếu tài liệu</h2>
+
+<p>Một tình huống không nằm gọn trong 5 nhóm trên nhưng rất phổ biến: codebase cũ, không có tài liệu,
+không có test, người viết ban đầu đã nghỉ việc. Cách tiếp cận khác với "giải thích code" thông thường vì
+mục tiêu không chỉ là hiểu, mà là hiểu <em>đủ an toàn để thay đổi</em>:</p>
+
+<pre><code>"Đây là module legacy không có tài liệu: {dán code}. Trước khi tôi thay
+đổi bất cứ điều gì, hãy giúp tôi:
+1. Liệt kê mọi nơi module này được gọi đến (dựa trên các dấu hiệu có thể
+   suy luận từ code — tên hàm, import, comment cũ).
+2. Chỉ ra các hành vi 'ẩn' cần cẩn thận (side effect, biến toàn cục bị
+   thay đổi, thứ tự gọi hàm quan trọng).
+3. Đề xuất bộ test tối thiểu để 'chụp lại' hành vi hiện tại trước khi
+   tôi sửa bất cứ gì (characterization test)."</code></pre>
+
+<p>Kỹ thuật "characterization test" (viết test ghi lại hành vi hiện tại, kể cả khi không chắc hành vi đó
+có đúng theo ý định ban đầu hay không) là bước an toàn bắt buộc trước khi refactor code legacy — làm đúng
+thứ tự này giúp AI hỗ trợ hiệu quả hơn nhiều so với yêu cầu "sửa luôn" ngay từ đầu.</p>
+
+<h2>Chọn đúng ngữ cảnh khi thay đổi nhiều file</h2>
+
+<p>Nhắc lại "context rot" ở Chương 4: nhồi toàn bộ codebase vào một prompt không đảm bảo chất lượng tốt
+hơn — thường ngược lại. Khi một thay đổi chạm vào nhiều file, hãy chọn lọc theo mức độ liên quan thay vì
+đưa "tất cả cho chắc":</p>
+
+<ul>
+<li><strong>File cần sửa trực tiếp:</strong> luôn đưa vào đầy đủ.</li>
+<li><strong>File định nghĩa interface/type được dùng:</strong> đưa vào nếu thay đổi có khả năng ảnh hưởng
+đến hợp đồng (contract) giữa các module.</li>
+<li><strong>File chỉ tham khảo convention</strong> (ví dụ 1-2 file mẫu cùng pattern): đưa 1 ví dụ đại diện,
+không cần đưa toàn bộ các file tương tự.</li>
+<li><strong>Phần còn lại của codebase:</strong> để CLI agent (Chương 9) tự tìm kiếm khi cần (qua tool đọc
+file), thay vì nhồi sẵn vào context ngay từ đầu.</li>
+</ul>
+
 <div class="callout template">
 <span class="callout-label">Phụ lục B</span>
 Toàn bộ 5 template trên, cùng các biến thể theo ngôn ngữ/framework phổ biến, được tổng hợp đầy đủ ở
