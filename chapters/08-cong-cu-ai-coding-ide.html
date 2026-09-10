@@ -109,6 +109,23 @@ phân rã nhiệm vụ...) áp dụng được cho <em>mọi</em> công cụ tro
 Đó là lý do sách dành phần lớn dung lượng cho kỹ năng prompting hơn là hướng dẫn thao tác từng công cụ.
 </div>
 
+<h2>Chuẩn hoá công cụ ở cấp team</h2>
+
+<p>Với cá nhân, dùng công cụ nào tuỳ sở thích. Với team, thiếu chuẩn hoá gây ba vấn đề cụ thể: (1) review
+code khó hơn vì mỗi người quen một "phong cách" AI khác nhau, (2) không thể chia sẻ prompt template dùng
+chung (Chương 6) nếu công cụ khác nhau đọc cấu hình khác nhau, (3) khó đánh giá chi phí/hiệu quả tổng thể
+khi dữ liệu sử dụng rải rác nhiều nền tảng. Không nhất thiết ép mọi người dùng đúng 1 công cụ — nhưng nên
+thống nhất tối thiểu: định dạng file cấu hình dự án (như <code>CLAUDE.md</code>, Chương 9), và nơi lưu
+prompt template dùng chung.</p>
+
+<h2>Khi nào cân nhắc mô hình tự host cho coding</h2>
+
+<p>Phần lớn công cụ ở bảng trên dùng mô hình đóng qua API (Chương 3). Với tổ chức có yêu cầu bảo mật/tuân
+thủ nghiêm ngặt (dữ liệu không được rời khỏi mạng nội bộ), một số công cụ hỗ trợ trỏ tới mô hình mở tự
+host thay vì API công cộng. Đánh đổi: chất lượng completion/chat thường kém hơn mô hình đóng hàng đầu, và
+tổ chức phải tự đầu tư hạ tầng (GPU, vận hành) — quyết định này nên đi cùng khung tiêu chí chọn mô hình đã
+học ở Chương 3, không tách rời.</p>
+
 <p>Chương 9 sẽ đi sâu vào một loại công cụ cụ thể — CLI/agentic coding tool — vì đây là nhóm gần nhất với
 cách làm việc "agentic" mà Phần III và Phần IV của sách xây dựng lên.</p>
 
