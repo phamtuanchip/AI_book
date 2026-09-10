@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 22: Kiến trúc Agentic AI cho SDLC</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 22: Kiến trúc Agentic AI cho SDLC</h1>
+
+<p>Chương 18-21 đi qua AI ở từng giai đoạn SDLC như những cải tiến riêng lẻ. Chương này ghép chúng lại
+thành một <strong>hệ thống agentic thống nhất</strong> — Cấp độ 3 trong bảng ở Chương 17. Đây là chương
+mang tính kiến trúc sư nhất của cuốn sách: bạn sẽ học cách nghĩ về toàn bộ SDLC như một hệ thống phần mềm
+có nhiều thành phần AI phối hợp, chứ không phải một chuỗi công cụ rời rạc.</p>
+
+<h2>Kiến trúc tham chiếu: Orchestrator + agent chuyên biệt theo giai đoạn</h2>
+
+<figure>
+<svg viewBox="0 0 760 460" role="img" aria-label="Kiến trúc agentic SDLC: orchestrator điều phối các agent Planner, Coder, Reviewer, Tester, Deploy, dùng chung Knowledge Base, có cổng phê duyệt con người và tầng audit log">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#232323">
+
+    <!-- Orchestrator -->
+    <rect x="290" y="10" width="180" height="50" rx="6" fill="#a4442f" stroke="#7a3223"/>
+    <text x="380" y="40" text-anchor="middle" fill="#fff" font-weight="700">Orchestrator</text>
+
+    <!-- five stage agents -->
+    <rect x="10" y="110" width="130" height="55" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="75" y="133" text-anchor="middle" font-weight="700">Planner</text>
+    <text x="75" y="150" text-anchor="middle" font-size="10.5">agent (Ch.18)</text>
+
+    <rect x="160" y="110" width="130" height="55" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="225" y="133" text-anchor="middle" font-weight="700">Coder</text>
+    <text x="225" y="150" text-anchor="middle" font-size="10.5">agent (Ch.20)</text>
+
+    <rect x="310" y="110" width="130" height="55" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="375" y="133" text-anchor="middle" font-weight="700">Reviewer</text>
+    <text x="375" y="150" text-anchor="middle" font-size="10.5">agent (Ch.20)</text>
+
+    <rect x="460" y="110" width="130" height="55" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="525" y="133" text-anchor="middle" font-weight="700">Tester</text>
+    <text x="525" y="150" text-anchor="middle" font-size="10.5">agent (Ch.20)</text>
+
+    <rect x="610" y="110" width="130" height="55" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="675" y="133" text-anchor="middle" font-weight="700">Deploy / Ops</text>
+    <text x="675" y="150" text-anchor="middle" font-size="10.5">agent (Ch.21)</text>
+
+    <!-- orchestrator to agents -->
+    <path d="M340 60 L75 108" stroke="#a4442f" stroke-width="1.3" fill="none"/>
+    <path d="M360 60 L225 108" stroke="#a4442f" stroke-width="1.3" fill="none"/>
+    <path d="M380 60 L375 108" stroke="#a4442f" stroke-width="1.3" fill="none"/>
+    <path d="M400 60 L525 108" stroke="#a4442f" stroke-width="1.3" fill="none"/>
+    <path d="M420 60 L675 108" stroke="#a4442f" stroke-width="1.3" fill="none"/>
+
+    <!-- pipeline order arrows -->
+    <path d="M140 137 L158 137" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#a10)"/>
+    <path d="M290 137 L308 137" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#a10)"/>
+    <path d="M440 137 L458 137" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#a10)"/>
+    <path d="M590 137 L608 137" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#a10)"/>
+
+    <!-- Knowledge base -->
+    <rect x="150" y="220" width="460" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="380" y="240" text-anchor="middle" font-weight="700">Knowledge Base dùng chung</text>
+    <text x="380" y="256" text-anchor="middle" font-size="10.5">Codebase (RAG), ADR, runbook, quy ước team, lịch sử incident</text>
+
+    <path d="M75 165 L200 220" stroke="#3f7d3f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <path d="M225 165 L280 220" stroke="#3f7d3f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <path d="M375 165 L380 220" stroke="#3f7d3f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <path d="M525 165 L480 220" stroke="#3f7d3f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <path d="M675 165 L560 220" stroke="#3f7d3f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+    <!-- Human approval gates -->
+    <rect x="20" y="310" width="170" height="50" rx="6" fill="#fbeaea" stroke="#a4442f"/>
+    <text x="105" y="330" text-anchor="middle" font-weight="700" font-size="11.5">Cổng duyệt: kế hoạch</text>
+    <text x="105" y="346" text-anchor="middle" font-size="10.5">(sau Planner)</text>
+
+    <rect x="570" y="310" width="170" height="50" rx="6" fill="#fbeaea" stroke="#a4442f"/>
+    <text x="655" y="330" text-anchor="middle" font-weight="700" font-size="11.5">Cổng duyệt: deploy</text>
+    <text x="655" y="346" text-anchor="middle" font-size="10.5">(trước Deploy agent)</text>
+
+    <path d="M75 165 L105 308" stroke="#a4442f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <path d="M675 165 L655 308" stroke="#a4442f" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+    <!-- Audit layer -->
+    <rect x="150" y="390" width="460" height="45" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="380" y="410" text-anchor="middle" font-weight="700" font-size="12">Tầng Audit Log &amp; Giám sát (Chương 16, 23)</text>
+    <text x="380" y="426" text-anchor="middle" font-size="10.5">Ghi lại mọi hành động của mọi agent — nền tảng cho Chương 23</text>
+
+    <defs>
+      <marker id="a10" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#6b6b6b"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Kiến trúc tham chiếu: Orchestrator điều phối 5 agent chuyên biệt theo từng giai đoạn SDLC, dùng
+chung một Knowledge Base, có cổng phê duyệt con người ở các điểm rủi ro cao, và một tầng audit log bao
+trùm toàn bộ hệ thống.</figcaption>
+</figure>
+
+<h2>Vì sao có Orchestrator thay vì để các agent tự nói chuyện với nhau</h2>
+
+<p>Nhắc lại mẫu orchestrator/sub-agent ở Chương 13: với SDLC, orchestrator đóng vai trò "project manager"
+— nhận yêu cầu (ví dụ một ticket), quyết định thứ tự gọi agent nào, truyền đúng dữ liệu giữa các agent, và
+theo dõi tiến độ toàn cục. Không để các agent tự do gọi lẫn nhau (mesh không kiểm soát) vì: (1) khó theo
+dõi luồng xử lý tổng thể, (2) khó áp dụng cổng phê duyệt tập trung, (3) một agent lỗi có thể kích hoạt
+chuỗi gọi không kiểm soát sang các agent khác.</p>
+
+<h2>Knowledge Base dùng chung — tránh "mỗi agent một hiểu biết riêng"</h2>
+
+<p>Nếu mỗi agent tự đọc lại toàn bộ codebase/tài liệu mỗi lần, vừa tốn chi phí (token, Chương 16) vừa có
+nguy cơ các agent hiểu bối cảnh khác nhau cho cùng một hệ thống (ví dụ Coder agent áp dụng convention cũ,
+trong khi ADR mới nhất — Chương 19 — đã đổi convention). Một Knowledge Base dùng chung, cập nhật qua RAG
+(Chương 13), đảm bảo mọi agent tham chiếu cùng một nguồn sự thật — codebase hiện tại, ADR, runbook, quy
+ước team.</p>
+
+<div class="callout warning">
+<span class="callout-label">Rủi ro cần lường trước — sẽ mổ xẻ kỹ ở Chương 23</span>
+Một Knowledge Base dùng chung cũng là một <strong>bề mặt tấn công tập trung</strong>: nếu bị "đầu độc"
+(dữ liệu sai/độc hại lọt vào), mọi agent đọc từ đó đều bị ảnh hưởng theo. Đây là một trong các rủi ro
+trọng tâm của chương tiếp theo.
+</div>
+
+<h2>Cổng phê duyệt con người — không đặt tuỳ tiện, đặt theo rủi ro</h2>
+
+<p>Áp đúng nguyên tắc phân cấp quyền hạn ở Chương 16 vào pipeline SDLC: hai điểm rủi ro cao rõ ràng nhất
+là <strong>sau khi Planner đề xuất kế hoạch</strong> (trước khi Coder bắt đầu viết hàng loạt code theo một
+hướng có thể sai) và <strong>trước khi Deploy agent đưa thay đổi lên production</strong> (hành động khó
+hoàn tác nhất trong toàn chuỗi). Reviewer và Tester agent có thể tự động chạy mà không cần cổng chặn riêng
+— vì kết quả của chúng (comment review, kết quả test) vẫn được con người xem trước khi merge, đã tạo thành
+một điểm kiểm soát tự nhiên.</p>
+
+<h2>Xử lý khi một agent "kẹt" hoặc thất bại</h2>
+
+<p>Trong một pipeline nhiều bước, một agent có thể không hoàn thành được việc (ví dụ Tester agent liên
+tục gặp lỗi môi trường không liên quan đến code). Kiến trúc cần định nghĩa rõ:</p>
+
+<ul>
+<li><strong>Ngưỡng dừng:</strong> số lần thử lại tối đa trước khi agent báo lỗi thay vì lặp vô hạn (nhắc
+lại giới hạn vòng lặp, Chương 14, 16).</li>
+<li><strong>Escalation rõ ràng:</strong> khi dừng, orchestrator chuyển trạng thái và toàn bộ ngữ cảnh đã
+thu thập được cho con người, không chỉ báo "thất bại" trống rỗng.</li>
+<li><strong>Không tự động "nhảy cóc" qua bước bị kẹt</strong> — ví dụ Deploy agent không được tự ý deploy
+khi Tester agent chưa xác nhận pass, dù orchestrator có logic retry phức tạp đến đâu.</li>
+</ul>
+
+<h2>Áp dụng theo đúng quy mô — không phải mọi team cần cả 5 agent</h2>
+
+<div class="callout">
+<span class="callout-label">Ghi nhớ</span>
+Kiến trúc tham chiếu trên là đầy đủ nhất, không phải "chuẩn bắt buộc". Một team nhỏ có thể bắt đầu chỉ với
+Coder + Reviewer agent (đã tạo giá trị lớn), rồi mở rộng dần theo đúng tinh thần 3 cấp độ ở Chương 17.
+Vai trò của một AI SDLC Architect là <strong>chọn đúng phạm vi</strong> cho bối cảnh cụ thể của tổ chức
+mình, không phải triển khai mọi thứ có thể triển khai.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Vẽ lại sơ đồ kiến trúc trên nhưng rút gọn cho team/dự án thực tế của bạn: agent nào cần có ngay, agent nào
+có thể để sau, và bạn sẽ đặt cổng phê duyệt con người ở (những) điểm nào? Giải thích ngắn gọn lý do chọn
+điểm đó dựa trên mức độ rủi ro (bảng Chương 16).
+</div>
+
+<nav class="chapter-nav">
+<a href="21-ai-trong-van-hanh-bao-tri.html">&larr; Chương 21: AI trong vận hành &amp; bảo trì</a>
+<a href="23-bao-mat-agentic-sdlc.html">Chương 23: Bảo mật &amp; bảo vệ hệ thống cho Agentic AI SDLC &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
