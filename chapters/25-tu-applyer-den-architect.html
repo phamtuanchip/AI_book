@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 25: Từ Applyer đến Architect &amp; Manager</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 25: Từ Applyer đến Architect &amp; Manager</h1>
+
+<p>Chương chốt của Phần IV, và của định hướng đặt ra từ đầu sách (Chương 1): tổng hợp toàn bộ Chương
+17-24 thành vai trò cụ thể mà bạn cần đảm nhận để thực sự là người <strong>thiết kế và quản trị</strong>
+một hệ thống AI SDLC, không chỉ người dùng nó.</p>
+
+<h2>Applyer vs Architect &amp; Manager — khác nhau ở đâu</h2>
+
+<table>
+<thead>
+<tr><th></th><th>Applyer</th><th>AI SDLC Architect &amp; Manager</th></tr>
+</thead>
+<tbody>
+<tr><td>Trọng tâm</td><td>Dùng công cụ AI hiệu quả cho công việc cá nhân (Phần II)</td><td>Thiết kế cách
+cả team/tổ chức dùng AI một cách nhất quán, an toàn, đo lường được (Phần IV)</td></tr>
+<tr><td>Quyết định điển hình</td><td>"Prompt nào cho ra kết quả tốt hơn?"</td><td>"Agent nào cần cổng phê
+duyệt con người? Rủi ro nào chấp nhận được, rủi ro nào không?"</td></tr>
+<tr><td>Chịu trách nhiệm về</td><td>Chất lượng output của chính mình</td><td>Kiến trúc, bảo mật, chi phí,
+và hiệu quả của cả hệ thống nhiều người dùng</td></tr>
+<tr><td>Khi có sự cố</td><td>Sửa lại prompt/code của mình</td><td>Truy vết qua audit trail (Chương 23),
+điều chỉnh guardrail/quy trình cho cả hệ thống</td></tr>
+</tbody>
+</table>
+
+<p>Hai vai trò không loại trừ nhau — một Architect &amp; Manager giỏi vẫn cần thành thạo kỹ năng Applyer
+(Phần II, III) để hiểu rõ công cụ mình đang thiết kế xung quanh. Sự khác biệt là <strong>phạm vi trách
+nhiệm</strong>: từ "công việc của tôi" sang "hệ thống của cả team".</p>
+
+<h2>Khung đánh giá kiến trúc (architecture review checklist)</h2>
+
+<p>Trước khi đưa một hệ thống agentic SDLC (Chương 22) vào vận hành thật, hoặc trước khi mở rộng phạm vi
+một hệ thống đang chạy, dùng khung câu hỏi sau — tổng hợp lại từ toàn Phần IV:</p>
+
+<table>
+<thead>
+<tr><th>Khía cạnh</th><th>Câu hỏi kiến trúc cần trả lời</th><th>Xem lại</th></tr>
+</thead>
+<tbody>
+<tr><td>Phạm vi</td><td>Hệ thống đang ở cấp độ nào (1/2/3), và cấp độ đó có phù hợp với độ trưởng thành
+của team không?</td><td>Chương 17</td></tr>
+<tr><td>Kiến trúc agent</td><td>Single-agent có đủ không, hay thực sự cần multi-agent? Orchestrator có
+điểm lỗi đơn không?</td><td>Chương 13, 22</td></tr>
+<tr><td>Quyền hạn</td><td>Mỗi agent có đúng least-privilege không? Cổng phê duyệt đặt đúng chỗ rủi ro
+cao chưa?</td><td>Chương 16, 22</td></tr>
+<tr><td>Bảo mật</td><td>Đã qua đủ 9 mục trong checklist bảo mật chưa?</td><td>Chương 23</td></tr>
+<tr><td>Chi phí</td><td>Chi phí vận hành thực tế có được ước lượng và theo dõi không?</td><td>Chương 16,
+24</td></tr>
+<tr><td>Con người</td><td>Team có đủ kỹ năng vận hành hệ thống này không? Quy trình có được cập nhật
+theo không?</td><td>Chương 24</td></tr>
+<tr><td>Đo lường</td><td>Có chỉ số cụ thể để biết hệ thống đang hoạt động tốt hay tệ đi không?</td>
+<td>Chương 24</td></tr>
+</tbody>
+</table>
+
+<h2>KPI: cân bằng giữa hiệu quả và rủi ro</h2>
+
+<p>Một Architect &amp; Manager không tối ưu một mình "tốc độ" — vì tốc độ tối đa thường đi kèm rủi ro tối
+đa (bỏ qua review, bỏ qua cổng phê duyệt). Cách nghĩ đúng là theo dõi <strong>cặp chỉ số song song</strong>:</p>
+
+<ul>
+<li><strong>Hiệu quả:</strong> cycle time, tỷ lệ chấp nhận gợi ý AI, chi phí/giá trị (Chương 24).</li>
+<li><strong>Rủi ro:</strong> số lần phải rollback do lỗi AI-generated, số sự cố bảo mật liên quan agent
+(Chương 23), số lần approval gate bị "bấm qua" mà không đọc kỹ (dấu hiệu quy trình có vấn đề).</li>
+</ul>
+
+<p>Một hệ thống "tốt" là hệ thống cải thiện cặp chỉ số này <em>cùng lúc</em> theo thời gian — nhanh hơn
+mà không rủi ro hơn, chứ không phải đánh đổi cái này lấy cái kia.</p>
+
+<h2>Quy trình ra quyết định khi thay đổi kiến trúc</h2>
+
+<p>Khi cân nhắc mở rộng hệ thống (thêm agent mới, mở rộng quyền hạn, tích hợp tool/MCP server mới —
+Chương 23), áp dụng quy trình ra quyết định có cấu trúc, giống một ADR (Chương 19) nhưng dành riêng cho
+thay đổi hệ thống agentic:</p>
+
+<ol>
+<li><strong>Vấn đề gì đang cần giải quyết</strong> — không mở rộng hệ thống chỉ vì công nghệ mới có sẵn.</li>
+<li><strong>Chạy lại khung đánh giá kiến trúc</strong> ở trên cho phần mở rộng cụ thể.</li>
+<li><strong>Định nghĩa rõ tiêu chí rollback</strong> — nếu thay đổi gây vấn đề, cách quay lại trạng thái
+an toàn trước đó là gì.</li>
+<li><strong>Triển khai có kiểm soát</strong> — thử nghiệm phạm vi hẹp (1 team, 1 loại tác vụ) trước khi
+áp dụng toàn tổ chức, đúng tinh thần leo thang dần theo 3 cấp độ (Chương 17).</li>
+</ol>
+
+<div class="callout">
+<span class="callout-label">Tư duy cốt lõi của một AI SDLC Architect &amp; Manager</span>
+Không phải người biết nhiều công cụ AI nhất, mà là người luôn hỏi đúng câu hỏi trước khi triển khai: rủi
+ro gì đang được chấp nhận, ai chịu trách nhiệm khi sai, và hệ thống có thể được kiểm tra/truy vết được
+không khi cần. Công cụ sẽ đổi liên tục (nhắc lại Chương 3, 8) — khung tư duy này thì không.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một thay đổi bạn đang cân nhắc cho hệ thống AI trong công việc của mình (thêm một agent, mở rộng
+quyền hạn, tích hợp tool mới). Chạy qua đúng khung đánh giá kiến trúc ở trên — với mỗi hàng chưa có câu
+trả lời rõ ràng, đó là việc cần làm trước khi triển khai thay đổi đó.
+</div>
+
+<nav class="chapter-nav">
+<a href="24-xay-dung-ai-native-team.html">&larr; Chương 24: Xây dựng "AI-native team"</a>
+<a href="26-tong-ket.html">Chương 26: Tổng kết &amp; lộ trình tự học tiếp theo &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
