@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 11: Case study thực hành</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 11: Case study thực hành</h1>
+
+<p>Chương khép lại Phần II bằng hai case study end-to-end, kết hợp toàn bộ kỹ thuật từ Chương 5-10: khung
+4 thành phần, phân rã nhiệm vụ, chain-of-thought khi debug, và checklist review trước khi merge.</p>
+
+<h2>Case study 1: Xây tính năng mới — export dữ liệu ra CSV</h2>
+
+<p><strong>Yêu cầu:</strong> thêm endpoint cho phép người dùng export danh sách đơn hàng ra file CSV, có
+lọc theo khoảng thời gian.</p>
+
+<h3>Bước 1 — Phân rã nhiệm vụ (Chương 6) trước khi viết code</h3>
+
+<pre><code>"Tôi cần thêm tính năng export đơn hàng ra CSV, lọc theo khoảng thời
+gian, cho một REST API Node.js/Express hiện có. Trước khi viết code,
+liệt kê các bước cần làm và những quyết định thiết kế cần chốt trước
+(ví dụ: giới hạn số dòng export, xử lý dữ liệu lớn, định dạng ngày)."</code></pre>
+
+<p>AI đề xuất các bước: (1) validate query param ngày bắt đầu/kết thúc, (2) giới hạn khoảng thời gian tối
+đa để tránh export quá lớn, (3) query dữ liệu theo stream thay vì load hết vào bộ nhớ, (4) sinh CSV, (5)
+trả về đúng header <code>Content-Type</code>/<code>Content-Disposition</code>. Đây là lúc bạn — người ra
+quyết định — chốt các con số cụ thể (ví dụ giới hạn 90 ngày) trước khi sang bước viết code.</p>
+
+<h3>Bước 2 — Viết code với đủ ngữ cảnh (Chương 5, 7)</h3>
+
+<pre><code>"Viết endpoint GET /api/orders/export theo đúng convention của các
+endpoint khác trong orders.controller.ts. Yêu cầu:
+- Query param: from, to (ISO date), bắt buộc, tối đa cách nhau 90 ngày
+- Query dữ liệu qua stream (dùng cách hiện có trong repo, xem
+  orders.repository.ts), không load hết vào memory
+- Convert sang CSV, trả về qua response stream
+- Trả lỗi 400 rõ ràng nếu thiếu param hoặc vượt quá 90 ngày"</code></pre>
+
+<h3>Bước 3 — Sinh test theo 4 nhóm case (Chương 7)</h3>
+
+<pre><code>"Viết test cho endpoint vừa tạo, bao phủ: (1) export thành công với
+khoảng ngày hợp lệ, (2) thiếu param from/to, (3) khoảng ngày vượt quá 90
+ngày, (4) khoảng ngày không có đơn hàng nào (CSV chỉ có header)."</code></pre>
+
+<h3>Bước 4 — Review theo checklist (Chương 10)</h3>
+
+<p>Trước khi merge, tự tay đi qua checklist Chương 10: đúng phạm vi (không tự ý thêm tính năng export
+Excel dù không ai yêu cầu), có kiểm tra dữ liệu stream thật sự không load hết vào bộ nhớ với dataset lớn,
+có escape đúng ký tự đặc biệt trong CSV (dấu phẩy, xuống dòng trong trường dữ liệu) không — đây là lỗi
+bảo mật/đúng-đắn dữ liệu rất dễ bị bỏ sót nếu chỉ đọc lướt.</p>
+
+<div class="callout">
+<span class="callout-label">Điểm mấu chốt của case study 1</span>
+Tính năng "nhìn đơn giản" (export CSV) có nhiều quyết định ẩn (giới hạn dữ liệu, streaming, escape ký tự)
+mà một prompt hời hợt ("viết API export CSV") sẽ bỏ sót hoàn toàn. Phân rã nhiệm vụ trước khi code chính
+là bước ngăn AI đoán bừa các quyết định đó thay bạn.
+</div>
+
+<h2>Case study 2: Debug lỗi production — race condition</h2>
+
+<p><strong>Tình huống:</strong> thỉnh thoảng (không tái hiện được ổn định) một user được trừ tiền 2 lần
+cho cùng một đơn hàng.</p>
+
+<h3>Bước 1 — Cung cấp đủ ngữ cảnh, yêu cầu suy luận từng bước (Chương 6, 7)</h3>
+
+<pre><code>"Bug: đôi khi user bị trừ tiền 2 lần cho cùng 1 đơn hàng, không tái hiện
+ổn định — nghi ngờ liên quan tới việc user bấm nút thanh toán nhiều lần
+liên tiếp khi mạng chậm. Đây là code xử lý thanh toán: {dán code
+processPayment và các hàm liên quan}.
+
+Trước khi kết luận, hãy: (1) mô tả luồng chạy khi có 2 request đến gần
+như đồng thời, (2) chỉ ra đoạn code nào không an toàn với concurrent
+request (race condition), (3) đề xuất tối thiểu 2 hướng fix khác nhau
+kèm đánh đổi (trade-off) của mỗi hướng."</code></pre>
+
+<p>Vì được yêu cầu suy luận từng bước thay vì "sửa ngay", AI có nhiều khả năng chỉ ra đúng vấn đề: giữa
+lúc kiểm tra "đơn hàng đã thanh toán chưa" và lúc ghi nhận thanh toán, không có cơ chế khoá (lock) hay
+ràng buộc duy nhất (unique constraint) nào ngăn 2 request xử lý song song cùng lúc — bug kinh điển gọi là
+<em>TOCTOU (time-of-check to time-of-use)</em>.</p>
+
+<h3>Bước 2 — Đánh giá các hướng fix được đề xuất</h3>
+
+<p>AI có thể đề xuất: (a) thêm unique constraint ở database cho cặp (order_id, status=success), (b) dùng
+row-level lock khi đọc-ghi trạng thái đơn hàng, (c) idempotency key từ phía client. Đây là lúc kiến thức
+và bối cảnh hệ thống của <em>bạn</em> quan trọng hơn AI — chọn hướng nào phụ thuộc vào kiến trúc hệ
+thống, không phải thứ AI có thể tự quyết thay bạn.</p>
+
+<h3>Bước 3 — Viết test tái hiện bug trước khi fix (Chương 7, 10)</h3>
+
+<pre><code>"Viết test mô phỏng 2 request processPayment gần như đồng thời cho cùng
+1 order_id. Trước khi fix, test này phải FAIL (tái hiện đúng bug). Sau
+khi tôi áp fix, chạy lại để xác nhận PASS."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Điểm mấu chốt của case study 2</span>
+Với bug liên quan tiền bạc/concurrency, không bao giờ chấp nhận fix chỉ vì "AI nói vậy" — luôn có test
+tái hiện được bug trước khi sửa, và hiểu rõ <em>tại sao</em> fix hoạt động, không chỉ copy-paste code
+được đề xuất.
+</div>
+
+<h2>Tổng kết Phần II</h2>
+
+<p>Hai case study trên minh hoạ một mô-típ lặp lại xuyên suốt: <strong>phân rã → cung cấp ngữ cảnh đầy đủ
+→ yêu cầu suy luận tường minh cho việc phức tạp → viết/xác nhận bằng test → review có checklist</strong>.
+Đây chính là quy trình bạn sẽ mang theo sang Phần III, nơi các bước này được tự động hoá thành hành vi
+của một AI agent.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ — khép lại Phần II</span>
+Chọn một tính năng nhỏ hoặc một bug thật bạn đang có trong công việc. Áp đúng quy trình 5 bước ở trên
+(phân rã → ngữ cảnh → code/suy luận → test → review checklist). Ghi chú lại bước nào tốn thời gian nhất —
+đó thường là dấu hiệu cho biết bạn cần luyện thêm kỹ năng ở chương nào trong Phần II.
+</div>
+
+<nav class="chapter-nav">
+<a href="10-danh-gia-chat-luong-output.html">&larr; Chương 10: Đánh giá chất lượng output AI</a>
+<a href="12-ai-agent-la-gi.html">Chương 12: AI agent là gì &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
