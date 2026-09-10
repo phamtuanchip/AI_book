@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 7: Prompting cho code</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 7: Prompting cho code</h1>
+
+<p>Chương này áp khung 4 thành phần (Chương 5) và các kỹ thuật nâng cao (Chương 6) vào 5 tình huống lập
+trình phổ biến nhất: sinh code mới, giải thích code, refactor, sinh test, và debug. Mỗi tình huống có một
+"công thức" prompt riêng vì tiêu chí thành công khác nhau.</p>
+
+<h2>Sinh code mới</h2>
+
+<p>Rủi ro lớn nhất khi sinh code mới là mô hình đoán bừa các ràng buộc bạn không nói ra — phiên bản
+ngôn ngữ, thư viện được phép dùng, convention của team. Prompt tốt phải chặn trước các điểm mơ hồ đó:</p>
+
+<pre><code>Vai trò: Bạn là backend engineer dùng Go.
+Bối cảnh: Service xử lý order trong hệ thống microservice, dùng
+PostgreSQL qua sqlx, không dùng ORM.
+Yêu cầu: Viết hàm CreateOrder(ctx, input) nhận input đã validate, insert
+vào bảng orders, trả về order kèm ID vừa tạo. Xử lý lỗi trùng khoá
+(duplicate key) trả về error riêng biệt.
+Định dạng: Chỉ code Go, không giải thích dài dòng, comment ngắn ở chỗ
+logic không hiển nhiên.</code></pre>
+
+<h2>Giải thích code</h2>
+
+<p>Khi nhờ AI giải thích code lạ (thường gặp khi vào codebase mới — sẽ nói kỹ hơn ở Chương 9), hãy nói rõ
+<em>mức độ</em> giải thích bạn cần — tổng quan kiến trúc hay chi tiết từng dòng — nếu không sẽ nhận một
+đoạn diễn giải chung chung ít giá trị:</p>
+
+<pre><code>"Giải thích đoạn code sau ở 2 tầng:
+1. Tổng quan: hàm này giải quyết vấn đề gì, được gọi từ đâu (dựa trên
+   ngữ cảnh có thể suy luận được)?
+2. Chi tiết: đi qua từng khối logic chính, giải thích TẠI SAO nó được
+   viết như vậy (không chỉ mô tả nó làm gì).
+
+{dán code}"</code></pre>
+
+<h2>Refactor</h2>
+
+<p>Refactor là tình huống dễ "mất kiểm soát" nhất nếu không giới hạn phạm vi — mô hình có xu hướng viết
+lại nhiều hơn cần thiết. Luôn khoanh vùng rõ mục tiêu và những gì <strong>không được đổi</strong>:</p>
+
+<pre><code>"Refactor hàm sau để giảm độ phức tạp cyclomatic (đang lồng 4 tầng
+if/else). Ràng buộc:
+- Giữ nguyên signature của hàm (tên, tham số, kiểu trả về).
+- Không đổi hành vi — liệt kê rõ nếu có thay đổi hành vi dù nhỏ.
+- Ưu tiên early return thay vì lồng điều kiện.
+- Không thêm dependency mới."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Luôn kèm test khi refactor bằng AI</span>
+Nếu chưa có test cho đoạn code định refactor, hãy yêu cầu AI viết test cho hành vi <em>hiện tại</em>
+trước, chạy xanh, rồi mới refactor. Không có test, bạn không có cách nào xác nhận "không đổi hành vi"
+thực sự đúng.
+</div>
+
+<h2>Sinh test</h2>
+
+<p>Yêu cầu mặc định "viết test cho hàm này" thường chỉ ra test cho đường đi thuận (happy path). Prompt
+tốt phải chủ động liệt kê các nhóm case cần bao phủ:</p>
+
+<pre><code>"Viết unit test cho hàm {tên hàm} bằng {framework test}. Bao phủ đủ 4
+nhóm case:
+1. Happy path (input hợp lệ điển hình)
+2. Input biên (rỗng, null/undefined, giá trị 0, giá trị âm nếu áp dụng)
+3. Input không hợp lệ (sai kiểu, thiếu field bắt buộc)
+4. Case gây lỗi/exception — assert đúng loại lỗi được throw
+
+Mỗi test đặt tên mô tả rõ case đang kiểm tra."</code></pre>
+
+<h2>Debug</h2>
+
+<p>Đây là nơi chain-of-thought (Chương 6) phát huy tác dụng rõ nhất — đừng chỉ dán lỗi và hỏi "sửa sao",
+hãy cung cấp đủ ngữ cảnh và yêu cầu mô hình suy luận có hệ thống thay vì đoán bừa:</p>
+
+<pre><code>"Tôi gặp lỗi sau khi chạy hàm {tên hàm}:
+
+Lỗi: {message lỗi đầy đủ + stack trace}
+Code liên quan: {dán code}
+Đã thử: {những gì bạn đã kiểm tra/loại trừ, nếu có}
+
+Trước khi đề xuất fix, hãy: (1) liệt kê tối đa 3 nguyên nhân khả dĩ dựa
+trên message lỗi, (2) với mỗi nguyên nhân, chỉ ra dòng code liên quan,
+(3) đề xuất cách kiểm tra nhanh nguyên nhân nào đúng trước khi sửa."</code></pre>
+
+<div class="callout">
+<span class="callout-label">Vì sao nên khai báo "đã thử những gì"</span>
+Không cung cấp thông tin này, mô hình dễ lặp lại chính hướng debug bạn đã loại trừ — vì nó không có cách
+nào biết bạn đã thử gì, dẫn tới vòng lặp hỏi-đáp lãng phí thời gian cả hai bên.
+</div>
+
+<div class="callout template">
+<span class="callout-label">Phụ lục B</span>
+Toàn bộ 5 template trên, cùng các biến thể theo ngôn ngữ/framework phổ biến, được tổng hợp đầy đủ ở
+<strong>Phụ lục B — Prompting cho code</strong> cuối sách.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một hàm bất kỳ trong dự án bạn đang làm chưa có test. Dùng đúng template "Sinh test" ở trên để yêu
+cầu AI viết test cho nó, sau đó tự đọc lại: có case nào bị bỏ sót mà bạn nghĩ ra nhưng AI không đề cập
+không?
+</div>
+
+<nav class="chapter-nav">
+<a href="06-ky-thuat-prompting-nang-cao.html">&larr; Chương 6: Kỹ thuật prompting nâng cao</a>
+<a href="08-cong-cu-ai-coding-ide.html">Chương 8: Công cụ AI coding trong IDE &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
