@@ -152,6 +152,25 @@ kiểm soát output</em> (Phần II) — kỹ năng đó chuyển đổi đượ
 dẫn đầu" thì thay đổi mỗi vài tháng.
 </div>
 
+<h2>Chi phí ẩn ít người để ý lúc mới chọn mô hình</h2>
+
+<p>Ngoài giá niêm yết theo token, vài yếu tố sau thường bị bỏ sót khi so sánh mô hình, nhưng ảnh hưởng
+thực tế không nhỏ khi vận hành lâu dài:</p>
+
+<ul>
+<li><strong>Rate limit (giới hạn tần suất gọi):</strong> mỗi tài khoản/API key thường bị giới hạn số
+request hoặc số token mỗi phút. Một agent chạy nhiều vòng lặp (Chương 14, 16) có thể chạm giới hạn này
+nhanh hơn dự kiến, gây lỗi hoặc chờ đợi ngoài ý muốn.</li>
+<li><strong>SLA (cam kết chất lượng dịch vụ):</strong> mô hình có cam kết uptime/độ trễ rõ ràng cho gói trả
+phí doanh nghiệp không, hay chỉ "cố gắng tốt nhất" (best-effort) như gói cá nhân?</li>
+<li><strong>Chi phí chuyển đổi (switching cost):</strong> đổi nhà cung cấp mô hình không chỉ là đổi API
+key — prompt đã tối ưu cho một mô hình cụ thể (Phụ lục E) có thể cần điều chỉnh lại khi đổi sang mô hình
+khác, vì mỗi mô hình "phản ứng" với cách diễn đạt hơi khác nhau.</li>
+<li><strong>Chính sách ngừng hỗ trợ (deprecation):</strong> mô hình cũ bị ngừng phục vụ sau một mốc thời
+gian — cần theo dõi changelog nhà cung cấp (đã nhắc ở trên) để không bị gián đoạn đột ngột khi một phiên
+bản bị khai tử.</li>
+</ul>
+
 <h2>Mô hình lớn vs mô hình nhỏ/nhanh</h2>
 
 <p>Gần như mọi nhà cung cấp lớn đều có ít nhất hai cấp mô hình: một dòng "mạnh nhất" (reasoning tốt, giá
