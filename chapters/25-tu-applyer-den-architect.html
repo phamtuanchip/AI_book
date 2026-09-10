@@ -87,6 +87,36 @@ theo không?</td><td>Chương 24</td></tr>
 <p>Một hệ thống "tốt" là hệ thống cải thiện cặp chỉ số này <em>cùng lúc</em> theo thời gian — nhanh hơn
 mà không rủi ro hơn, chứ không phải đánh đổi cái này lấy cái kia.</p>
 
+<h2>Giao tiếp với người không rành kỹ thuật</h2>
+
+<p>Một phần trách nhiệm ít được nhắc đến nhưng rất thực tế: giải thích rủi ro/giá trị của hệ thống AI SDLC
+cho lãnh đạo, bộ phận pháp lý, hay khách hàng doanh nghiệp — những người không quan tâm đến chi tiết kiến
+trúc (Chương 22) nhưng cần hiểu đúng mức độ rủi ro và lợi ích để ra quyết định đầu tư/phê duyệt. Vài
+nguyên tắc giúp giao tiếp hiệu quả:</p>
+
+<ul>
+<li><strong>Diễn đạt rủi ro bằng hậu quả cụ thể</strong>, không bằng thuật ngữ kỹ thuật — "nếu agent bị
+lợi dụng, dữ liệu khách hàng X có thể bị lộ" dễ hiểu hơn "có rủi ro prompt injection gián tiếp".</li>
+<li><strong>Trình bày cặp chỉ số hiệu quả/rủi ro</strong> (đã nói ở trên) thay vì chỉ số hiệu quả đơn lẻ —
+giúp người ra quyết định thấy được đánh đổi thật, không chỉ lợi ích một chiều.</li>
+<li><strong>Không hứa "an toàn tuyệt đối"</strong> — trình bày rủi ro đã giảm thiểu đến mức nào và rủi ro
+còn lại là gì, đúng tinh thần trung thực của toàn bộ Chương 23.</li>
+</ul>
+
+<h2>Build vs Buy — tự xây hay dùng nền tảng có sẵn</h2>
+
+<p>Không phải mọi tổ chức cần tự xây kiến trúc agentic từ đầu (Chương 22) — nhiều nền tảng thương mại đã
+cung cấp sẵn orchestrator, guardrail, và audit trail. Quyết định build vs buy nên dựa trên:</p>
+
+<ul>
+<li><strong>Mức độ đặc thù của quy trình:</strong> quy trình SDLC càng đặc thù (khác biệt lớn so với quy
+trình chuẩn của ngành), càng khó tìm nền tảng có sẵn phù hợp.</li>
+<li><strong>Yêu cầu bảo mật/tuân thủ:</strong> nếu bắt buộc dữ liệu không rời khỏi hạ tầng nội bộ (Chương
+23), nhiều nền tảng SaaS có thể không đáp ứng được, dù tiện lợi hơn.</li>
+<li><strong>Năng lực đội ngũ:</strong> tự xây đòi hỏi có người đủ năng lực Architect &amp; Manager (đúng
+vai trò chương này mô tả) để vận hành lâu dài — không chỉ để triển khai ban đầu.</li>
+</ul>
+
 <h2>Quy trình ra quyết định khi thay đổi kiến trúc</h2>
 
 <p>Khi cân nhắc mở rộng hệ thống (thêm agent mới, mở rộng quyền hạn, tích hợp tool/MCP server mới —
