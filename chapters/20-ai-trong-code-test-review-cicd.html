@@ -103,6 +103,25 @@ Bỏ qua các commit thuần refactor/chore không ảnh hưởng người dùng
 <p>Đây là việc AI làm rất tốt và tiết kiệm thời gian đáng kể — tổng hợp thông tin có sẵn (danh sách
 commit) thành văn bản có cấu trúc, rủi ro hallucination thấp vì có nguồn dữ liệu rõ ràng để bám vào.</p>
 
+<h2>Hỗ trợ giải quyết merge conflict</h2>
+
+<p>Merge conflict phức tạp (nhiều người sửa cùng file trong thời gian dài) tốn thời gian và dễ gây lỗi khi
+giải quyết vội. AI hữu ích ở việc giải thích rõ <em>ý định</em> của mỗi bên thay đổi trước khi đề xuất
+cách gộp:</p>
+
+<pre><code>"Đây là conflict giữa 2 nhánh: {dán đoạn conflict kèm marker <<<<<<< /
+======= / >>>>>>>}. Với mỗi bên, giải thích thay đổi đó nhằm mục đích
+gì (dựa trên code và commit message liên quan nếu có). Đề xuất cách gộp
+giữ được ý định của cả hai bên — nếu không thể gộp tự động an toàn, nói
+rõ vì sao và cần hỏi ai để quyết định."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Không tự động merge conflict logic nghiệp vụ</span>
+Với conflict chỉ liên quan định dạng/style, gợi ý của AI có thể áp dụng trực tiếp. Với conflict chạm vào
+logic nghiệp vụ (hai người cùng sửa một hàm tính toán quan trọng), luôn cần người hiểu ý định của cả hai
+thay đổi xác nhận — AI có thể giải thích nhưng không nên tự quyết định bên nào "đúng".
+</div>
+
 <h2>Đo lường hiệu quả pipeline có AI</h2>
 
 <p>Khi đưa AI vào pipeline cấp team, cần đo lường để biết nó thực sự giúp ích hay chỉ tạo thêm nhiễu —
