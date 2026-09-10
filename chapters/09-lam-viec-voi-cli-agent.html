@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 9: Làm việc với Claude Code / CLI agent</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 9: Làm việc với Claude Code / CLI agent</h1>
+
+<p>CLI/agentic coding tool (Claude Code, Aider và các công cụ tương tự) khác biệt rõ so với chat thông
+thường: nó <strong>tự đọc file, tự sửa, tự chạy lệnh (test, build, git)</strong> theo yêu cầu của bạn,
+lặp lại nhiều vòng cho đến khi xong việc — thay vì chỉ trả lời một câu hỏi rồi dừng. Chương này dùng
+Claude Code làm ví dụ đại diện, nhưng phần lớn nguyên lý áp dụng cho mọi CLI agent.</p>
+
+<h2>Cấu hình ngữ cảnh dự án một lần, dùng mãi</h2>
+
+<p>Thay vì lặp lại "dự án này dùng TypeScript, convention đặt tên thế này, chạy test bằng lệnh này" ở mỗi
+prompt, CLI agent thường hỗ trợ một <strong>file cấu hình ở gốc repo</strong> (với Claude Code là
+<code>CLAUDE.md</code>) — agent tự đọc file này ở đầu mỗi phiên làm việc:</p>
+
+<pre><code># CLAUDE.md (ví dụ rút gọn)
+
+## Stack
+- Backend: Node.js + TypeScript, framework Express
+- Database: PostgreSQL, query qua Prisma
+- Test: Vitest, chạy bằng `npm test`
+
+## Quy ước
+- Không dùng `any`, luôn khai báo type rõ ràng
+- Commit message theo Conventional Commits
+- Mọi API mới phải có test kèm theo trong cùng PR
+
+## Lệnh hay dùng
+- Chạy dev server: `npm run dev`
+- Lint: `npm run lint`
+- Build: `npm run build`</code></pre>
+
+<p>File này chính là "ngữ cảnh" (Chương 5) được thiết lập sẵn ở cấp dự án — giảm hẳn công sức lặp lại
+context cho mỗi yêu cầu, và giúp agent tự chạy đúng lệnh test/lint của dự án bạn thay vì đoán bừa.</p>
+
+<h2>Quy trình làm việc thực tế</h2>
+
+<figure>
+<svg viewBox="0 0 700 140" role="img" aria-label="Quy trình làm việc với CLI agent: giao việc, agent thực thi, review, chấp nhận hoặc điều chỉnh">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#232323">
+    <rect x="10" y="45" width="140" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="80" y="75" text-anchor="middle">Giao việc rõ</text>
+
+    <path d="M155 70 L185 70" stroke="#a4442f" stroke-width="2" marker-end="url(#a4)"/>
+
+    <rect x="190" y="45" width="150" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="265" y="65" text-anchor="middle">Agent đọc/sửa/</text>
+    <text x="265" y="80" text-anchor="middle">chạy lệnh (lặp)</text>
+
+    <path d="M345 70 L375 70" stroke="#a4442f" stroke-width="2" marker-end="url(#a4)"/>
+
+    <rect x="380" y="45" width="140" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="450" y="75" text-anchor="middle">Bạn review diff</text>
+
+    <path d="M525 70 L555 70" stroke="#a4442f" stroke-width="2" marker-end="url(#a4)"/>
+
+    <rect x="560" y="45" width="130" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="625" y="65" text-anchor="middle">Chấp nhận /</text>
+    <text x="625" y="80" text-anchor="middle">yêu cầu sửa</text>
+
+    <path d="M625 95 C 625 125, 80 125, 80 95" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#a4)"/>
+    <defs>
+      <marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Bạn luôn là người review trước khi thay đổi được chấp nhận — CLI agent tăng tốc phần thực thi,
+không thay thế phần kiểm soát.</figcaption>
+</figure>
+
+<h3>Đọc code / hiểu codebase lạ</h3>
+
+<pre><code>"Đọc module payment/ trong repo này. Tóm tắt: luồng xử lý thanh toán đi
+qua những file nào, các bước chính, và điểm nào có khả năng gây lỗi nếu
+tôi thêm phương thức thanh toán mới."</code></pre>
+
+<h3>Sửa bug</h3>
+
+<pre><code>"Có bug: khi user huỷ đơn hàng 2 lần liên tiếp, hệ thống tạo 2 bản ghi
+refund trùng nhau. Tìm nguyên nhân trong codebase, đề xuất fix, viết
+test tái hiện bug trước khi sửa, rồi chạy test để xác nhận."</code></pre>
+
+<h3>Viết feature mới</h3>
+
+<pre><code>"Thêm endpoint GET /api/orders/:id/timeline trả về lịch sử trạng thái
+đơn hàng. Theo đúng convention hiện có của các endpoint khác trong
+orders/. Viết kèm test. Chạy lint và test trước khi báo xong."</code></pre>
+
+<div class="callout">
+<span class="callout-label">Khác biệt lớn nhất so với chat thông thường</span>
+Với chat, bạn copy-paste code qua lại thủ công. Với CLI agent, bạn <strong>giao việc ở mức mục tiêu</strong>
+("thêm endpoint X", "sửa bug Y") và để agent tự lo phần thao tác file — nhưng điều đó không có nghĩa bạn
+bỏ qua bước review. Luôn đọc diff trước khi commit, y như review code của một đồng nghiệp mới.
+</div>
+
+<h2>Mở rộng: skill/slash-command tuỳ biến</h2>
+
+<p>Nhiều CLI agent cho phép định nghĩa các quy trình lặp lại thành lệnh tắt riêng (custom skill/slash
+command) — ví dụ một lệnh <code>/deploy-checklist</code> luôn chạy đúng chuỗi bước: lint → test → build →
+kiểm tra changelog. Đây là cách biến prompt template (Chương 6) thành công cụ thao tác được, không chỉ là
+văn bản để copy-paste.</p>
+
+<div class="callout warning">
+<span class="callout-label">Vẫn cần thận trọng</span>
+Agent có quyền chạy lệnh thật trên máy/repo của bạn. Trước khi cho phép agent tự chạy các lệnh có tác
+động khó hoàn tác (xoá file, force push, chạy migration trên database thật), luôn xem lại nó định làm gì.
+Chủ đề quyền hạn của agent sẽ được bàn kỹ và có hệ thống hơn ở Chương 16 và Chương 23.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Nếu dự án của bạn chưa có file cấu hình kiểu <code>CLAUDE.md</code>, hãy viết một bản rút gọn (stack,
+quy ước, lệnh hay dùng) như ví dụ trên cho một dự án thật bạn đang làm. Dùng nó cho 1 tác vụ nhỏ (sửa bug
+hoặc thêm test) và so sánh chất lượng kết quả với lần bạn không cung cấp ngữ cảnh này.
+</div>
+
+<nav class="chapter-nav">
+<a href="08-cong-cu-ai-coding-ide.html">&larr; Chương 8: Công cụ AI coding trong IDE</a>
+<a href="10-danh-gia-chat-luong-output.html">Chương 10: Đánh giá chất lượng output AI &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
