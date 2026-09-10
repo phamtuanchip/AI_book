@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 8: Công cụ AI coding trong IDE</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 8: Công cụ AI coding trong IDE</h1>
+
+<div class="callout warning">
+<span class="callout-label">Tên sản phẩm thay đổi nhanh</span>
+Danh sách công cụ cụ thể trong chương này sẽ lỗi thời nhanh hơn mọi chương khác — thị trường này ra mắt
+tính năng mới hàng tháng. Hãy đọc chương theo <strong>nhóm/loại công cụ</strong> và tiêu chí chọn, thay vì
+ghi nhớ tên sản phẩm cụ thể.
+</div>
+
+<h2>Bốn nhóm công cụ AI coding</h2>
+
+<table>
+<thead>
+<tr><th>Nhóm</th><th>Cách hoạt động</th><th>Ví dụ đại diện</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inline completion</strong></td>
+<td>Gợi ý code ngay khi gõ, giống autocomplete nâng cao — chấp nhận bằng Tab. Tốt cho việc viết nhanh
+đoạn code lặp lại, ít can thiệp vào luồng làm việc.</td>
+<td>GitHub Copilot (chế độ completion), Codeium/Windsurf Tab, JetBrains AI Assistant</td>
+</tr>
+<tr>
+<td><strong>Chat trong IDE</strong></td>
+<td>Cửa sổ chat cạnh trình soạn thảo, có thể "đính kèm" file/đoạn code làm ngữ cảnh, trả lời câu hỏi hoặc
+đề xuất thay đổi để bạn duyệt trước khi áp dụng.</td>
+<td>Copilot Chat, JetBrains AI Chat, chat panel trong Cursor/Windsurf</td>
+</tr>
+<tr>
+<td><strong>Editor AI-native</strong></td>
+<td>IDE được thiết kế lại xoay quanh AI làm trung tâm — có thể sửa nhiều file cùng lúc, hiểu ngữ cảnh cả
+dự án, tích hợp sâu hơn plugin thông thường.</td>
+<td>Cursor, Windsurf</td>
+</tr>
+<tr>
+<td><strong>CLI / Agentic coding tool</strong></td>
+<td>Chạy trong terminal, tự đọc-sửa-chạy lệnh trên codebase theo yêu cầu ngôn ngữ tự nhiên, có thể thực
+hiện chuỗi việc nhiều bước gần như độc lập (đọc file, sửa, chạy test, sửa tiếp). Đây là nhóm gần nhất với
+khái niệm "agent" ở Phần III.</td>
+<td>Claude Code, Aider, và các CLI agent tương tự</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Tiêu chí chọn công cụ</h2>
+
+<ul>
+<li><strong>Quy mô thay đổi cần làm:</strong> sửa 1 dòng → inline completion là đủ; cần hiểu và sửa nhiều
+file liên quan nhau → cần chat có ngữ cảnh dự án hoặc CLI agent.</li>
+<li><strong>Mức độ tự động hoá muốn có:</strong> muốn xem từng gợi ý trước khi chấp nhận (kiểm soát cao,
+chậm hơn) hay để công cụ tự thực hiện cả chuỗi bước rồi review kết quả cuối (nhanh hơn, cần tin tưởng
+hơn)?</li>
+<li><strong>Tích hợp với IDE hiện có:</strong> đổi hẳn sang một editor AI-native có chi phí học lại; một
+plugin/extension gắn vào IDE quen thuộc thường dễ áp dụng hơn cho team đã có quy trình ổn định.</li>
+<li><strong>Chính sách dữ liệu của tổ chức</strong> (nhắc lại Chương 4): công cụ có gửi code lên server
+bên thứ ba không, có tuỳ chọn self-host/on-prem không, có phù hợp với dữ liệu nhạy cảm của dự án không.</li>
+<li><strong>Chi phí theo cách dùng thực tế:</strong> gói theo số lượt gợi ý, theo token, hay theo subscription
+cố định — cách tính phí phù hợp phụ thuộc vào việc bạn dùng công cụ liên tục hay theo đợt.</li>
+</ul>
+
+<h2>Phối hợp nhiều công cụ cùng lúc</h2>
+
+<p>Không có gì sai khi dùng song song nhiều công cụ — thực tế nhiều lập trình viên có kinh nghiệm làm vậy.
+Cách phối hợp phổ biến và hiệu quả:</p>
+
+<ul>
+<li><strong>Inline completion luôn bật</strong> cho công việc gõ code thông thường — chi phí nhận thức
+gần như bằng 0.</li>
+<li><strong>Chat/CLI agent dùng cho việc có chủ đích</strong> — bắt đầu tính năng mới, refactor lớn, debug
+phức tạp, viết tài liệu — nơi bạn chủ động mở "phiên làm việc" với AI thay vì để nó chạy nền liên tục.</li>
+<li><strong>Một công cụ "chính" cho các thay đổi nhiều file</strong> — tránh dùng 2-3 agent khác nhau sửa
+cùng lúc trên cùng một nhánh code, dễ gây xung đột và khó theo dõi ai đã đổi gì.</li>
+</ul>
+
+<div class="callout">
+<span class="callout-label">Nguyên tắc xuyên suốt sách</span>
+Công cụ sẽ thay đổi liên tục, nhưng kỹ năng bạn học ở Chương 5-7 (4 thành phần prompt, chain-of-thought,
+phân rã nhiệm vụ...) áp dụng được cho <em>mọi</em> công cụ trong bảng trên — kể cả công cụ chưa ra mắt.
+Đó là lý do sách dành phần lớn dung lượng cho kỹ năng prompting hơn là hướng dẫn thao tác từng công cụ.
+</div>
+
+<p>Chương 9 sẽ đi sâu vào một loại công cụ cụ thể — CLI/agentic coding tool — vì đây là nhóm gần nhất với
+cách làm việc "agentic" mà Phần III và Phần IV của sách xây dựng lên.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Liệt kê công cụ AI coding bạn đang dùng (nếu có) theo đúng 4 nhóm ở bảng trên. Nếu đang thiếu hẳn 1 nhóm
+(ví dụ chưa thử CLI agent), tìm hiểu 1 công cụ đại diện cho nhóm đó và ghi chú lại: nó phù hợp với loại
+việc gì trong công việc hàng ngày của bạn?
+</div>
+
+<nav class="chapter-nav">
+<a href="07-prompting-cho-code.html">&larr; Chương 7: Prompting cho code</a>
+<a href="09-lam-viec-voi-cli-agent.html">Chương 9: Làm việc với Claude Code / CLI agent &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
