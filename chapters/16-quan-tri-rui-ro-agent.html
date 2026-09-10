@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 16: Quản trị &amp; rủi ro khi dùng agent</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần III — Công nghiệp Agentic: AI Agents trong công việc</p>
+<h1>Chương 16: Quản trị &amp; rủi ro khi dùng agent</h1>
+
+<p>Chương khép lại Phần III, và là nền tảng bắt buộc trước khi đọc Chương 23 (bảo mật hệ thống agentic
+cho SDLC — nơi các nguyên tắc ở đây được áp dụng chi tiết và nâng cao hơn). Nhắc lại cảnh báo ở Chương 12:
+agent hành động thật, sai sót của nó có hậu quả thật, không chỉ là một câu trả lời sai vô hại.</p>
+
+<h2>Quyền hạn theo nguyên tắc least-privilege</h2>
+
+<p>Nguyên tắc kinh điển trong bảo mật hệ thống, áp dụng nguyên vẹn cho agent: <strong>chỉ cấp đúng quyền
+cần thiết cho công việc, không hơn</strong>. Một agent xử lý yêu cầu nghỉ phép (Chương 15) không cần
+quyền truy cập database lương; một agent hỗ trợ debug không cần quyền deploy production.</p>
+
+<table>
+<thead>
+<tr><th>Cấp độ</th><th>Ví dụ quyền hạn</th><th>Mức giám sát cần có</th></tr>
+</thead>
+<tbody>
+<tr><td>Chỉ đọc</td><td>Đọc file, tra cứu dữ liệu, tìm kiếm</td><td>Thấp — log lại để tham khảo</td></tr>
+<tr><td>Ghi trong phạm vi hẹp</td><td>Sửa file trong 1 thư mục, cập nhật trạng thái 1 bảng dữ liệu</td>
+<td>Trung bình — review trước khi áp dụng (như CLI agent ở Chương 9)</td></tr>
+<tr><td>Hành động khó hoàn tác</td><td>Xoá dữ liệu, gửi email/tin nhắn ra ngoài, gọi API thanh toán</td>
+<td>Cao — bắt buộc con người phê duyệt trước (approval gate)</td></tr>
+<tr><td>Hành động ảnh hưởng hệ thống chung</td><td>Deploy production, chạy migration, đổi cấu hình hạ
+tầng</td><td>Rất cao — phê duyệt + có kế hoạch rollback rõ ràng</td></tr>
+</tbody>
+</table>
+
+<h2>Guardrail: giới hạn phạm vi hành động</h2>
+
+<p>Ngoài việc giới hạn quyền ở tầng hệ thống (agent không có API key/quyền truy cập ngoài phạm vi), nên
+có thêm lớp guardrail ở tầng prompt và tầng kiểm tra đầu ra:</p>
+
+<ul>
+<li><strong>Allow-list thay vì deny-list:</strong> định nghĩa rõ những hành động/tool được phép, thay vì
+cố liệt kê mọi thứ bị cấm (danh sách cấm luôn có thể thiếu sót).</li>
+<li><strong>Validate input/output của tool:</strong> kiểm tra tham số agent truyền vào tool có hợp lệ
+trước khi thực thi (ví dụ: <code>order_id</code> phải đúng định dạng, số tiền không được âm) — đừng tin
+tưởng mù quáng rằng mô hình luôn tạo ra tham số đúng.</li>
+<li><strong>Rate limit / giới hạn số vòng lặp:</strong> đã nhắc ở Chương 14 — giới hạn cứng số lần agent
+được gọi tool trong một phiên, tránh vòng lặp mất kiểm soát hoặc chi phí bất ngờ.</li>
+<li><strong>Giới hạn phạm vi dữ liệu:</strong> agent xử lý dữ liệu khách hàng A không nên có quyền truy
+cập dữ liệu khách hàng B trong cùng một phiên, kể cả khi dùng chung một tool.</li>
+</ul>
+
+<h2>Human-in-the-loop: con người ở đúng chỗ, đúng lúc</h2>
+
+<figure>
+<svg viewBox="0 0 700 150" role="img" aria-label="Approval gate: agent đề xuất hành động rủi ro cao, con người phê duyệt trước khi thực thi">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#232323">
+    <rect x="10" y="50" width="150" height="50" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="85" y="80" text-anchor="middle">Agent đề xuất</text>
+
+    <path d="M165 75 L195 75" stroke="#a4442f" stroke-width="2" marker-end="url(#a7)"/>
+
+    <rect x="200" y="50" width="170" height="50" rx="6" fill="#fbeaea" stroke="#a4442f"/>
+    <text x="285" y="70" text-anchor="middle" font-weight="700">Rủi ro cao?</text>
+    <text x="285" y="86" text-anchor="middle" font-size="11">(xem bảng cấp độ trên)</text>
+
+    <path d="M300 100 L300 125 L560 125" stroke="#a4442f" stroke-width="2" fill="none"/>
+    <text x="330" y="140" font-size="11" fill="#6b6b6b">Có</text>
+
+    <path d="M440 75 L470 75" stroke="#a4442f" stroke-width="2" marker-end="url(#a7)"/>
+    <text x="450" y="65" font-size="11" fill="#6b6b6b">Không</text>
+
+    <rect x="475" y="50" width="120" height="50" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="535" y="80" text-anchor="middle">Tự thực thi</text>
+
+    <rect x="560" y="95" width="130" height="50" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="625" y="115" text-anchor="middle">Chờ con người</text>
+    <text x="625" y="131" text-anchor="middle">phê duyệt</text>
+
+    <defs>
+      <marker id="a7" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Approval gate: hành động rủi ro thấp agent tự thực thi; hành động rủi ro cao luôn dừng lại chờ
+con người xác nhận.</figcaption>
+</figure>
+
+<p>Không phải mọi hành động đều cần con người phê duyệt — như vậy sẽ triệt tiêu lợi ích tốc độ của agent.
+Nguyên tắc thực dụng: đặt approval gate tại các hành động <strong>rủi ro cao và/hoặc khó hoàn tác</strong>
+(theo bảng cấp độ ở trên), để agent tự do hành động ở các bước rủi ro thấp, có thể hoàn tác dễ dàng.</p>
+
+<h2>Giám sát &amp; audit trail</h2>
+
+<p>Mọi hành động agent thực hiện nên được ghi log đầy đủ: tool nào được gọi, tham số gì, kết quả ra sao,
+ai/agent nào khởi tạo phiên làm việc, lúc nào. Đây không phải việc "làm cho có" — khi có sự cố, audit
+trail là cách duy nhất để trả lời câu hỏi "chuyện gì đã thực sự xảy ra" mà không phải đoán.</p>
+
+<div class="callout">
+<span class="callout-label">Nguyên tắc chọn mức giám sát</span>
+Mức độ log/giám sát nên tỷ lệ thuận với cấp độ rủi ro của hành động (bảng ở trên) — hành động chỉ-đọc có
+thể chỉ cần log tóm tắt; hành động rủi ro cao cần log chi tiết đủ để tái hiện lại toàn bộ quyết định của
+agent nếu cần điều tra sau này.
+</div>
+
+<h2>Chi phí vận hành — rủi ro dễ bị bỏ quên</h2>
+
+<p>Mỗi vòng lặp Plan → Act → Observe (Chương 12) là ít nhất một lần gọi mô hình, tính phí theo token
+(Chương 3). Một agent chạy nhiều vòng lặp, hoặc nhiều agent chạy song song (multi-agent, Chương 13), có
+thể phát sinh chi phí lớn hơn dự kiến rất nhiều nếu không kiểm soát. Biện pháp thực dụng: đặt ngân sách
+token/chi phí tối đa cho mỗi phiên, dùng model routing (mô hình nhỏ/rẻ cho bước đơn giản — đã nhắc ở
+Chương 3) khi có thể, và theo dõi chi phí thực tế thường xuyên thay vì chỉ ước tính một lần lúc thiết kế.</p>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ — khép lại Phần III</span>
+Quay lại agent bạn đã thiết kế ở bài tập Chương 14/15. Với mỗi tool trong danh sách, xếp nó vào 1 trong 4
+cấp độ quyền hạn ở bảng trên. Với các tool ở cấp "rủi ro cao" trở lên, viết rõ: ai sẽ là người phê duyệt,
+và thông tin gì cần hiển thị cho người đó để ra quyết định nhanh và đúng.
+</div>
+
+<p>Phần III đã trang bị cho bạn đủ nền tảng về agent: khái niệm, kiến trúc, cách xây dựng, ứng dụng thực
+tế, và quản trị rủi ro. Phần IV sẽ đưa toàn bộ kiến thức này vào một bối cảnh cụ thể và có hệ thống hơn —
+áp dụng AI xuyên suốt vòng đời phát triển phần mềm (SDLC), với mục tiêu biến bạn thành người thiết kế và
+quản trị hệ thống đó, không chỉ người dùng nó.</p>
+
+<nav class="chapter-nav">
+<a href="15-agent-cong-viec-phi-lap-trinh.html">&larr; Chương 15: Agent trong công việc phi lập trình</a>
+<a href="17-buc-tranh-sdlc-voi-ai.html">Chương 17: Bức tranh SDLC với AI &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
