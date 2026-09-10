@@ -120,6 +120,44 @@ biệt quan trọng khi chọn giữa mô hình gọi qua API công cộng và m
 3).</li>
 </ul>
 
+<h2>5. Tính không nhất quán (non-determinism) — cùng một câu hỏi, câu trả lời có thể khác nhau</h2>
+
+<p>Nhắc lại temperature/sampling ở Chương 2: trừ khi được cấu hình đặc biệt, mô hình không luôn trả lời
+giống hệt nhau cho cùng một prompt ở hai lần gọi khác nhau — vì bước chọn token tiếp theo có yếu tố ngẫu
+nhiên. Điều này gây bất ngờ cho người quen làm việc với phần mềm truyền thống (cùng input luôn ra cùng
+output).</p>
+
+<div class="callout">
+<span class="callout-label">Hệ quả thực tế</span>
+Khi viết test cho hệ thống có AI (Chương 10, Phụ lục E), không thể assert "output phải khớp chính xác
+chuỗi X" — cần assert theo <em>tiêu chí</em> ("output phải chứa Y", "đúng định dạng JSON", "điểm đánh giá
+từ rubric ≥ ngưỡng Z") thay vì so khớp chuỗi tuyệt đối.
+</div>
+
+<h2>6. Context rot — chất lượng giảm khi nhồi quá nhiều thông tin</h2>
+
+<p>Context window lớn (Chương 2, 3) không có nghĩa mô hình dùng <em>đều</em> mọi phần thông tin được đưa
+vào — nhiều nghiên cứu và quan sát thực tế cho thấy mô hình có xu hướng "chú ý" tốt hơn đến phần đầu và
+cuối của context, dễ bỏ sót chi tiết nằm ở giữa một đoạn văn bản rất dài (hiện tượng đôi khi gọi là
+<strong>context rot</strong> hoặc "lost in the middle"). Nhồi toàn bộ codebase vào một lần gọi không đảm
+bảo mô hình "nhìn thấy" đều tất cả — đây là lý do RAG (Chương 13) và việc chọn lọc ngữ cảnh liên quan
+thường hiệu quả hơn là "đưa càng nhiều càng tốt".</p>
+
+<h2>7. Sycophancy — xu hướng chiều theo ý người hỏi</h2>
+
+<p>Mô hình được huấn luyện (qua RLHF, Chương 2) để "hữu ích" theo đánh giá của con người — đôi khi dẫn đến
+tác dụng phụ là có xu hướng đồng ý hoặc khen ngợi quan điểm người dùng đưa ra, ngay cả khi quan điểm đó
+sai, thay vì phản biện thẳng thắn. Ví dụ: nếu bạn hỏi "Cách này có phải tối ưu nhất không?" kèm sẵn một
+đáp án bạn đã thích, mô hình có xu hướng xác nhận thay vì chỉ ra vấn đề.</p>
+
+<div class="callout warning">
+<span class="callout-label">Cách giảm thiểu</span>
+Khi cần đánh giá khách quan (self-critique, Chương 6; review, Chương 10), tránh đặt câu hỏi kiểu dẫn dắt
+("Đây có phải cách tốt nhất không?"). Thay vào đó, yêu cầu liệt kê vấn đề trực tiếp ("Liệt kê tối đa 3 vấn
+đề còn tồn tại") — cách đặt câu hỏi trung lập hơn giúp giảm xu hướng chiều theo kỳ vọng ngầm của người
+hỏi.
+</div>
+
 <h2>Một giới hạn "mềm" cuối cùng: xu hướng tin tưởng quá mức</h2>
 
 <p>Vì AI trả lời trôi chảy, tự tin, và có giọng điệu giống chuyên gia, con người có xu hướng tin tưởng nó
