@@ -90,6 +90,31 @@ khó debug hơn (lỗi có thể xảy ra ở tầng điều phối, không ch�
 khi single-agent thực sự không đủ chuyên môn hoá hoặc quá tải context.
 </div>
 
+<h2>So sánh nhanh 3 mẫu kiến trúc</h2>
+
+<table>
+<thead>
+<tr><th>Tiêu chí</th><th>Single-agent</th><th>Orchestrator/Sub-agent</th><th>Pipeline tuần tự</th></tr>
+</thead>
+<tbody>
+<tr><td>Độ phức tạp triển khai</td><td>Thấp</td><td>Cao</td><td>Trung bình</td></tr>
+<tr><td>Chi phí token</td><td>Thấp nhất (1 context)</td><td>Cao (nhiều agent, nhiều context riêng)</td>
+<td>Trung bình (context truyền nối tiếp)</td></tr>
+<tr><td>Dễ debug</td><td>Dễ nhất</td><td>Khó nhất (luồng điều phối động)</td><td>Trung bình (thứ tự cố
+định, dễ theo dõi hơn orchestrator)</td></tr>
+<tr><td>Phù hợp khi</td><td>Phạm vi rõ, không cần chuyên môn hoá</td><td>Nhiều loại việc khác nhau, cần
+linh hoạt định tuyến</td><td>Quy trình có thứ tự cố định, lặp lại (giống pipeline CI/CD, Chương 20)</td></tr>
+</tbody>
+</table>
+
+<h2>Mẫu lai (hybrid) — kết hợp cả hai</h2>
+
+<p>Trong thực tế, nhiều hệ thống không thuần một mẫu — ví dụ một pipeline tuần tự tổng thể (Planner →
+Coder → Reviewer, Chương 22), nhưng trong bước "Coder", lại dùng orchestrator nhỏ điều phối 2 sub-agent
+chuyên biệt (một agent viết logic chính, một agent viết test). Không cần chọn cứng một mẫu cho toàn bộ hệ
+thống — <strong>chọn mẫu phù hợp cho từng phần</strong>, miễn là ranh giới trách nhiệm giữa các phần rõ
+ràng.</p>
+
 <h2>RAG kết hợp agent: bù đắp giới hạn kiến thức</h2>
 
 <p>Nhắc lại Chương 4: mô hình có kiến thức lỗi thời (training cutoff) và có thể hallucination khi thiếu
