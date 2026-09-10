@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 2: Mô hình ngôn ngữ lớn (LLM) hoạt động thế nào</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần I — Nhập môn AI nhanh</p>
+<h1>Chương 2: Mô hình ngôn ngữ lớn (LLM) hoạt động thế nào</h1>
+
+<p>Bạn không cần biết đạo hàm hay ma trận để dùng AI hiệu quả — nhưng nếu hiểu đúng cơ chế cốt lõi, bạn
+sẽ prompt tốt hơn và đoán được khi nào mô hình có khả năng sai. Chương này giải thích LLM ở mức trực
+giác, đủ dùng cho toàn bộ phần còn lại của sách.</p>
+
+<h2>Ý tưởng cốt lõi: "đoán từ tiếp theo"</h2>
+
+<p>Về bản chất, một LLM là một cỗ máy làm đúng một việc cực kỳ tốt: <strong>cho một đoạn văn bản, đoán
+xem từ (chính xác hơn là <em>token</em>) tiếp theo nên là gì</strong>. Nó lặp lại việc này hàng nghìn
+lần để tạo ra cả một đoạn trả lời.</p>
+
+<figure>
+<svg viewBox="0 0 700 150" role="img" aria-label="Sơ đồ vòng lặp dự đoán token tiếp theo">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#232323">
+    <rect x="10" y="55" width="230" height="40" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="125" y="80" text-anchor="middle">"Hôm nay trời rất</text>
+
+    <path d="M245 75 L295 75" stroke="#a4442f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="300" y="55" width="120" height="40" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="360" y="80" text-anchor="middle">mô hình</text>
+
+    <path d="M425 75 L475 75" stroke="#a4442f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="480" y="55" width="90" height="40" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="525" y="80" text-anchor="middle">"đẹp"</text>
+
+    <path d="M525 95 C 525 130, 130 130, 130 95" stroke="#6b6b6b" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+    <text x="330" y="140" text-anchor="middle" fill="#6b6b6b">ghép "đẹp" vào chuỗi, lặp lại để sinh token tiếp theo</text>
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Mỗi lần chỉ đoán một token, rồi ghép vào chuỗi đầu vào để đoán token kế tiếp.</figcaption>
+</figure>
+
+<p><strong>Token</strong> là đơn vị nhỏ mô hình xử lý — không hẳn là "từ", có thể là một từ, một phần từ,
+hoặc một dấu câu. Ví dụ "prompting" có thể bị tách thành <code>prompt</code> + <code>ing</code>. Đây là
+lý do các nhà cung cấp AI tính phí theo <em>số token</em> chứ không phải số ký tự hay số từ, và vì sao
+"context window" (bộ nhớ ngắn hạn của mô hình trong một cuộc hội thoại) được đo bằng token — ví dụ
+200.000 token tương đương khoảng 150.000 từ tiếng Anh.</p>
+
+<p>Việc "đoán token tiếp theo" nghe đơn giản, nhưng khi mô hình được huấn luyện trên hàng nghìn tỷ token
+văn bản (sách, code, bài báo, tài liệu kỹ thuật...), nó học được cấu trúc ngôn ngữ, kiến thức thực tế,
+logic cơ bản, và cả cách viết code — tất cả chỉ từ việc lặp đi lặp lại một mục tiêu duy nhất này.</p>
+
+<h2>Ba giai đoạn tạo ra một mô hình ta đang dùng</h2>
+
+<p>Mô hình bạn chat cùng (ChatGPT, Claude, Gemini...) không chỉ trải qua một bước huấn luyện — mà là kết
+quả của một chuỗi giai đoạn, mỗi giai đoạn dạy mô hình một việc khác nhau:</p>
+
+<figure>
+<svg viewBox="0 0 700 130" role="img" aria-label="Ba giai đoạn huấn luyện LLM: pretraining, fine-tuning, RLHF">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#232323">
+    <rect x="10" y="30" width="205" height="60" rx="6" fill="#f1efe9" stroke="#e2ddd3"/>
+    <text x="112" y="55" text-anchor="middle" font-weight="700">1. Pretraining</text>
+    <text x="112" y="74" text-anchor="middle" font-size="11">Học ngôn ngữ &amp; kiến thức</text>
+    <text x="112" y="88" text-anchor="middle" font-size="11">từ kho văn bản khổng lồ</text>
+
+    <path d="M220 60 L245 60" stroke="#a4442f" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="250" y="30" width="205" height="60" rx="6" fill="#eef2f6" stroke="#2f5f8f"/>
+    <text x="352" y="55" text-anchor="middle" font-weight="700">2. Fine-tuning</text>
+    <text x="352" y="74" text-anchor="middle" font-size="11">Dạy "làm theo hướng dẫn"</text>
+    <text x="352" y="88" text-anchor="middle" font-size="11">bằng ví dụ do con người viết</text>
+
+    <path d="M460 60 L485 60" stroke="#a4442f" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <rect x="490" y="30" width="205" height="60" rx="6" fill="#eef6ee" stroke="#3f7d3f"/>
+    <text x="592" y="55" text-anchor="middle" font-weight="700">3. RLHF / alignment</text>
+    <text x="592" y="74" text-anchor="middle" font-size="11">Tinh chỉnh theo phản hồi</text>
+    <text x="592" y="88" text-anchor="middle" font-size="11">con người: hữu ích &amp; an toàn</text>
+
+    <defs>
+      <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#a4442f"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
+<figcaption>Ba giai đoạn chính biến một "cỗ máy đoán token" thành trợ lý hữu ích và an toàn.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Pretraining (tiền huấn luyện):</strong> mô hình đọc một lượng văn bản khổng lồ (sách, web,
+code, tài liệu...) và chỉ học một việc — đoán token tiếp theo. Giai đoạn này tốn hàng chục đến hàng trăm
+triệu USD tính toán, và là lý do chỉ vài công ty lớn làm được mô hình nền (foundation model).</li>
+<li><strong>Fine-tuning / Instruction tuning:</strong> mô hình sau pretraining chỉ giỏi "viết tiếp văn
+bản", chưa biết "trả lời câu hỏi" hay "làm theo hướng dẫn". Ở bước này, mô hình được huấn luyện thêm trên
+các cặp ví dụ dạng (hướng dẫn → câu trả lời tốt) do con người biên soạn, để học cách cư xử như một trợ
+lý.</li>
+<li><strong>RLHF (Reinforcement Learning from Human Feedback) và các kỹ thuật alignment khác:</strong>
+con người xếp hạng nhiều câu trả lời của mô hình cho cùng một câu hỏi; mô hình học cách tạo ra câu trả
+lời <em>giống câu được xếp hạng cao hơn</em>. Đây là bước giúp mô hình hữu ích hơn, ít độc hại hơn, và
+biết từ chối những yêu cầu không phù hợp.</li>
+</ul>
+
+<div class="callout">
+<span class="callout-label">Vì sao điều này quan trọng khi prompting</span>
+Vì mô hình được "dạy" cách cư xử qua ví dụ và phản hồi con người, nó rất nhạy với <em>cách bạn diễn đạt
+prompt</em> — giống cách một người mới việc sẽ làm tốt hơn nếu bạn đưa hướng dẫn rõ ràng, có ví dụ, có
+tiêu chí thành công. Đây chính là nền tảng của toàn bộ Phần II trong sách này.
+</div>
+
+<h2>Vài khái niệm khác bạn sẽ gặp lại</h2>
+
+<ul>
+<li><strong>Context window:</strong> lượng token mô hình có thể "nhìn thấy" cùng lúc trong một lần gọi
+(bao gồm cả prompt của bạn, lịch sử hội thoại, và tài liệu đính kèm). Hết context window, mô hình sẽ
+"quên" phần đầu hoặc từ chối nhận thêm.</li>
+<li><strong>Temperature / sampling:</strong> tham số điều chỉnh độ "ngẫu nhiên" khi mô hình chọn token
+tiếp theo. Temperature thấp → câu trả lời ổn định, ít sáng tạo, phù hợp việc cần độ chính xác cao (sinh
+code, trích xuất dữ liệu). Temperature cao → đa dạng, sáng tạo hơn nhưng dễ lệch hướng.</li>
+<li><strong>Embedding:</strong> cách mô hình biểu diễn từ/câu dưới dạng vector số, sao cho các khái niệm
+gần nghĩa nhau nằm gần nhau trong không gian số. Đây là nền tảng của tìm kiếm ngữ nghĩa và RAG (sẽ nhắc
+lại ở Chương 13).</li>
+</ul>
+
+<div class="callout warning">
+<span class="callout-label">Hệ quả quan trọng</span>
+Vì cơ chế cốt lõi chỉ là "đoán token có khả năng cao nhất", mô hình <strong>không tra cứu sự thật</strong>
+theo cách con người tra cứu — nó tạo ra thứ "nghe hợp lý" dựa trên pattern đã học. Đó là gốc rễ của hiện
+tượng <em>hallucination</em> (bịa thông tin) mà Chương 4 sẽ phân tích kỹ.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Mở một chatbot AI bất kỳ, hỏi một câu hỏi kiến thức chuyên ngành hẹp mà bạn chắc chắn biết câu trả lời
+(ví dụ một API cũ, một sự kiện ít người biết). Quan sát: câu trả lời có tự tin không, dù đúng hay sai?
+Điều đó minh hoạ trực tiếp cho việc mô hình "đoán token hợp lý" chứ không "biết mình không biết".
+</div>
+
+<nav class="chapter-nav">
+<a href="01-ai-la-gi.html">&larr; Chương 1: AI là gì, vì sao quan tâm lúc này</a>
+<a href="03-he-sinh-thai-mo-hinh.html">Chương 3: Hệ sinh thái mô hình &amp; nhà cung cấp &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
