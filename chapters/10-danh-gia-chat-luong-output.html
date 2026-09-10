@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 10: Đánh giá chất lượng output AI</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
+<h1>Chương 10: Đánh giá chất lượng output AI</h1>
+
+<p>Đây là chương quan trọng nhất Phần II, dù ngắn gọn nhất. Prompt giỏi đến đâu cũng vô nghĩa nếu bạn
+chấp nhận output mà không kiểm chứng — nhắc lại hallucination và automation bias ở Chương 4. Chương này
+biến điều đó thành thói quen review cụ thể.</p>
+
+<h2>"Vibe coding" là gì, và vì sao nguy hiểm</h2>
+
+<p><strong>Vibe coding</strong> — thuật ngữ chỉ việc chấp nhận code do AI sinh ra chỉ vì nó "chạy được"
+hoặc "trông ổn", không đọc kỹ, không hiểu logic, không kiểm tra edge case. Với việc thử nghiệm cá nhân,
+prototype nhanh, đây có thể là cách làm hợp lý. Nhưng đưa vào code chạy sản phẩm thật, nó tích luỹ nợ kỹ
+thuật vô hình: bug tiềm ẩn không ai hiểu tại sao xảy ra, vì không ai — kể cả người "viết" ra nó — thực sự
+đọc và hiểu logic.</p>
+
+<div class="callout warning">
+<span class="callout-label">Ranh giới cần phân biệt rõ</span>
+Dùng AI để <em>tăng tốc viết code</em> là tốt. Dùng AI để <em>thay thế việc hiểu code</em> là rủi ro. Bạn
+vẫn phải là người chịu trách nhiệm giải thích được code trong PR của mình khi bị hỏi — dù ai/cái gì đã
+viết ra nó.
+</div>
+
+<h2>Checklist review code do AI sinh ra</h2>
+
+<p>Coi code AI-generated như code của một thực tập sinh rất nhanh nhưng chưa có kinh nghiệm ngữ cảnh dự
+án — nhanh, siêng, nhưng cần review kỹ như bất kỳ PR nào khác, cộng thêm vài điểm đặc thù:</p>
+
+<ul>
+<li><strong>Đúng yêu cầu, không thừa:</strong> có làm đúng những gì được yêu cầu, không tự ý thêm tính
+năng/thay đổi ngoài phạm vi (mô hình có xu hướng "hào phóng" thêm code không ai nhờ)?</li>
+<li><strong>Ảo giác API:</strong> hàm/thư viện/tham số được dùng có thực sự tồn tại? Kiểm tra với tài
+liệu chính thức nếu không chắc, đặc biệt với thư viện ít phổ biến (nhắc lại Chương 4).</li>
+<li><strong>Edge case &amp; xử lý lỗi:</strong> input rỗng, null, timeout, dữ liệu vượt giới hạn — có
+được xử lý hay bị bỏ qua?</li>
+<li><strong>Bảo mật:</strong> có lỗ hổng injection, có validate input từ người dùng không, có hardcode
+secret nào không (xem thêm Chương 23 cho hệ thống agentic)?</li>
+<li><strong>Nhất quán với codebase:</strong> có theo đúng convention, pattern, cấu trúc thư mục đã có,
+hay tạo ra một "đảo phong cách" riêng biệt?</li>
+<li><strong>Hiệu năng ở quy mô thực tế:</strong> code chạy đúng với dữ liệu mẫu nhỏ, nhưng có vấn đề
+N+1 query, vòng lặp lồng không cần thiết, hay load toàn bộ dữ liệu vào bộ nhớ không?</li>
+</ul>
+
+<div class="callout template">
+<span class="callout-label">Dùng chính AI để hỗ trợ review — nhưng không thay bạn</span>
+<pre><code>"Đóng vai một senior reviewer khó tính, review đoạn diff sau theo
+checklist: (1) đúng phạm vi yêu cầu, (2) API/hàm dùng có thực sự tồn
+tại, (3) edge case, (4) bảo mật, (5) nhất quán convention, (6) hiệu năng.
+Với mỗi mục, ghi PASS hoặc liệt kê vấn đề cụ thể kèm số dòng.
+
+{dán diff}"</code></pre>
+Đây là kỹ thuật self-critique (Chương 6) áp dụng cho review — hữu ích để bắt các lỗi rõ ràng nhanh hơn,
+nhưng không thay thế việc chính bạn đọc và hiểu code trước khi merge.
+</div>
+
+<h2>Kiểm thử vẫn là tuyến phòng thủ quan trọng nhất</h2>
+
+<p>Test tự động (unit test, integration test) là cách khách quan nhất để xác nhận code — do AI hay con
+người viết — thực sự đúng, không phụ thuộc vào việc đọc code có "trông ổn" hay không. Ba nguyên tắc khi
+kết hợp AI với testing:</p>
+
+<ol>
+<li><strong>Không để AI tự viết test rồi tự chấm nó "pass"</strong> mà không có ai review test đó có thực
+sự kiểm tra đúng hành vi mong muốn không — test viết sai vẫn "xanh" nhưng vô giá trị.</li>
+<li><strong>Test hành vi hiện tại trước khi refactor bằng AI</strong> (đã nhắc ở Chương 7) — không có test
+nền, bạn không có cách nào biết "không đổi hành vi" có thực sự đúng.</li>
+<li><strong>CI/pipeline vẫn phải là cửa chặn cuối cùng</strong> — không merge code (dù AI hay người viết)
+chỉ dựa trên việc nó "chạy được trên máy tôi".</li>
+</ol>
+
+<h2>Khi nào nên tin tưởng nhiều hơn, khi nào nên chậm lại</h2>
+
+<table>
+<thead>
+<tr><th>Tình huống</th><th>Mức độ review cần thiết</th></tr>
+</thead>
+<tbody>
+<tr><td>Prototype, script dùng một lần, không chạy production</td><td>Thấp — đọc lướt là đủ</td></tr>
+<tr><td>Code logic nghiệp vụ, chạy production, ảnh hưởng người dùng thật</td><td>Cao — review đầy đủ
+checklist trên, có test</td></tr>
+<tr><td>Code liên quan bảo mật, dữ liệu nhạy cảm, thanh toán</td><td>Rất cao — review kỹ, có thể cần thêm
+người review độc lập, không chỉ tự AI-review</td></tr>
+<tr><td>Thay đổi hạ tầng, migration, lệnh có thể phá dữ liệu</td><td>Rất cao — luôn có con người phê duyệt
+trước khi thực thi (xem thêm human-in-the-loop, Chương 16)</td></tr>
+</tbody>
+</table>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Lấy lại danh sách 3 công cụ AI ở bài tập Chương 1 — với mỗi lần AI từng làm bạn bất ngờ vì sai, thử áp
+checklist review ở chương này: mục nào trong checklist, nếu được làm, có thể đã bắt được lỗi đó sớm hơn?
+</div>
+
+<p>Đến đây, bạn đã có đủ kỹ năng prompting và tư duy đánh giá để dùng AI hỗ trợ lập trình một cách có
+kiểm soát. Chương 11 khép lại Phần II bằng các case study thực hành end-to-end, kết hợp mọi kỹ thuật đã
+học.</p>
+
+<nav class="chapter-nav">
+<a href="09-lam-viec-voi-cli-agent.html">&larr; Chương 9: Làm việc với Claude Code / CLI agent</a>
+<a href="11-case-study-thuc-hanh.html">Chương 11: Case study thực hành &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
