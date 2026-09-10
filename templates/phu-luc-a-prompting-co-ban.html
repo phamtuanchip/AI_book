@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục A: Prompting cơ bản &amp; nâng cao</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="../chapters/index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phụ lục A</p>
+<h1>Prompting cơ bản &amp; nâng cao — thư viện template</h1>
+
+<p>Các template dùng chung cho kỹ thuật ở Chương 5-6. Copy, điền vào chỗ <code>{...}</code>, chỉnh theo
+tình huống cụ thể.</p>
+
+<h2>1. Khung 4 thành phần (role + context + format)</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Vai trò: Bạn là {vai trò chuyên môn cụ thể}.
+Bối cảnh: {mô tả dự án/tình huống, ràng buộc kỹ thuật liên quan}.
+Yêu cầu: {việc cụ thể cần làm}.
+Ví dụ (nếu có): {1-2 ví dụ input/output mẫu}.
+Định dạng đầu ra: {liệt kê/bảng/JSON/code kèm giải thích/chỉ code...}.</code></pre>
+</div>
+
+<h2>2. Few-shot (học theo ví dụ)</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>{Mô tả việc cần làm}, theo đúng định dạng ví dụ dưới đây:
+
+Ví dụ 1:
+Input:  {input mẫu 1}
+Output: {output mẫu 1}
+
+Ví dụ 2:
+Input:  {input mẫu 2}
+Output: {output mẫu 2}
+
+Bây giờ hãy xử lý:
+Input: {input thật cần xử lý}</code></pre>
+</div>
+
+<h2>3. Chain-of-thought (suy luận từng bước)</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>{Câu hỏi/bài toán cần giải}.
+
+Trước khi trả lời, hãy trình bày rõ từng bước suy luận:
+1. {bước phân tích đầu tiên cần làm}
+2. {bước tiếp theo}
+3. ...
+
+Chỉ đưa ra kết luận cuối cùng sau khi đã trình bày đủ các bước trên.</code></pre>
+</div>
+
+<h2>4. Task decomposition (phân rã nhiệm vụ)</h2>
+<div class="callout template">
+<span class="callout-label">Template — bước 1: lập kế hoạch</span>
+<pre><code>Tôi cần {mục tiêu lớn cần đạt được}. Trước khi bắt tay vào làm, hãy
+liệt kê các bước cần thực hiện theo đúng thứ tự, kèm lý do vì sao cần
+thứ tự đó. Chưa thực hiện bước nào — chỉ lập kế hoạch.</code></pre>
+</div>
+<div class="callout template">
+<span class="callout-label">Template — bước 2: thực hiện từng bước</span>
+<pre><code>Với bước "{tên bước cụ thể}" trong kế hoạch vừa lập, hãy thực hiện chi
+tiết. {Ràng buộc/ngữ cảnh bổ sung riêng cho bước này nếu có}.</code></pre>
+</div>
+
+<h2>5. Self-critique / self-refine</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đây là câu trả lời/kết quả vừa được tạo ra:
+{dán lại output cần phản biện}
+
+Đóng vai một reviewer khó tính, liệt kê tối đa {số lượng} vấn đề còn
+tồn tại ({loại vấn đề cần chú ý: bug, thiếu edge case, vi phạm best
+practice, thiếu rõ ràng...}). Với mỗi vấn đề, đề xuất cách sửa cụ thể.</code></pre>
+</div>
+
+<h2>6. Prompt tái sử dụng theo biến (template hoá cho việc lặp lại)</h2>
+<div class="callout template">
+<span class="callout-label">Ví dụ template hoá — "Tóm tắt tài liệu theo chuẩn team"</span>
+<pre><code>Bạn là {vai trò}. Tóm tắt tài liệu sau thành {độ dài mong muốn}, theo
+cấu trúc: Mục đích, Điểm chính (tối đa {số điểm} gạch đầu dòng), Hành
+động cần làm (nếu có).
+
+Tài liệu:
+{dán nội dung}</code></pre>
+<p style="margin-top:12px;font-size:0.9rem;color:var(--muted)">Biến cần điền mỗi lần dùng: <code>{vai
+trò}</code>, <code>{độ dài mong muốn}</code>, <code>{số điểm}</code>, <code>{nội dung}</code> — phần còn
+lại giữ cố định để đảm bảo output nhất quán giữa các lần dùng.</p>
+</div>
+
+<nav class="chapter-nav">
+<a href="../chapters/05-nguyen-ly-prompting-co-ban.html">&larr; Chương 5: Nguyên lý prompting cơ bản</a>
+<a href="phu-luc-b-prompting-cho-code.html">Phụ lục B: Prompting cho code &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>

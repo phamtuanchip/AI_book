@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục D: Prompt cho từng giai đoạn SDLC</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="../chapters/index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phụ lục D</p>
+<h1>Prompt cho từng giai đoạn SDLC — thư viện template</h1>
+
+<p>Template dùng cho Phần IV (Chương 18-21), sắp theo thứ tự vòng đời SDLC ở Chương 17.</p>
+
+<h2>1. User story</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đây là mô tả tính năng thô: "{dán mô tả thô}".
+
+Chuyển thành user story: Là {vai trò}, tôi muốn {mục tiêu}, để {giá trị
+mang lại}. Kèm theo:
+- Acceptance criteria (dạng Given/When/Then)
+- Danh sách câu hỏi cần làm rõ với người yêu cầu trước khi bắt đầu code</code></pre>
+</div>
+
+<h2>2. Phân tích yêu cầu — tìm mâu thuẫn/phụ thuộc</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đọc các tài liệu yêu cầu sau cho {tên tính năng}: {đính kèm tài liệu}.
+
+Chỉ ra: (1) điểm mâu thuẫn giữa các tài liệu, (2) yêu cầu phụ thuộc vào
+hệ thống/tính năng khác chưa được nhắc rõ, (3) yêu cầu thiếu tiêu chí
+đo lường được.</code></pre>
+</div>
+
+<h2>3. ADR (Architecture Decision Record)</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Tôi vừa quyết định chọn {phương án X} thay vì {phương án Y, Z} cho
+{vấn đề cần giải quyết}. Lý do chính: {lý do thật của bạn}.
+
+Viết thành ADR theo format: Title, Status, Context, Decision,
+Consequences (gồm đánh đổi/rủi ro chấp nhận), Alternatives Considered.</code></pre>
+</div>
+
+<h2>4. Threat modeling</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Với hệ thống/tính năng sau: {mô tả kiến trúc/luồng dữ liệu}, hãy phân
+tích theo khung STRIDE (Spoofing, Tampering, Repudiation, Information
+disclosure, Denial of service, Elevation of privilege). Với mỗi hạng
+mục áp dụng được, chỉ ra: kịch bản tấn công cụ thể, mức độ nghiêm
+trọng, và biện pháp giảm thiểu đề xuất.</code></pre>
+</div>
+
+<h2>5. Security review</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Review đoạn code/thiết kế sau dưới góc độ bảo mật: {dán code/mô tả}.
+Kiểm tra: input validation, injection (SQL/command/prompt nếu có thành
+phần AI), xử lý secret/credential, kiểm soát quyền truy cập, xử lý lỗi
+có làm lộ thông tin nhạy cảm không. Với mỗi vấn đề, ghi rõ mức độ
+nghiêm trọng và cách sửa.</code></pre>
+</div>
+
+<h2>6. Postmortem / incident report</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đây là dữ liệu về sự cố vừa xảy ra: {timeline, log, hành động đã thực
+hiện để khắc phục}.
+
+Viết postmortem theo format: Tóm tắt sự cố, Tác động (thời gian, phạm
+vi ảnh hưởng), Timeline chi tiết, Nguyên nhân gốc (root cause), Hành
+động khắc phục đã thực hiện, Hành động phòng ngừa cần làm tiếp (kèm
+người phụ trách đề xuất). Giọng văn không đổ lỗi cá nhân (blameless).</code></pre>
+</div>
+
+<h2>7. Release note</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đây là danh sách commit/PR đã merge trong đợt release này: {dán danh
+sách}. Viết release note theo 3 nhóm: Tính năng mới, Cải tiến, Sửa lỗi.
+Ngôn ngữ dành cho người dùng cuối, không dùng thuật ngữ kỹ thuật nội
+bộ. Bỏ qua commit thuần refactor/chore không ảnh hưởng người dùng.</code></pre>
+</div>
+
+<nav class="chapter-nav">
+<a href="phu-luc-c-system-prompt-agent.html">&larr; Phụ lục C: System prompt &amp; prompt cho agent</a>
+<a href="../chapters/index.html">Mục lục &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>

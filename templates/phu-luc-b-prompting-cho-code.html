@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phụ lục B: Prompting cho code</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="../chapters/index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phụ lục B</p>
+<h1>Prompting cho code — thư viện template</h1>
+
+<p>Template dùng chung cho các tình huống lập trình ở Chương 7 và 10. Điền vào <code>{...}</code> theo
+ngôn ngữ/framework/dự án cụ thể của bạn.</p>
+
+<h2>1. Sinh code mới</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Vai trò: Bạn là {vai trò, ví dụ: backend engineer dùng Go}.
+Bối cảnh: {mô tả hệ thống/module liên quan, stack đang dùng}.
+Yêu cầu: Viết {tên hàm/module} nhận {input}, thực hiện {logic chính},
+trả về {output}. Xử lý các case: {liệt kê case cần xử lý, kể cả lỗi}.
+Ràng buộc: {thư viện được/không được dùng, convention cần theo}.
+Định dạng: Chỉ code, comment ngắn ở chỗ logic không hiển nhiên.</code></pre>
+</div>
+
+<h2>2. Giải thích code</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Giải thích đoạn code sau ở 2 tầng:
+1. Tổng quan: đoạn code giải quyết vấn đề gì, khả năng được gọi từ đâu?
+2. Chi tiết: đi qua từng khối logic chính, giải thích TẠI SAO viết như
+   vậy (không chỉ mô tả nó làm gì).
+
+{dán code}</code></pre>
+</div>
+
+<h2>3. Refactor</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Refactor đoạn code sau để {mục tiêu cụ thể: giảm độ phức tạp, tách hàm
+quá dài, loại bỏ trùng lặp...}. Ràng buộc:
+- Giữ nguyên signature (tên, tham số, kiểu trả về).
+- Không đổi hành vi — liệt kê rõ nếu có thay đổi hành vi dù nhỏ.
+- {ràng buộc khác nếu có, ví dụ: không thêm dependency mới}.
+
+{dán code}</code></pre>
+</div>
+
+<h2>4. Sinh unit test</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Viết unit test cho {tên hàm/module} bằng {framework test}. Bao phủ đủ
+4 nhóm case:
+1. Happy path (input hợp lệ điển hình)
+2. Input biên (rỗng, null/undefined, 0, âm nếu áp dụng)
+3. Input không hợp lệ (sai kiểu, thiếu field bắt buộc)
+4. Case gây lỗi/exception — assert đúng loại lỗi được throw
+
+Mỗi test đặt tên mô tả rõ case đang kiểm tra.
+
+{dán code cần test}</code></pre>
+</div>
+
+<h2>5. Tìm &amp; sửa bug</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Lỗi: {message lỗi đầy đủ + stack trace}
+Code liên quan: {dán code}
+Đã thử: {những gì đã kiểm tra/loại trừ, nếu có}
+
+Trước khi đề xuất fix, hãy: (1) liệt kê tối đa 3 nguyên nhân khả dĩ,
+(2) với mỗi nguyên nhân, chỉ ra dòng code liên quan, (3) đề xuất cách
+kiểm tra nhanh nguyên nhân nào đúng trước khi sửa.</code></pre>
+</div>
+
+<h2>6. Code review</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Đóng vai một reviewer khó tính, review đoạn diff sau theo checklist:
+(1) đúng phạm vi yêu cầu, không thêm thay đổi ngoài phạm vi
+(2) API/hàm dùng có thực sự tồn tại không
+(3) edge case &amp; xử lý lỗi
+(4) bảo mật (injection, validate input, secrets)
+(5) nhất quán với convention hiện có
+(6) hiệu năng ở quy mô thực tế (N+1 query, vòng lặp không cần thiết...)
+
+Với mỗi mục, ghi PASS hoặc liệt kê vấn đề cụ thể kèm số dòng.
+
+{dán diff}</code></pre>
+</div>
+
+<h2>7. Viết commit message / PR description</h2>
+<div class="callout template">
+<span class="callout-label">Template</span>
+<pre><code>Dựa trên diff sau, viết:
+1. Commit message theo chuẩn {Conventional Commits/chuẩn team cụ thể},
+   dòng đầu tối đa 72 ký tự.
+2. PR description gồm: Tóm tắt thay đổi, Lý do thay đổi (why, không chỉ
+   what), Cách test/kiểm chứng, Rủi ro/ảnh hưởng cần lưu ý khi review.
+
+{dán diff hoặc danh sách commit}</code></pre>
+</div>
+
+<nav class="chapter-nav">
+<a href="phu-luc-a-prompting-co-ban.html">&larr; Phụ lục A: Prompting cơ bản &amp; nâng cao</a>
+<a href="phu-luc-c-system-prompt-agent.html">Phụ lục C: System prompt &amp; prompt cho agent &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
