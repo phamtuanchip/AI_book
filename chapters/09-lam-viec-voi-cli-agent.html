@@ -120,6 +120,33 @@ Agent có quyền chạy lệnh thật trên máy/repo của bạn. Trước khi
 Chủ đề quyền hạn của agent sẽ được bàn kỹ và có hệ thống hơn ở Chương 16 và Chương 23.
 </div>
 
+<h2>Quản lý phiên làm việc dài</h2>
+
+<p>Với tác vụ lớn, một phiên làm việc với CLI agent có thể kéo dài, tích luỹ nhiều lượt trao đổi — và
+nhắc lại context window (Chương 2): phiên càng dài, càng dễ chạm giới hạn hoặc gặp "context rot" (Chương
+4). Vài thói quen giúp phiên làm việc hiệu quả hơn:</p>
+
+<ul>
+<li><strong>Chốt xong một việc, bắt đầu phiên mới</strong> thay vì tiếp tục kéo dài một phiên đã xử lý
+nhiều việc không liên quan — phiên mới "sạch" giúp agent tập trung đúng ngữ cảnh cần thiết.</li>
+<li><strong>Tóm tắt lại trạng thái khi cần chuyển phiên</strong> — nếu việc dở dang cần tiếp tục ở phiên
+sau, yêu cầu agent tóm tắt "đã làm gì, còn gì dở dang" trước khi kết thúc, để dán lại làm ngữ cảnh mở đầu
+phiên mới.</li>
+<li><strong>Không ngại ngắt và làm lại</strong> nếu agent đi sai hướng nhiều bước — sửa tiếp trên một
+hướng sai thường tốn thời gian hơn bắt đầu lại với ngữ cảnh và yêu cầu rõ ràng hơn.</li>
+</ul>
+
+<h2>Khi nào KHÔNG nên dùng CLI agent</h2>
+
+<div class="callout">
+<span class="callout-label">Không phải công cụ vạn năng</span>
+Với thay đổi 1-2 dòng, đã biết chính xác cần sửa gì, việc tự sửa tay hoặc dùng inline completion (Chương
+8) thường nhanh hơn là mở cả một phiên agent — chi phí "giao việc rõ ràng" (Chương 5) đôi khi lớn hơn chi
+phí tự làm trực tiếp. CLI agent phát huy giá trị rõ nhất ở việc có <em>phạm vi rộng nhưng mô tả được rõ
+ràng</em> (đọc hiểu nhiều file, chuỗi thao tác lặp lại, refactor có quy tắc) — không phải mọi thay đổi
+nhỏ trong ngày.
+</div>
+
 <div class="callout exercise">
 <span class="callout-label">Bài tập nhỏ</span>
 Nếu dự án của bạn chưa có file cấu hình kiểu <code>CLAUDE.md</code>, hãy viết một bản rút gọn (stack,
