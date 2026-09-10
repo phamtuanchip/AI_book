@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 24: Xây dựng "AI-native team"</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần IV — Áp dụng AI toàn diện vào SDLC: từ Applyer đến Architect &amp; Manager</p>
+<h1>Chương 24: Xây dựng "AI-native team"</h1>
+
+<p>Chương 22-23 giải quyết bài toán công nghệ: kiến trúc và bảo mật. Nhưng một hệ thống agentic hoàn hảo
+về kỹ thuật vẫn thất bại nếu team không biết vận hành, không tin tưởng đúng mức, hoặc chống đối vì lo sợ
+bị thay thế. Chương này nói về khía cạnh con người và tổ chức — thường bị bỏ qua nhưng quyết định thành
+bại nhiều hơn công nghệ.</p>
+
+<h2>Thay đổi quy trình — không chỉ thêm công cụ</h2>
+
+<p>Sai lầm phổ biến: coi việc "đưa AI vào SDLC" là mua/cài công cụ, giữ nguyên toàn bộ quy trình cũ. Thực
+tế, mỗi cấp độ ở Chương 17 đòi hỏi thay đổi quy trình tương ứng:</p>
+
+<ul>
+<li><strong>Quy trình review</strong> cần cập nhật để có bước AI-review trước review con người (Chương
+20), và tiêu chí đánh giá PR cần tính đến cả chất lượng prompt/cách dùng AI, không chỉ chất lượng code
+cuối cùng.</li>
+<li><strong>Quy trình phê duyệt</strong> cần định nghĩa rõ cổng phê duyệt con người ở đâu (Chương 16, 22,
+23) — đây là quyết định tổ chức, không phải cấu hình kỹ thuật đơn thuần.</li>
+<li><strong>Quy trình onboarding</strong> cho thành viên mới cần dạy cả cách dùng hệ thống AI nội bộ của
+team, không chỉ codebase và công cụ truyền thống.</li>
+</ul>
+
+<h2>Văn hoá: từ nghi ngờ/né tránh đến sử dụng có phê phán</h2>
+
+<p>Team thường trải qua vài giai đoạn thái độ với AI, và vai trò của người dẫn dắt là đưa team qua các
+giai đoạn này nhanh và lành mạnh:</p>
+
+<table>
+<thead>
+<tr><th>Giai đoạn</th><th>Biểu hiện</th><th>Việc cần làm</th></tr>
+</thead>
+<tbody>
+<tr><td>Nghi ngờ/né tránh</td><td>"AI viết code không đáng tin, tôi tự làm nhanh hơn"</td><td>Cho thấy ví
+dụ cụ thể, đo lường được (Chương 11) — không tranh luận lý thuyết</td></tr>
+<tr><td>Hưng phấn quá mức</td><td>Vibe coding (Chương 10), tin tưởng output không kiểm chứng</td><td>Đưa
+checklist review bắt buộc vào quy trình, không dựa vào ý thức cá nhân</td></tr>
+<tr><td>Sử dụng có phê phán</td><td>Dùng AI đúng chỗ, biết khi nào cần chậm lại kiểm chứng (Chương 10)</td>
+<td>Trạng thái mục tiêu — duy trì bằng đo lường liên tục (mục dưới) và chia sẻ case study nội bộ</td></tr>
+</tbody>
+</table>
+
+<div class="callout warning">
+<span class="callout-label">Lo ngại bị thay thế — cần được nói thẳng, không né tránh</span>
+Nếu team lo sợ AI khiến vai trò của họ biến mất, họ sẽ ngầm chống đối hoặc dùng đối phó thay vì thực tâm.
+Vai trò AI SDLC Manager cần định vị rõ: AI thay đổi <em>loại công việc</em> con người làm (từ viết từng
+dòng sang thiết kế, review, quản trị hệ thống — đúng tinh thần Chương 1), không phải xoá bỏ vai trò con
+người trong SDLC.
+</div>
+
+<h2>Kỹ năng cần có trong một AI-native team</h2>
+
+<ul>
+<li><strong>Prompting có hệ thống</strong> (Phần II) — không còn là kỹ năng "có thì tốt", mà là kỹ năng
+nền tảng như đọc-hiểu Git.</li>
+<li><strong>Đánh giá phê phán output AI</strong> (Chương 10) — khả năng nhận ra khi nào một câu trả lời
+"nghe hợp lý" nhưng sai.</li>
+<li><strong>Tư duy hệ thống về agent</strong> (Phần III) — hiểu được giới hạn quyền hạn, rủi ro, không
+chỉ "ra lệnh cho AI làm việc".</li>
+<li><strong>Với vai trò Architect/Manager:</strong> khả năng đánh giá đánh đổi kiến trúc (Chương 22),
+đánh giá rủi ro bảo mật (Chương 23), và giao tiếp các quyết định đó với cả người kỹ thuật lẫn phi kỹ
+thuật.</li>
+</ul>
+
+<h2>Đo lường hiệu quả — tránh "cảm giác nhanh hơn" mơ hồ</h2>
+
+<p>Không đo lường, rất dễ rơi vào hai thái cực sai: tin AI giúp ích nhiều hơn thực tế (vì cảm giác gõ code
+nhanh hơn, bỏ qua thời gian sửa lỗi phát sinh sau), hoặc đánh giá thấp giá trị thực sự vì chỉ nhìn vào chi
+phí công cụ mà không đo tác động. Vài chỉ số cụ thể nên theo dõi ở cấp team, xây dựng thêm từ gợi ý ở
+Chương 20:</p>
+
+<ul>
+<li><strong>Thời gian từ ý tưởng đến production</strong> (cycle time) — đo trước/sau khi áp dụng từng cấp
+độ AI (Chương 17), không chỉ đo tốc độ viết code đơn lẻ.</li>
+<li><strong>Tỷ lệ lỗi phát hiện ở từng giai đoạn</strong> — nếu AI-review (Chương 20) thực sự hiệu quả,
+tỷ lệ lỗi lọt đến production nên giảm, không chỉ số lượng PR tăng lên.</li>
+<li><strong>Chi phí vận hành thực tế</strong> (token, hạ tầng — Chương 16) so với giá trị thời gian tiết
+kiệm được — để biết hệ thống có thực sự đáng đầu tư tiếp không.</li>
+<li><strong>Khảo sát định tính từ team</strong> — điểm nào AI thực sự giúp ích, điểm nào gây phiền/mất
+thời gian sửa lại — không thể thay thế hoàn toàn bằng số liệu định lượng.</li>
+</ul>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Với team/tổ chức của bạn, chọn 1 chỉ số định lượng và 1 câu hỏi khảo sát định tính phù hợp nhất để bắt đầu
+đo lường hiệu quả AI trong SDLC ngay tuần này — ưu tiên thứ đo được dễ dàng bằng công cụ đang có, hơn là
+một hệ thống đo lường hoàn hảo nhưng không ai triển khai.
+</div>
+
+<nav class="chapter-nav">
+<a href="23-bao-mat-agentic-sdlc.html">&larr; Chương 23: Bảo mật &amp; bảo vệ hệ thống cho Agentic AI SDLC</a>
+<a href="25-tu-applyer-den-architect.html">Chương 25: Từ Applyer đến Architect &amp; Manager &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
