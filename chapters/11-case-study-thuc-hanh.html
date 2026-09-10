@@ -13,8 +13,8 @@
 <p class="part-label">Phần II — Prompting &amp; công cụ AI hỗ trợ lập trình</p>
 <h1>Chương 11: Case study thực hành</h1>
 
-<p>Chương khép lại Phần II bằng hai case study end-to-end, kết hợp toàn bộ kỹ thuật từ Chương 5-10: khung
-4 thành phần, phân rã nhiệm vụ, chain-of-thought khi debug, và checklist review trước khi merge.</p>
+<p>Chương khép lại Phần II bằng ba case study end-to-end, kết hợp toàn bộ kỹ thuật từ Chương 5-10: khung
+4 thành phần, phân rã nhiệm vụ, chain-of-thought khi debug/tối ưu, và checklist review trước khi merge.</p>
 
 <h2>Case study 1: Xây tính năng mới — export dữ liệu ra CSV</h2>
 
@@ -105,9 +105,49 @@ tái hiện được bug trước khi sửa, và hiểu rõ <em>tại sao</em> f
 được đề xuất.
 </div>
 
+<h2>Case study 3: Tối ưu một truy vấn chậm</h2>
+
+<p><strong>Tình huống:</strong> một endpoint báo cáo doanh thu theo tháng mất hơn 8 giây để trả về, trong
+khi các endpoint tương tự khác chỉ mất vài trăm mili giây.</p>
+
+<h3>Bước 1 — Thu thập ngữ cảnh trước khi hỏi (Chương 5)</h3>
+
+<p>Khác với debug logic (case study 2), tối ưu hiệu năng cần dữ liệu định lượng trước khi AI có thể phân
+tích có căn cứ — thiếu bước này, AI dễ đoán bừa nguyên nhân:</p>
+
+<pre><code>"Endpoint GET /api/reports/monthly-revenue mất 8.2s để trả về (đo bằng
+APM). Đây là câu query và đoạn code liên quan: {dán query + code}.
+Đây là EXPLAIN ANALYZE của câu query: {dán kết quả EXPLAIN}.
+Bảng orders có khoảng 12 triệu dòng.
+
+Dựa trên EXPLAIN ANALYZE, chỉ ra: (1) bước nào trong query plan tốn
+thời gian nhất, (2) có đang thiếu index phù hợp không, (3) đề xuất tối
+đa 2 hướng tối ưu, kèm đánh đổi của mỗi hướng (ví dụ: thêm index tăng
+tốc đọc nhưng làm chậm ghi)."</code></pre>
+
+<h3>Bước 2 — Kiểm chứng trước khi áp dụng vào production</h3>
+
+<p>Giả sử AI chỉ ra bảng <code>orders</code> đang thiếu index trên cột <code>created_at</code> khiến
+query phải quét toàn bảng (full table scan) khi lọc theo tháng. Trước khi chạy <code>CREATE INDEX</code>
+trên bảng 12 triệu dòng ở production — một thao tác có thể khoá bảng và ảnh hưởng người dùng thật — cần:</p>
+
+<pre><code>"Trước khi tôi chạy CREATE INDEX trên production, hãy: (1) ước tính
+index này tốn bao nhiêu dung lượng, (2) đề xuất cách tạo index không
+khoá bảng (ví dụ CREATE INDEX CONCURRENTLY nếu dùng PostgreSQL), (3)
+viết câu query kiểm tra lại EXPLAIN ANALYZE sau khi có index, để tôi xác
+nhận cải thiện thật sự trước khi coi là xong."</code></pre>
+
+<div class="callout warning">
+<span class="callout-label">Điểm mấu chốt của case study 3</span>
+Tối ưu hiệu năng là lĩnh vực đặc biệt dễ bị AI "đoán" sai nếu thiếu dữ liệu đo đạc thật (EXPLAIN ANALYZE,
+số liệu APM) — luôn cung cấp bằng chứng định lượng thay vì mô tả chung chung "endpoint này chậm", và luôn
+đo lại sau khi áp dụng thay đổi để xác nhận cải thiện thật, không chỉ tin lý thuyết "thêm index sẽ nhanh
+hơn".
+</div>
+
 <h2>Tổng kết Phần II</h2>
 
-<p>Hai case study trên minh hoạ một mô-típ lặp lại xuyên suốt: <strong>phân rã → cung cấp ngữ cảnh đầy đủ
+<p>Ba case study trên minh hoạ một mô-típ lặp lại xuyên suốt: <strong>phân rã → cung cấp ngữ cảnh đầy đủ
 → yêu cầu suy luận tường minh cho việc phức tạp → viết/xác nhận bằng test → review có checklist</strong>.
 Đây chính là quy trình bạn sẽ mang theo sang Phần III, nơi các bước này được tự động hoá thành hành vi
 của một AI agent.</p>
