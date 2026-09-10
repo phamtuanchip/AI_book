@@ -106,6 +106,21 @@ từ bạn. Đừng để AI "tự bịa" lý do nghe hợp lý cho một quyế
 lý do thật, để AI giúp trình bày nó rõ ràng và đầy đủ hơn.
 </div>
 
+<h2>Phân tích yêu cầu phi chức năng (NFR)</h2>
+
+<p>Yêu cầu phi chức năng (hiệu năng, khả năng mở rộng, độ sẵn sàng, bảo mật) thường bị bỏ sót vì requirement
+ban đầu (Chương 18) chủ yếu tập trung vào hành vi chức năng. AI hữu ích ở việc chủ động đặt câu hỏi về các
+khía cạnh này trước khi thiết kế được chốt:</p>
+
+<pre><code>"Với thiết kế hệ thống thông báo ở trên, hãy đặt câu hỏi về các yêu cầu
+phi chức năng chưa được nhắc đến: lưu lượng dự kiến (bao nhiêu thông
+báo/giây ở giờ cao điểm), độ trễ chấp nhận được, hành vi khi một kênh
+gửi (email/SMS) bị gián đoạn, và mức độ cần đảm bảo 'gửi đúng 1 lần'
+hay 'gửi ít nhất 1 lần' (at-least-once vs exactly-once)."</code></pre>
+
+<p>Câu trả lời cho các câu hỏi này ảnh hưởng trực tiếp đến việc chọn hướng kiến trúc nào trong 3 hướng ở
+sơ đồ trên — ví dụ yêu cầu "exactly-once" nghiêm ngặt sẽ loại bỏ một số lựa chọn đơn giản.</p>
+
 <h2>Review thiết kế — dùng AI như một cặp mắt thứ hai</h2>
 
 <pre><code>"Đóng vai một kiến trúc sư có kinh nghiệm, review thiết kế sau: {mô tả/
