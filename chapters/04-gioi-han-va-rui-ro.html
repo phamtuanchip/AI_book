@@ -17,6 +17,37 @@
 tự tin sai chỗ. Bốn nhóm giới hạn dưới đây sẽ quay lại xuyên suốt sách, đặc biệt ở Chương 10 (đánh giá
 output) và Chương 23 (bảo mật hệ thống agentic).</p>
 
+<figure>
+<svg viewBox="0 0 640 320" role="img" aria-label="Ma trận rủi ro: tần suất gặp phải so với mức độ nghiêm trọng cho 4 nhóm giới hạn của AI">
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#232323">
+    <!-- axes -->
+    <line x1="80" y1="20" x2="80" y2="270" stroke="#6b6b6b" stroke-width="1.5"/>
+    <line x1="80" y1="270" x2="610" y2="270" stroke="#6b6b6b" stroke-width="1.5"/>
+    <text x="40" y="150" text-anchor="middle" transform="rotate(-90 40 150)">Mức độ nghiêm trọng →</text>
+    <text x="345" y="300" text-anchor="middle">Tần suất gặp phải →</text>
+
+    <!-- points -->
+    <circle cx="520" cy="90" r="7" fill="#a4442f"/>
+    <text x="520" y="75" text-anchor="middle" font-weight="700">Hallucination</text>
+    <text x="520" y="108" text-anchor="middle" font-size="10.5">gặp thường xuyên, hậu quả cao nếu không kiểm chứng</text>
+
+    <circle cx="240" cy="60" r="7" fill="#2f5f8f"/>
+    <text x="240" y="45" text-anchor="middle" font-weight="700">Bảo mật/rò rỉ dữ liệu</text>
+    <text x="240" y="78" text-anchor="middle" font-size="10.5">ít gặp hơn nhưng hậu quả rất nghiêm trọng</text>
+
+    <circle cx="470" cy="200" r="7" fill="#3f7d3f"/>
+    <text x="470" y="185" text-anchor="middle" font-weight="700">Kiến thức lỗi thời</text>
+    <text x="470" y="218" text-anchor="middle" font-size="10.5">rất thường gặp, hậu quả vừa phải nếu biết kiểm tra</text>
+
+    <circle cx="200" cy="230" r="7" fill="#8a6d3b"/>
+    <text x="200" y="215" text-anchor="middle" font-weight="700">Bias</text>
+    <text x="200" y="248" text-anchor="middle" font-size="10.5">gặp khi dùng cho quyết định về con người</text>
+  </g>
+</svg>
+<figcaption>Bốn nhóm giới hạn không "nguy hiểm như nhau" — mức độ ưu tiên phòng ngừa nên dựa trên cả tần
+suất lẫn hậu quả, không chỉ một trong hai.</figcaption>
+</figure>
+
 <h2>1. Hallucination — bịa thông tin một cách tự tin</h2>
 
 <p>Nhắc lại từ Chương 2: mô hình sinh ra token có khả năng cao nhất dựa trên pattern đã học, chứ không
@@ -30,6 +61,19 @@ Hỏi AI về một thư viện ít phổ biến, nó có thể "sáng tác" ra 
 tồn tại trong API thật (hiện tượng dân lập trình hay gọi là "package hallucination"). Luôn kiểm tra lại
 với tài liệu chính thức trước khi tin.
 </div>
+
+<pre><code>// Ví dụ minh hoạ — hỏi AI cách retry request với thư viện HTTP client X
+// AI có thể trả lời rất tự tin:
+
+const response = await httpClient.get(url, {
+  retry: { attempts: 3, backoff: "exponential" },   // <- tham số "retry"
+});                                                   //    nghe hợp lý nhưng
+                                                       //    có thể KHÔNG tồn tại
+                                                       //    trong thư viện thật
+
+// Cách kiểm chứng: mở tài liệu chính thức của httpClient, tìm đúng tên
+// tham số/API cho việc retry — nếu không thấy "retry" trong danh sách
+// option hợp lệ, đây chính là một hallucination điển hình.</code></pre>
 
 <p><strong>Cách giảm thiểu:</strong> yêu cầu mô hình trích dẫn nguồn/trích đoạn cụ thể; cung cấp tài liệu
 tham chiếu trực tiếp trong prompt (RAG — sẽ nói ở Chương 13) thay vì dựa vào "trí nhớ" của mô hình; hạ
