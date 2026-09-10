@@ -92,6 +92,22 @@ context window.</li>
 cần.</li>
 </ul>
 
+<h2>Bộ nhớ dài hạn trong thực tế trông như thế nào</h2>
+
+<p>Cụ thể hoá khái niệm "bộ nhớ dài hạn" ở trên bằng hai cách triển khai phổ biến:</p>
+
+<ul>
+<li><strong>Key-value đơn giản:</strong> lưu các sự thật rời rạc dạng khoá-giá trị (ví dụ "ngôn ngữ ưa
+thích: TypeScript", "quy ước đặt tên: camelCase") — phù hợp thông tin ít, thay đổi chậm, giống hệt file
+<code>CLAUDE.md</code> ở Chương 9.</li>
+<li><strong>Vector store (kho vector):</strong> lưu văn bản dưới dạng embedding (Chương 2) để tìm kiếm
+theo ngữ nghĩa — phù hợp khi lượng thông tin lớn, cần tìm "đoạn nào liên quan nhất" thay vì tra đúng một
+khoá cố định. Đây chính là nền tảng kỹ thuật của RAG sẽ nói kỹ ở Chương 13.</li>
+</ul>
+
+<p>Một agent thật thường dùng cả hai: key-value cho vài quy tắc cố định quan trọng, vector store cho kho
+tri thức lớn cần tra cứu linh hoạt.</p>
+
 <div class="callout">
 <span class="callout-label">Vì sao khái niệm này quan trọng ngoài lập trình</span>
 Một khi đã hiểu agent = mô hình + tools + vòng lặp plan-act-observe + memory, bạn sẽ thấy nguyên lý này áp
