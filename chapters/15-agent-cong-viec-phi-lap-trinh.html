@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 15: Agent trong công việc phi lập trình</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<a class="toc-back" href="index.html">&larr; Mục lục</a>
+
+<p class="part-label">Phần III — Công nghiệp Agentic: AI Agents trong công việc</p>
+<h1>Chương 15: Agent trong công việc phi lập trình</h1>
+
+<p>Nguyên lý ở Chương 12-14 (tools, vòng lặp plan-act-observe, memory) không hề đặc thù cho lập trình.
+Chương này đi qua bốn nhóm ứng dụng ngoài coding mà lập trình viên thường được giao xây dựng cho tổ chức
+của mình — kiến thức này cũng chính là nền tảng cho Phần IV, nơi agent được áp vào chính quy trình SDLC.</p>
+
+<h2>Tự động hoá quy trình nội bộ (workflow automation)</h2>
+
+<p>Thay vì viết script cứng nhắc xử lý từng bước cố định, agent có thể xử lý quy trình có nhiều nhánh rẽ
+tuỳ ngữ cảnh — ví dụ: xử lý yêu cầu nghỉ phép (đọc yêu cầu, kiểm tra số ngày phép còn lại qua tool tra
+cứu HR system, kiểm tra chính sách áp dụng, tự động duyệt nếu hợp lệ hoặc chuyển cho quản lý nếu cần xét
+duyệt đặc biệt).</p>
+
+<pre><code>Tools: check_leave_balance, check_policy, notify_manager, approve_request
+
+System prompt (rút gọn):
+"Bạn xử lý yêu cầu nghỉ phép. Nếu số ngày còn lại đủ VÀ không vi phạm
+chính sách (ví dụ nghỉ trùng đợt cao điểm đã khoá) → tự approve_request.
+Nếu không đủ điều kiện hoặc có ngoại lệ chính sách → notify_manager kèm
+tóm tắt lý do, KHÔNG tự ý approve."</code></pre>
+
+<h2>Xử lý tài liệu (document processing)</h2>
+
+<p>Agent kết hợp RAG (Chương 13) rất mạnh trong việc đọc, trích xuất, phân loại, và tóm tắt số lượng lớn
+tài liệu — hợp đồng, hoá đơn, báo cáo, email — việc vốn tốn nhiều giờ lao động thủ công:</p>
+
+<ul>
+<li><strong>Trích xuất có cấu trúc:</strong> đọc hợp đồng PDF, trích ra các trường cố định (ngày hiệu
+lực, các bên liên quan, điều khoản thanh toán) thành dữ liệu có cấu trúc (JSON) để nạp vào hệ thống khác.</li>
+<li><strong>Phân loại &amp; định tuyến:</strong> đọc email/ticket gửi đến, phân loại theo chủ đề, tự động
+chuyển đến đúng bộ phận xử lý.</li>
+<li><strong>Tóm tắt hàng loạt:</strong> tóm tắt hàng trăm báo cáo/phản hồi khảo sát thành các điểm chính,
+giúp con người không phải đọc từng cái.</li>
+</ul>
+
+<div class="callout warning">
+<span class="callout-label">Rủi ro đặc thù của xử lý tài liệu</span>
+Hallucination (Chương 4) đặc biệt nguy hiểm ở đây — agent có thể "trích xuất" ra một con số/điều khoản
+không có thật trong tài liệu gốc, nhưng trình bày rất tự tin. Với tài liệu pháp lý/tài chính, luôn có
+bước đối chiếu lại với bản gốc trước khi dùng dữ liệu trích xuất cho quyết định quan trọng.
+</div>
+
+<h2>Hỗ trợ vận hành (ops support)</h2>
+
+<p>Agent có thể theo dõi hệ thống giám sát (monitoring), phân tích log, và đề xuất hành động khi có sự cố
+— chủ đề này sẽ được mở rộng đầy đủ ở Chương 21 (AI trong vận hành &amp; bảo trì) khi áp riêng cho SDLC.
+Ở mức tổng quát hơn, agent vận hành có thể: đọc alert từ hệ thống giám sát, tra cứu runbook liên quan,
+tổng hợp bối cảnh (log gần đây, thay đổi deploy gần nhất), và soạn báo cáo đầu tiên cho người trực (on-
+call) — rút ngắn thời gian phản ứng ban đầu mà không tự ý thực hiện hành động khắc phục nếu chưa được
+phê duyệt.</p>
+
+<h2>Trợ lý nghiên cứu (research assistant)</h2>
+
+<p>Agent có tool tìm kiếm (web search, tra cứu tài liệu nội bộ) có thể thực hiện nghiên cứu nhiều bước:
+đặt câu hỏi con, tìm kiếm, đọc, tổng hợp, rồi đặt tiếp câu hỏi con dựa trên những gì vừa tìm được — lặp
+lại vòng Plan → Act → Observe cho đến khi đủ thông tin trả lời câu hỏi gốc. Hữu ích cho việc tổng hợp
+thông tin thị trường, so sánh giải pháp kỹ thuật, hay chuẩn bị tài liệu cho một quyết định.</p>
+
+<div class="callout">
+<span class="callout-label">Điểm chung của cả bốn nhóm ứng dụng</span>
+Dù là duyệt nghỉ phép, trích xuất hợp đồng, hỗ trợ vận hành, hay nghiên cứu — mẫu thiết kế luôn giống
+nhau: xác định rõ tool cần thiết, viết system prompt với ranh giới rõ ràng "được làm gì / phải hỏi con
+người khi nào" (đúng template Chương 14), và luôn có điểm con người có thể kiểm tra lại trước khi hành
+động có hệ quả thật xảy ra.
+</div>
+
+<div class="callout exercise">
+<span class="callout-label">Bài tập nhỏ</span>
+Chọn một quy trình phi lập trình trong tổ chức của bạn (hoặc hình dung một quy trình quen thuộc: duyệt
+chi phí, xử lý ticket hỗ trợ, tổng hợp báo cáo tuần...). Áp cùng cách phân tích ở Chương 14: liệt kê tool
+cần thiết, và xác định rõ ranh giới "agent tự làm" vs "phải hỏi người" cho quy trình đó.
+</div>
+
+<nav class="chapter-nav">
+<a href="14-xay-dung-agent-don-gian.html">&larr; Chương 14: Xây dựng agent đơn giản</a>
+<a href="16-quan-tri-rui-ro-agent.html">Chương 16: Quản trị &amp; rủi ro khi dùng agent &rarr;</a>
+</nav>
+
+</div>
+</body>
+</html>
