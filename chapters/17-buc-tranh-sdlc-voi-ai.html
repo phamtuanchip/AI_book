@@ -140,6 +140,24 @@ của riêng mình, mà thiết kế được cách cả team/tổ chức áp d�
 an toàn.
 </div>
 
+<h2>Ví dụ cụ thể ở mỗi cấp độ, cùng một tổ chức</h2>
+
+<p>Để tránh 3 cấp độ nghe quá trừu tượng, hãy hình dung cùng một đội ngũ 15 kỹ sư ở ba thời điểm khác
+nhau:</p>
+
+<ul>
+<li><strong>Cấp 1 (điểm lẻ):</strong> 8/15 người tự cài Copilot hoặc công cụ tương tự, không ai biết
+người khác đang prompt thế nào, không có checklist review chung — chất lượng output khác nhau tuỳ người.</li>
+<li><strong>Cấp 2 (tích hợp quy trình):</strong> team thống nhất dùng chung 1 bộ prompt template (Phụ lục
+A-D), có bước AI-review tự động trong CI (Chương 20), có file <code>CLAUDE.md</code> chuẩn cho từng repo.</li>
+<li><strong>Cấp 3 (hệ thống agentic có quản trị):</strong> có Planner/Coder/Reviewer agent phối hợp qua
+orchestrator (Chương 22), có checklist bảo mật 9 mục được audit định kỳ (Chương 23), có người giữ vai trò
+AI SDLC Architect &amp; Manager chịu trách nhiệm cho toàn hệ thống.</li>
+</ul>
+
+<p>Phần lớn tổ chức không cần (và không nên vội) nhảy thẳng lên Cấp 3 — leo thang tuần tự, đo lường ở mỗi
+bước (Chương 24), là con đường thực tế hơn nhiều so với triển khai toàn bộ ngay từ đầu.</p>
+
 <h2>Lộ trình các chương tiếp theo</h2>
 
 <p>Chương 18-21 đi qua AI ở từng giai đoạn cụ thể (planning, thiết kế, code/test/CI-CD, vận hành) — tương
