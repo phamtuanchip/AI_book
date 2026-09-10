@@ -118,6 +118,29 @@ thể phát sinh chi phí lớn hơn dự kiến rất nhiều nếu không ki�
 token/chi phí tối đa cho mỗi phiên, dùng model routing (mô hình nhỏ/rẻ cho bước đơn giản — đã nhắc ở
 Chương 3) khi có thể, và theo dõi chi phí thực tế thường xuyên thay vì chỉ ước tính một lần lúc thiết kế.</p>
 
+<h2>Ví dụ minh hoạ: một guardrail thiếu sót gây hậu quả gì</h2>
+
+<div class="callout warning">
+<span class="callout-label">Kịch bản giả định — dùng để minh hoạ, không phải sự cố có thật</span>
+Một agent hỗ trợ vận hành được giao quyền "gửi email thông báo cho khách hàng bị ảnh hưởng bởi sự cố".
+Do thiếu giới hạn phạm vi dữ liệu (mục "Giới hạn phạm vi dữ liệu" ở trên) và thiếu allow-list rõ ràng cho
+điều kiện "khách hàng bị ảnh hưởng", một lỗi logic nhỏ trong truy vấn khiến agent gửi email cảnh báo sự cố
+tới <em>toàn bộ</em> khách hàng thay vì chỉ nhóm bị ảnh hưởng thật — hành động khó hoàn tác (Chương 12) vì
+email đã gửi đi không thể thu hồi.
+</div>
+
+<p>Nếu có approval gate (mục human-in-the-loop ở trên) cho hành động "gửi email hàng loạt ra ngoài tổ
+chức", một người review nhanh danh sách người nhận trước khi gửi hoàn toàn có thể phát hiện con số bất
+thường (toàn bộ khách hàng thay vì một nhóm nhỏ) trước khi thiệt hại xảy ra — minh hoạ trực tiếp vì sao
+"tốc độ" không nên đánh đổi với "không có điểm dừng nào" cho hành động khó hoàn tác.</p>
+
+<h2>Giám sát chi phí bằng dashboard, không chỉ ước tính một lần</h2>
+
+<p>Mở rộng phần "chi phí vận hành" ở trên: chi phí token thực tế nên được theo dõi liên tục (dashboard,
+alert khi vượt ngưỡng), không chỉ ước tính một lần lúc thiết kế rồi bỏ quên. Một agent thay đổi hành vi
+nhẹ (ví dụ do cập nhật system prompt, hoặc do dữ liệu đầu vào phức tạp hơn dự kiến) có thể khiến số vòng
+lặp trung bình tăng dần theo thời gian mà không ai để ý cho đến khi hoá đơn cuối tháng tăng đột biến.</p>
+
 <div class="callout exercise">
 <span class="callout-label">Bài tập nhỏ — khép lại Phần III</span>
 Quay lại agent bạn đã thiết kế ở bài tập Chương 14/15. Với mỗi tool trong danh sách, xếp nó vào 1 trong 4
